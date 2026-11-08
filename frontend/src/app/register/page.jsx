@@ -1,163 +1,217 @@
 'use client';
 
-import React, { useState } from 'react';
+import React from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { Store, User, Mail, Lock, Phone, ArrowRight } from 'lucide-react';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { z } from 'zod';
+import { toast } from 'sonner';
+import { Store, User, Mail, Lock, Phone, ArrowRight, AlertCircle, Sparkles } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
-import { useToast } from '../../context/ToastContext';
+
+const registerSchema = z.object({
+  shop_name: z
+    .string()
+    .min(2, 'Store name must be at least 2 characters')
+    .max(80, 'Store name too long'),
+  name: z
+    .string()
+    .min(2, 'Full name must be at least 2 characters'),
+  email: z
+    .string()
+    .min(1, 'Email is required')
+    .email('Please enter a valid email address'),
+  phone: z
+    .string()
+    .optional(),
+  password: z
+    .string()
+    .min(6, 'Password must be at least 6 characters'),
+});
 
 export default function RegisterPage() {
-  const { register } = useAuth();
-  const { addToast } = useToast();
+  const { register: registerAuth } = useAuth();
   const router = useRouter();
 
-  const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    password: '',
-    phone: '',
-    shop_name: '',
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, isSubmitting },
+  } = useForm({
+    resolver: zodResolver(registerSchema),
+    defaultValues: {
+      shop_name: '',
+      name: '',
+      email: '',
+      phone: '',
+      password: '',
+    },
   });
-  const [submitting, setSubmitting] = useState(false);
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    if (formData.password.length < 6) {
-      addToast('Password must be at least 6 characters', 'error');
-      return;
-    }
-
+  const onSubmit = async (data) => {
     try {
-      setSubmitting(true);
-      await register(formData);
-      addToast('Shop registered successfully! Welcome to your store.', 'success');
+      await registerAuth({
+        name: data.name,
+        email: data.email,
+        password: data.password,
+        phone: data.phone || '',
+        shop_name: data.shop_name,
+      });
+      toast.success('Store Created Successfully!', {
+        description: `Welcome ${data.name}! Your storefront "${data.shop_name}" is ready.`,
+      });
       router.push('/shop-owner/dashboard');
     } catch (err) {
       console.error(err);
-      addToast(err.response?.data?.message || 'Registration failed', 'error');
-    } finally {
-      setSubmitting(false);
+      toast.error('Registration Failed', {
+        description: err.response?.data?.message || 'Could not register your store. Please check the fields.',
+      });
     }
   };
 
   return (
-    <div className="min-h-[85vh] flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-md w-full space-y-8 bg-white p-8 rounded-3xl border border-slate-200/90 shadow-xl">
+    <div className="min-h-[85vh] flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8 bg-paper">
+      <div className="max-w-md w-full space-y-7 bg-white p-8 sm:p-9 rounded-2xl border border-stone-200 shadow-craft">
+        {/* Header */}
         <div className="text-center">
-          <div className="w-12 h-12 bg-gradient-to-tr from-emerald-600 to-teal-500 rounded-2xl flex items-center justify-center mx-auto text-white shadow-md shadow-emerald-500/20 mb-3">
-            <Store className="w-6 h-6" />
+          <div className="inline-flex items-center justify-center w-12 h-12 rounded-xl bg-stone-100 text-stone-800 border border-stone-200 mb-4 shadow-subtle">
+            <Store className="w-6 h-6 text-emerald-800" />
           </div>
-          <h2 className="text-2xl font-extrabold text-slate-900 tracking-tight">Open Your Store</h2>
-          <p className="text-xs text-slate-500 mt-1">
-            Join the platform to access and customize products from the shared catalog
+          <h1 className="text-2xl font-bold tracking-tight text-stone-900">Launch Your Store</h1>
+          <p className="text-xs text-stone-500 mt-1.5 font-normal">
+            Gain immediate access to the shared global catalog and curate your shop.
           </p>
         </div>
 
-        <form onSubmit={handleSubmit} className="space-y-3.5">
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
           <div>
-            <label className="block text-xs font-semibold text-slate-700 mb-1">
+            <label className="block text-xs font-semibold text-stone-700 mb-1.5">
               Store / Shop Name <span className="text-rose-500">*</span>
             </label>
             <div className="relative">
-              <Store className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
+              <Store className="w-4 h-4 text-stone-400 absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
               <input
                 type="text"
-                required
-                value={formData.shop_name}
-                onChange={(e) => setFormData({ ...formData, shop_name: e.target.value })}
-                className="w-full pl-10 pr-3 py-2 text-xs border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                {...register('shop_name')}
+                className={`w-full pl-10 pr-3.5 py-2.5 text-xs bg-stone-50/60 rounded-xl border ${
+                  errors.shop_name ? 'border-rose-400 focus:ring-rose-500' : 'border-stone-200 focus:ring-stone-900'
+                } focus:outline-none focus:ring-1 focus:bg-white text-stone-900 transition-all`}
                 placeholder="e.g. Skyline Goods"
               />
             </div>
+            {errors.shop_name && (
+              <div className="flex items-center space-x-1 text-[11px] text-rose-600 mt-1">
+                <AlertCircle className="w-3 h-3 flex-shrink-0" />
+                <span>{errors.shop_name.message}</span>
+              </div>
+            )}
           </div>
 
           <div>
-            <label className="block text-xs font-semibold text-slate-700 mb-1">
+            <label className="block text-xs font-semibold text-stone-700 mb-1.5">
               Your Full Name <span className="text-rose-500">*</span>
             </label>
             <div className="relative">
-              <User className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
+              <User className="w-4 h-4 text-stone-400 absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
               <input
                 type="text"
-                required
-                value={formData.name}
-                onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                className="w-full pl-10 pr-3 py-2 text-xs border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                {...register('name')}
+                className={`w-full pl-10 pr-3.5 py-2.5 text-xs bg-stone-50/60 rounded-xl border ${
+                  errors.name ? 'border-rose-400 focus:ring-rose-500' : 'border-stone-200 focus:ring-stone-900'
+                } focus:outline-none focus:ring-1 focus:bg-white text-stone-900 transition-all`}
                 placeholder="e.g. Jordan Hayes"
               />
             </div>
+            {errors.name && (
+              <div className="flex items-center space-x-1 text-[11px] text-rose-600 mt-1">
+                <AlertCircle className="w-3 h-3 flex-shrink-0" />
+                <span>{errors.name.message}</span>
+              </div>
+            )}
           </div>
 
           <div>
-            <label className="block text-xs font-semibold text-slate-700 mb-1">
+            <label className="block text-xs font-semibold text-stone-700 mb-1.5">
               Email Address <span className="text-rose-500">*</span>
             </label>
             <div className="relative">
-              <Mail className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
+              <Mail className="w-4 h-4 text-stone-400 absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
               <input
                 type="email"
-                required
-                value={formData.email}
-                onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                className="w-full pl-10 pr-3 py-2 text-xs border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                {...register('email')}
+                className={`w-full pl-10 pr-3.5 py-2.5 text-xs bg-stone-50/60 rounded-xl border ${
+                  errors.email ? 'border-rose-400 focus:ring-rose-500' : 'border-stone-200 focus:ring-stone-900'
+                } focus:outline-none focus:ring-1 focus:bg-white text-stone-900 transition-all`}
                 placeholder="jordan@example.com"
               />
             </div>
+            {errors.email && (
+              <div className="flex items-center space-x-1 text-[11px] text-rose-600 mt-1">
+                <AlertCircle className="w-3 h-3 flex-shrink-0" />
+                <span>{errors.email.message}</span>
+              </div>
+            )}
           </div>
 
           <div>
-            <label className="block text-xs font-semibold text-slate-700 mb-1">Phone Number (Optional)</label>
+            <label className="block text-xs font-semibold text-stone-700 mb-1.5">
+              Phone Number <span className="text-stone-400 font-normal">(Optional)</span>
+            </label>
             <div className="relative">
-              <Phone className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
+              <Phone className="w-4 h-4 text-stone-400 absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
               <input
                 type="text"
-                value={formData.phone}
-                onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                className="w-full pl-10 pr-3 py-2 text-xs border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                {...register('phone')}
+                className="w-full pl-10 pr-3.5 py-2.5 text-xs bg-stone-50/60 rounded-xl border border-stone-200 focus:ring-stone-900 focus:outline-none focus:ring-1 focus:bg-white text-stone-900 transition-all"
                 placeholder="+1 (555) 012-3456"
               />
             </div>
           </div>
 
           <div>
-            <label className="block text-xs font-semibold text-slate-700 mb-1">
-              Password (Min 6 chars) <span className="text-rose-500">*</span>
+            <label className="block text-xs font-semibold text-stone-700 mb-1.5">
+              Password (Min. 6 characters) <span className="text-rose-500">*</span>
             </label>
             <div className="relative">
-              <Lock className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
+              <Lock className="w-4 h-4 text-stone-400 absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
               <input
                 type="password"
-                required
-                minLength={6}
-                value={formData.password}
-                onChange={(e) => setFormData({ ...formData, password: e.target.value })}
-                className="w-full pl-10 pr-3 py-2 text-xs border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                {...register('password')}
+                className={`w-full pl-10 pr-3.5 py-2.5 text-xs bg-stone-50/60 rounded-xl border ${
+                  errors.password ? 'border-rose-400 focus:ring-rose-500' : 'border-stone-200 focus:ring-stone-900'
+                } focus:outline-none focus:ring-1 focus:bg-white text-stone-900 transition-all`}
                 placeholder="••••••••"
               />
             </div>
+            {errors.password && (
+              <div className="flex items-center space-x-1 text-[11px] text-rose-600 mt-1">
+                <AlertCircle className="w-3 h-3 flex-shrink-0" />
+                <span>{errors.password.message}</span>
+              </div>
+            )}
           </div>
 
           <button
             type="submit"
-            disabled={submitting}
-            className="w-full py-3 px-4 rounded-xl bg-emerald-600 hover:bg-emerald-700 disabled:opacity-60 text-white font-semibold text-xs transition-colors flex items-center justify-center space-x-2 shadow-sm mt-3"
+            disabled={isSubmitting}
+            className="w-full py-2.5 px-4 rounded-xl bg-stone-900 hover:bg-stone-800 disabled:opacity-60 text-white font-medium text-xs transition-all flex items-center justify-center space-x-2 shadow-sm mt-3 active:scale-[0.99]"
           >
-            {submitting ? (
+            {isSubmitting ? (
               <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
             ) : (
               <>
-                <span>Create Store & Continue</span>
+                <span>Register Store & Continue</span>
                 <ArrowRight className="w-3.5 h-3.5" />
               </>
             )}
           </button>
         </form>
 
-        <div className="text-center pt-2 border-t border-slate-100">
-          <p className="text-xs text-slate-500">
+        <div className="text-center pt-3 border-t border-stone-100">
+          <p className="text-xs text-stone-500">
             Already have an account?{' '}
-            <Link href="/login" className="font-semibold text-emerald-600 hover:underline">
+            <Link href="/login" className="font-semibold text-emerald-800 hover:underline">
               Sign in here
             </Link>
           </p>

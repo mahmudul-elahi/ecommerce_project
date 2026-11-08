@@ -1,72 +1,155 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
-import { Users, Plus, Search, Edit2, Trash2, Store, Mail, Phone } from 'lucide-react';
+import React, { useState } from 'react';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { z } from 'zod';
+import { toast } from 'sonner';
+import {
+  Users,
+  Plus,
+  Search,
+  Edit2,
+  Trash2,
+  Store,
+  Mail,
+  Phone,
+  ShieldCheck,
+  AlertCircle,
+  KeyRound,
+  UserCheck,
+} from 'lucide-react';
 import api from '../../../api/client';
-import { useToast } from '../../../context/ToastContext';
 import Modal from '../../../components/common/Modal';
 
+const userSchema = z.object({
+  name: z.string().min(2, 'Name is required'),
+  email: z.string().email('Please enter a valid email address'),
+  password: z.string().optional(),
+  phone: z.string().optional(),
+  role: z.enum(['shop_owner', 'admin']).default('shop_owner'),
+  shop_id: z.string().optional(),
+  shop_name: z.string().optional(),
+  is_active: z.boolean().default(true),
+});
+
 export default function UserManagementPage() {
-  const { addToast } = useToast();
-  const [users, setUsers] = useState([]);
-  const [shops, setShops] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const queryClient = useQueryClient();
+
   const [search, setSearch] = useState('');
 
   // Modal
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingUser, setEditingUser] = useState(null);
-  const [submitting, setSubmitting] = useState(false);
 
-  const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    password: '',
-    phone: '',
-    role: 'shop_owner',
-    shop_id: '',
-    shop_name: '',
-    is_active: true,
-  });
-
-  const fetchUsers = async () => {
-    try {
-      setLoading(true);
+  // TanStack Query: Users
+  const {
+    data: users = [],
+    isLoading,
+    isError,
+  } = useQuery({
+    queryKey: ['admin-users', search],
+    queryFn: async () => {
       const res = await api.get('/admin/users', {
         params: { search: search || undefined, per_page: 50 },
       });
-      setUsers(res.data.data || []);
-    } catch (err) {
-      console.error(err);
-      addToast('Failed to load shop owner accounts', 'error');
-    } finally {
-      setLoading(false);
-    }
-  };
+      return res.data.data || [];
+    },
+  });
 
-  const fetchShops = async () => {
-    try {
+  // TanStack Query: Shops (for assigning store)
+  const { data: shops = [] } = useQuery({
+    queryKey: ['admin-shops-for-users'],
+    queryFn: async () => {
       const res = await api.get('/admin/shops', { params: { per_page: 100 } });
-      setShops(res.data.data || []);
-    } catch (err) {
-      console.error(err);
-    }
-  };
+      return res.data.data || [];
+    },
+  });
 
-  useEffect(() => {
-    fetchShops();
-  }, []);
+  // React Hook Form
+  const {
+    register,
+    handleSubmit,
+    reset,
+    watch,
+    formState: { errors, isSubmitting },
+  } = useForm({
+    resolver: zodResolver(userSchema),
+    defaultValues: {
+      name: '',
+      email: '',
+      password: '',
+      phone: '',
+      role: 'shop_owner',
+      shop_id: '',
+      shop_name: '',
+      is_active: true,
+    },
+  });
 
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      fetchUsers();
-    }, 250);
-    return () => clearTimeout(timer);
-  }, [search]);
+  // Mutation: Save User (Create/Update)
+  const saveMutation = useMutation({
+    mutationFn: async (formData) => {
+      const payload = {
+        name: formData.name,
+        email: formData.email,
+        phone: formData.phone || null,
+        role: formData.role,
+        shop_id: formData.shop_id ? parseInt(formData.shop_id, 10) : null,
+        shop_name: formData.shop_name || null,
+        is_active: formData.is_active,
+      };
+
+      if (formData.password) {
+        payload.password = formData.password;
+      }
+
+      if (editingUser) {
+        return (await api.put(`/admin/users/${editingUser.id}`, payload)).data;
+      } else {
+        return (await api.post('/admin/users', payload)).data;
+      }
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['admin-users'] });
+      queryClient.invalidateQueries({ queryKey: ['admin-dashboard'] });
+      queryClient.invalidateQueries({ queryKey: ['admin-owners'] });
+      setIsModalOpen(false);
+      toast.success(
+        editingUser
+          ? 'Account Updated Successfully'
+          : 'Shop Owner Account Created Successfully'
+      );
+    },
+    onError: (err) => {
+      toast.error('Failed to save user', {
+        description: err.response?.data?.message || 'Please check inputs and try again.',
+      });
+    },
+  });
+
+  // Mutation: Delete User
+  const deleteMutation = useMutation({
+    mutationFn: async (id) => {
+      await api.delete(`/admin/users/${id}`);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['admin-users'] });
+      queryClient.invalidateQueries({ queryKey: ['admin-dashboard'] });
+      queryClient.invalidateQueries({ queryKey: ['admin-owners'] });
+      toast.success('User account removed');
+    },
+    onError: (err) => {
+      toast.error('Failed to delete user', {
+        description: err.response?.data?.message || 'Could not delete user account.',
+      });
+    },
+  });
 
   const handleOpenCreateModal = () => {
     setEditingUser(null);
-    setFormData({
+    reset({
       name: '',
       email: '',
       password: '',
@@ -81,200 +164,178 @@ export default function UserManagementPage() {
 
   const handleOpenEditModal = (user) => {
     setEditingUser(user);
-    setFormData({
+    reset({
       name: user.name || '',
       email: user.email || '',
       password: '',
       phone: user.phone || '',
       role: user.role || 'shop_owner',
-      shop_id: user.shop ? String(user.shop.id) : '',
+      shop_id: user.shop?.id ? String(user.shop.id) : '',
       shop_name: '',
       is_active: user.is_active ?? true,
     });
     setIsModalOpen(true);
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    if (!formData.name || !formData.email) {
-      addToast('Name and Email are required', 'error');
+  const handleDeleteUser = (id, name) => {
+    if (!window.confirm(`Are you sure you want to delete "${name}"?`)) {
       return;
     }
-    if (!editingUser && !formData.password) {
-      addToast('Password is required for new accounts', 'error');
-      return;
-    }
-
-    try {
-      setSubmitting(true);
-      const payload = {
-        ...formData,
-        shop_id: formData.shop_id ? Number(formData.shop_id) : null,
-      };
-      if (!payload.password) delete payload.password;
-
-      if (editingUser) {
-        await api.put(`/admin/users/${editingUser.id}`, payload);
-        addToast('Shop owner account updated successfully', 'success');
-      } else {
-        await api.post('/admin/users', payload);
-        addToast('Shop owner account created successfully', 'success');
-      }
-
-      setIsModalOpen(false);
-      fetchUsers();
-      fetchShops();
-    } catch (err) {
-      console.error(err);
-      addToast(err.response?.data?.message || 'Failed to save account', 'error');
-    } finally {
-      setSubmitting(false);
-    }
+    deleteMutation.mutate(id);
   };
 
-  const handleDelete = async (id, name) => {
-    if (!window.confirm(`Are you sure you want to delete the user "${name}"?`)) return;
-    try {
-      await api.delete(`/admin/users/${id}`);
-      addToast(`Account for "${name}" deleted`, 'success');
-      fetchUsers();
-    } catch (err) {
-      console.error(err);
-      addToast(err.response?.data?.message || 'Failed to delete user', 'error');
+  const onFormSubmit = (data) => {
+    if (!editingUser && !data.password) {
+      toast.error('Password is required for new accounts');
+      return;
     }
+    saveMutation.mutate(data);
   };
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-      {/* Title & Actions */}
-      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-6">
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-10">
+      {/* Editorial Header */}
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between pb-6 border-b border-stone-200 mb-8 gap-4">
         <div>
-          <h1 className="text-2xl font-extrabold text-slate-900 tracking-tight flex items-center space-x-2">
-            <Users className="w-6 h-6 text-purple-600" />
-            <span>Shop Owner Accounts</span>
+          <div className="inline-flex items-center space-x-1.5 px-2.5 py-0.5 rounded-full bg-stone-100 text-stone-700 text-[11px] font-semibold border border-stone-200 mb-2">
+            <Users className="w-3.5 h-3.5 text-stone-700" />
+            <span className="font-mono uppercase tracking-wider">Access & Identity Management</span>
+          </div>
+          <h1 className="text-2xl sm:text-3xl font-bold text-stone-900 tracking-tight">
+            Shop Owner Accounts
           </h1>
-          <p className="text-xs text-slate-500 mt-1">
-            Create, manage, and assign shop owner credentials to manage their stores.
+          <p className="text-xs text-stone-500 mt-1 max-w-xl font-normal">
+            Create and supervise merchant accounts, assign stores, and manage permissions.
           </p>
         </div>
 
         <button
           onClick={handleOpenCreateModal}
-          className="px-4 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-semibold shadow-sm flex items-center space-x-1.5 transition-colors"
+          className="px-4 py-2.5 rounded-xl bg-stone-900 hover:bg-stone-800 text-stone-50 text-xs font-semibold transition-colors shadow-xs flex items-center space-x-1.5"
         >
           <Plus className="w-4 h-4" />
-          <span>Create Shop Owner</span>
+          <span>New Shop Owner</span>
         </button>
       </div>
 
-      {/* Filter / Search Bar */}
-      <div className="bg-white p-4 rounded-2xl border border-slate-200 mb-6 shadow-sm flex items-center justify-between">
+      {/* Filter bar */}
+      <div className="bg-white p-3.5 rounded-2xl border border-stone-200 mb-6 shadow-xs flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
         <div className="relative w-full sm:w-80">
-          <Search className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
+          <Search className="w-4 h-4 text-stone-400 absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
           <input
             type="text"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            placeholder="Search by owner name, email, or phone..."
-            className="w-full pl-10 pr-4 py-2 text-xs border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500"
+            placeholder="Search accounts by name or email..."
+            className="w-full pl-10 pr-4 py-2 text-xs bg-stone-50 border border-stone-200 rounded-xl text-stone-900 placeholder:text-stone-400 focus:outline-none focus:ring-1 focus:ring-stone-900 focus:bg-white"
           />
         </div>
-        <div className="text-xs font-semibold text-slate-500">
-          Total: <span className="text-slate-900 font-bold">{users.length}</span> shop owners
+
+        <div className="text-xs font-mono text-stone-500">
+          Total Accounts: <span className="font-bold text-stone-900">{users.length}</span>
         </div>
       </div>
 
-      {/* Table */}
-      <div className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+      {/* Table Container */}
+      <div className="bg-white rounded-2xl border border-stone-200 shadow-xs overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full text-left text-xs">
-            <thead className="bg-slate-50/80 border-b border-slate-200 text-slate-500 uppercase font-semibold text-[11px] tracking-wider">
+            <thead className="bg-stone-50 border-b border-stone-200 text-stone-500 uppercase font-mono text-[10px] tracking-wider">
               <tr>
-                <th className="px-5 py-3.5">User</th>
-                <th className="px-5 py-3.5">Assigned Store</th>
-                <th className="px-5 py-3.5">Role</th>
-                <th className="px-5 py-3.5">Account Status</th>
+                <th className="px-5 py-3.5">User / Contact</th>
+                <th className="px-5 py-3.5">System Role</th>
+                <th className="px-5 py-3.5">Assigned Shop</th>
+                <th className="px-5 py-3.5">Status</th>
+                <th className="px-5 py-3.5">Registered</th>
                 <th className="px-5 py-3.5 text-right">Actions</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-slate-100">
-              {loading ? (
+            <tbody className="divide-y divide-stone-100">
+              {isLoading ? (
                 <tr>
-                  <td colSpan="5" className="px-5 py-12 text-center text-slate-400">
-                    <div className="w-6 h-6 border-2 border-emerald-600 border-t-transparent rounded-full animate-spin mx-auto mb-2" />
+                  <td colSpan="6" className="px-5 py-12 text-center text-stone-400">
+                    <div className="w-6 h-6 border-2 border-stone-800 border-t-transparent rounded-full animate-spin mx-auto mb-2" />
                     <span>Loading accounts...</span>
                   </td>
                 </tr>
               ) : users.length === 0 ? (
                 <tr>
-                  <td colSpan="5" className="px-5 py-12 text-center text-slate-400">
-                    No shop owner accounts found.
+                  <td colSpan="6" className="px-5 py-16 text-center text-stone-400">
+                    <Users className="w-10 h-10 text-stone-300 mx-auto mb-2" />
+                    <div className="font-semibold text-stone-700 text-sm">No accounts found</div>
+                    <div className="text-xs text-stone-400 mt-0.5">Try a different search or create an account.</div>
                   </td>
                 </tr>
               ) : (
-                users.map((user) => (
-                  <tr key={user.id} className="hover:bg-slate-50/50 transition-colors">
+                users.map((u) => (
+                  <tr key={u.id} className="hover:bg-stone-50/70 transition-colors">
                     <td className="px-5 py-4">
-                      <div className="font-bold text-slate-900 text-sm">{user.name}</div>
-                      <div className="text-[11px] text-slate-400 flex items-center space-x-2 mt-0.5">
-                        <span className="flex items-center space-x-1">
-                          <Mail className="w-3 h-3" />
-                          <span>{user.email}</span>
-                        </span>
-                        {user.phone && (
-                          <span className="flex items-center space-x-1">
-                            <span>•</span>
-                            <Phone className="w-3 h-3" />
-                            <span>{user.phone}</span>
-                          </span>
-                        )}
+                      <div>
+                        <div className="font-bold text-stone-900 text-xs">{u.name}</div>
+                        <div className="text-[11px] text-stone-400 font-mono">{u.email}</div>
+                        {u.phone && <div className="text-[11px] text-stone-500">{u.phone}</div>}
                       </div>
                     </td>
 
                     <td className="px-5 py-4">
-                      {user.shop ? (
-                        <div className="flex items-center space-x-1.5">
-                          <Store className="w-4 h-4 text-emerald-600 flex-shrink-0" />
-                          <span className="font-semibold text-slate-900">{user.shop.name}</span>
+                      <span className={`inline-flex items-center space-x-1 px-2 py-0.5 rounded-md text-[10px] font-mono uppercase border ${
+                        u.role === 'admin'
+                          ? 'bg-stone-900 text-stone-50 border-stone-900'
+                          : 'bg-stone-100 text-stone-700 border-stone-200'
+                      }`}>
+                        {u.role === 'admin' ? (
+                          <>
+                            <ShieldCheck className="w-3 h-3 mr-1" />
+                            <span>Administrator</span>
+                          </>
+                        ) : (
+                          <>
+                            <Store className="w-3 h-3 mr-1" />
+                            <span>Shop Owner</span>
+                          </>
+                        )}
+                      </span>
+                    </td>
+
+                    <td className="px-5 py-4">
+                      {u.shop ? (
+                        <div className="flex items-center space-x-2">
+                          <Store className="w-3.5 h-3.5 text-stone-500" />
+                          <span className="font-semibold text-stone-800">{u.shop.name}</span>
                         </div>
                       ) : (
-                        <span className="text-xs text-amber-600 bg-amber-50 px-2 py-0.5 rounded-md border border-amber-200">
-                          No store assigned
-                        </span>
+                        <span className="text-stone-400 italic">No shop assigned</span>
                       )}
                     </td>
 
                     <td className="px-5 py-4">
-                      <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-purple-50 text-purple-700 border border-purple-200">
-                        {user.role}
+                      <span className={`px-2 py-0.5 rounded-md text-[10px] font-mono uppercase border ${
+                        u.is_active
+                          ? 'bg-emerald-50 text-emerald-800 border-emerald-200'
+                          : 'bg-rose-50 text-rose-800 border-rose-200'
+                      }`}>
+                        {u.is_active ? 'Active' : 'Disabled'}
                       </span>
                     </td>
 
-                    <td className="px-5 py-4">
-                      <span
-                        className={`px-2 py-0.5 rounded-full text-[10px] font-bold ${
-                          user.is_active
-                            ? 'bg-emerald-50 text-emerald-700 border border-emerald-200'
-                            : 'bg-rose-50 text-rose-700 border border-rose-200'
-                        }`}
-                      >
-                        {user.is_active ? 'Active' : 'Suspended'}
-                      </span>
+                    <td className="px-5 py-4 text-stone-500 font-mono text-[11px]">
+                      {new Date(u.created_at).toLocaleDateString()}
                     </td>
 
                     <td className="px-5 py-4 text-right">
                       <div className="flex items-center justify-end space-x-2">
                         <button
-                          onClick={() => handleOpenEditModal(user)}
-                          className="p-1.5 rounded-lg text-slate-400 hover:text-slate-700 hover:bg-slate-100 transition-colors"
-                          title="Edit user"
+                          onClick={() => handleOpenEditModal(u)}
+                          className="p-1.5 rounded-lg text-stone-500 hover:text-stone-900 hover:bg-stone-100 transition-colors"
+                          title="Edit User"
                         >
                           <Edit2 className="w-4 h-4" />
                         </button>
                         <button
-                          onClick={() => handleDelete(user.id, user.name)}
-                          className="p-1.5 rounded-lg text-slate-400 hover:text-rose-600 hover:bg-rose-50 transition-colors"
-                          title="Delete user"
+                          onClick={() => handleDeleteUser(u.id, u.name)}
+                          disabled={deleteMutation.isPending}
+                          className="p-1.5 rounded-lg text-stone-400 hover:text-rose-600 hover:bg-rose-50 transition-colors"
+                          title="Delete User"
                         >
                           <Trash2 className="w-4 h-4" />
                         </button>
@@ -288,95 +349,121 @@ export default function UserManagementPage() {
         </div>
       </div>
 
-      {/* Modal for Create / Edit User */}
+      {/* Modal: Create/Edit User */}
       <Modal
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
-        title={editingUser ? 'Edit Shop Owner Account' : 'Create New Shop Owner Account'}
+        title={editingUser ? `Edit Account: ${editingUser.name}` : 'Provision New Shop Owner Account'}
       >
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <div>
-            <label className="block text-xs font-semibold text-slate-700 mb-1">
-              Full Name <span className="text-rose-500">*</span>
-            </label>
-            <input
-              type="text"
-              required
-              value={formData.name}
-              onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-              className="w-full px-3 py-2 text-xs border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500"
-              placeholder="e.g. Alex Rivera"
-            />
-          </div>
-
-          <div>
-            <label className="block text-xs font-semibold text-slate-700 mb-1">
-              Email Address <span className="text-rose-500">*</span>
-            </label>
-            <input
-              type="email"
-              required
-              value={formData.email}
-              onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-              className="w-full px-3 py-2 text-xs border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500"
-              placeholder="alex@ecommerce.com"
-            />
-          </div>
-
-          <div>
-            <label className="block text-xs font-semibold text-slate-700 mb-1">
-              {editingUser ? 'New Password (Leave blank to keep unchanged)' : 'Password *'}
-            </label>
-            <input
-              type="password"
-              minLength={6}
-              required={!editingUser}
-              value={formData.password}
-              onChange={(e) => setFormData({ ...formData, password: e.target.value })}
-              className="w-full px-3 py-2 text-xs border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500"
-              placeholder={editingUser ? '••••••••' : 'Minimum 6 characters'}
-            />
-          </div>
-
-          <div>
-            <label className="block text-xs font-semibold text-slate-700 mb-1">Phone Number</label>
-            <input
-              type="text"
-              value={formData.phone}
-              onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-              className="w-full px-3 py-2 text-xs border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500"
-              placeholder="+1 (555) 234-5678"
-            />
-          </div>
-
-          <div>
-            <label className="block text-xs font-semibold text-slate-700 mb-1">Assign to Existing Store</label>
-            <select
-              value={formData.shop_id}
-              onChange={(e) => setFormData({ ...formData, shop_id: e.target.value, shop_name: '' })}
-              className="w-full px-3 py-2 text-xs border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500 bg-white"
-            >
-              <option value="">-- None (Or enter new store name below) --</option>
-              {shops.map((s) => (
-                <option key={s.id} value={s.id}>
-                  {s.name} {s.owner ? `(Current owner: ${s.owner.name})` : '(No owner)'}
-                </option>
-              ))}
-            </select>
-          </div>
-
-          {!formData.shop_id && !editingUser && (
+        <form onSubmit={handleSubmit(onFormSubmit)} className="space-y-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
-              <label className="block text-xs font-semibold text-slate-700 mb-1">
-                Or Automatically Create a New Store for this Owner:
+              <label className="block text-xs font-semibold text-stone-700 mb-1">
+                Full Name <span className="text-rose-500">*</span>
               </label>
               <input
                 type="text"
-                value={formData.shop_name}
-                onChange={(e) => setFormData({ ...formData, shop_name: e.target.value })}
-                className="w-full px-3 py-2 text-xs border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500"
-                placeholder="e.g. Apex Tech Store"
+                {...register('name')}
+                placeholder="e.g. Eleanor Vance"
+                className={`w-full px-3 py-2 text-xs bg-white rounded-xl border ${
+                  errors.name ? 'border-rose-400' : 'border-stone-200'
+                } focus:outline-none focus:ring-1 focus:ring-stone-900`}
               />
+              {errors.name && (
+                <span className="text-[10px] text-rose-500 mt-1 block">{errors.name.message}</span>
+              )}
+            </div>
+
+            <div>
+              <label className="block text-xs font-semibold text-stone-700 mb-1">
+                Email Address <span className="text-rose-500">*</span>
+              </label>
+              <input
+                type="email"
+                {...register('email')}
+                placeholder="eleanor@domain.com"
+                className={`w-full px-3 py-2 text-xs bg-white rounded-xl border ${
+                  errors.email ? 'border-rose-400' : 'border-stone-200'
+                } focus:outline-none focus:ring-1 focus:ring-stone-900`}
+              />
+              {errors.email && (
+                <span className="text-[10px] text-rose-500 mt-1 block">{errors.email.message}</span>
+              )}
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div>
+              <label className="block text-xs font-semibold text-stone-700 mb-1">
+                Password {editingUser && '(Leave blank to keep current)'}
+              </label>
+              <input
+                type="password"
+                {...register('password')}
+                placeholder="••••••••"
+                className="w-full px-3 py-2 text-xs bg-white rounded-xl border border-stone-200 focus:outline-none focus:ring-1 focus:ring-stone-900"
+              />
+            </div>
+
+            <div>
+              <label className="block text-xs font-semibold text-stone-700 mb-1">
+                Contact Phone
+              </label>
+              <input
+                type="text"
+                {...register('phone')}
+                placeholder="+1 (555) 000-0000"
+                className="w-full px-3 py-2 text-xs bg-white rounded-xl border border-stone-200 focus:outline-none focus:ring-1 focus:ring-stone-900"
+              />
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div>
+              <label className="block text-xs font-semibold text-stone-700 mb-1">
+                System Role
+              </label>
+              <select
+                {...register('role')}
+                className="w-full px-3 py-2 text-xs bg-white rounded-xl border border-stone-200 focus:outline-none focus:ring-1 focus:ring-stone-900"
+              >
+                <option value="shop_owner">Shop Owner</option>
+                <option value="admin">Platform Administrator</option>
+              </select>
+            </div>
+
+            <div>
+              <label className="block text-xs font-semibold text-stone-700 mb-1">
+                Assign Existing Shop
+              </label>
+              <select
+                {...register('shop_id')}
+                className="w-full px-3 py-2 text-xs bg-white rounded-xl border border-stone-200 focus:outline-none focus:ring-1 focus:ring-stone-900"
+              >
+                <option value="">No existing shop (or create new below)</option>
+                {shops.map((s) => (
+                  <option key={s.id} value={s.id}>
+                    {s.name}
+                  </option>
+                ))}
+              </select>
+            </div>
+          </div>
+
+          {!editingUser && (
+            <div>
+              <label className="block text-xs font-semibold text-stone-700 mb-1">
+                Or Create Initial Store for this Merchant
+              </label>
+              <input
+                type="text"
+                {...register('shop_name')}
+                placeholder="e.g. Eleanor's Curated Living"
+                className="w-full px-3 py-2 text-xs bg-white rounded-xl border border-stone-200 focus:outline-none focus:ring-1 focus:ring-stone-900"
+              />
+              <span className="text-[10px] text-stone-500 mt-1 block">
+                If specified, a brand new storefront will be automatically created and assigned.
+              </span>
             </div>
           )}
 
@@ -384,32 +471,32 @@ export default function UserManagementPage() {
             <input
               type="checkbox"
               id="is_active_user"
-              checked={formData.is_active}
-              onChange={(e) => setFormData({ ...formData, is_active: e.target.checked })}
-              className="rounded text-emerald-600 focus:ring-emerald-500 h-4 w-4"
+              {...register('is_active')}
+              className="rounded border-stone-300 text-stone-900 focus:ring-stone-900"
             />
-            <label htmlFor="is_active_user" className="text-xs text-slate-700 font-semibold cursor-pointer">
-              Active Account (Allowed to sign in)
+            <label htmlFor="is_active_user" className="text-xs font-medium text-stone-700">
+              Account Active & Permitted to Sign In
             </label>
           </div>
 
-          <div className="pt-3 border-t border-slate-100 flex items-center justify-end space-x-2">
+          <div className="pt-4 border-t border-stone-100 flex items-center justify-end space-x-2">
             <button
               type="button"
               onClick={() => setIsModalOpen(false)}
-              className="px-4 py-2 rounded-xl text-xs font-semibold text-slate-600 hover:bg-slate-100 transition-colors"
+              className="px-4 py-2 rounded-xl text-xs font-medium text-stone-600 hover:bg-stone-100"
             >
               Cancel
             </button>
             <button
               type="submit"
-              disabled={submitting}
-              className="px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 disabled:opacity-60 text-white text-xs font-semibold transition-colors shadow-sm flex items-center space-x-1.5"
+              disabled={isSubmitting || saveMutation.isPending}
+              className="px-4 py-2 rounded-xl bg-stone-900 hover:bg-stone-800 text-stone-50 text-xs font-semibold shadow-xs disabled:opacity-50"
             >
-              {submitting ? (
-                <div className="w-3.5 h-3.5 border-2 border-white border-t-transparent rounded-full animate-spin" />
-              ) : null}
-              <span>{editingUser ? 'Save Changes' : 'Create Account'}</span>
+              {isSubmitting || saveMutation.isPending
+                ? 'Saving...'
+                : editingUser
+                ? 'Update Account'
+                : 'Create Account'}
             </button>
           </div>
         </form>

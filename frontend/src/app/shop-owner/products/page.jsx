@@ -1,7 +1,12 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import Link from 'next/link';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { z } from 'zod';
+import { toast } from 'sonner';
 import {
   Package,
   Plus,
@@ -10,59 +15,72 @@ import {
   Trash2,
   RotateCcw,
   ExternalLink,
+  Sparkles,
+  AlertCircle,
+  Tag,
+  CheckCircle2,
+  XCircle,
 } from 'lucide-react';
 import api from '../../../api/client';
-import { useToast } from '../../../context/ToastContext';
 import { useAuth } from '../../../context/AuthContext';
 import Modal from '../../../components/common/Modal';
 
+const customizeSchema = z.object({
+  custom_price: z.string().optional(),
+  custom_title: z.string().optional(),
+  custom_description: z.string().optional(),
+  custom_thumbnail: z.string().optional(),
+  clear_custom_thumbnail: z.boolean().default(false),
+  stock: z.coerce.number().min(0, 'Stock cannot be negative'),
+  is_active: z.boolean().default(true),
+});
+
 export default function MyProductsPage() {
-  const { addToast } = useToast();
   const { shop } = useAuth();
-  const [listings, setListings] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const queryClient = useQueryClient();
   const [search, setSearch] = useState('');
 
-  // Customize Modal
+  // Modal State
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedListing, setSelectedListing] = useState(null);
-  const [submitting, setSubmitting] = useState(false);
 
-  const [formData, setFormData] = useState({
-    custom_price: '',
-    custom_title: '',
-    custom_description: '',
-    custom_thumbnail: '',
-    clear_custom_thumbnail: false,
-    stock: 100,
-    is_active: true,
-  });
-
-  const fetchListings = async () => {
-    try {
-      setLoading(true);
+  // TanStack React Query: Listings
+  const {
+    data: listings = [],
+    isLoading,
+  } = useQuery({
+    queryKey: ['my-products', search],
+    queryFn: async () => {
       const res = await api.get('/shop-owner/products', {
         params: { search: search || undefined, per_page: 50 },
       });
-      setListings(res.data.data || []);
-    } catch (err) {
-      console.error(err);
-      addToast('Failed to load shop listings', 'error');
-    } finally {
-      setLoading(false);
-    }
-  };
+      return res.data.data || [];
+    },
+  });
 
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      fetchListings();
-    }, 250);
-    return () => clearTimeout(timer);
-  }, [search]);
+  // React Hook Form for Customize Modal
+  const {
+    register,
+    handleSubmit,
+    reset,
+    watch,
+    formState: { errors, isSubmitting },
+  } = useForm({
+    resolver: zodResolver(customizeSchema),
+    defaultValues: {
+      custom_price: '',
+      custom_title: '',
+      custom_description: '',
+      custom_thumbnail: '',
+      clear_custom_thumbnail: false,
+      stock: 100,
+      is_active: true,
+    },
+  });
 
   const handleOpenEditModal = (listing) => {
     setSelectedListing(listing);
-    setFormData({
+    reset({
       custom_price: listing.custom_price !== null ? String(listing.custom_price) : '',
       custom_title: listing.custom_title || '',
       custom_description: listing.custom_description || '',
@@ -74,163 +92,183 @@ export default function MyProductsPage() {
     setIsModalOpen(true);
   };
 
-  const handleSaveListing = async (e) => {
-    e.preventDefault();
-    if (!selectedListing) return;
-
-    try {
-      setSubmitting(true);
-      const payload = {
-        custom_price: formData.custom_price !== '' ? parseFloat(formData.custom_price) : null,
-        custom_title: formData.custom_title || null,
-        custom_description: formData.custom_description || null,
-        custom_thumbnail: formData.custom_thumbnail || null,
-        clear_custom_thumbnail: formData.clear_custom_thumbnail,
-        stock: parseInt(formData.stock || 0, 10),
-        is_active: formData.is_active,
-      };
-
-      await api.put(`/shop-owner/products/${selectedListing.id}`, payload);
-      addToast('Shop product customizations updated!', 'success');
+  // Mutation: Save Customizations
+  const saveMutation = useMutation({
+    mutationFn: async ({ id, payload }) => {
+      const res = await api.put(`/shop-owner/products/${id}`, payload);
+      return res.data;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['my-products'] });
+      toast.success('Customizations Saved', {
+        description: 'Shop pricing and product details updated successfully.',
+      });
       setIsModalOpen(false);
-      fetchListings();
-    } catch (err) {
+    },
+    onError: (err) => {
       console.error(err);
-      addToast(err.response?.data?.message || 'Failed to update listing', 'error');
-    } finally {
-      setSubmitting(false);
-    }
-  };
+      toast.error('Update Failed', {
+        description: err.response?.data?.message || 'Could not update shop listing.',
+      });
+    },
+  });
 
-  const handleResetToCatalog = async () => {
-    if (!selectedListing) return;
-    if (!window.confirm('Reset all shop-specific price, title, and thumbnail customizations back to shared catalog defaults?'))
-      return;
-
-    try {
-      setSubmitting(true);
-      await api.put(`/shop-owner/products/${selectedListing.id}`, { reset_to_catalog: true });
-      addToast('Listing restored to shared catalog defaults', 'success');
+  // Mutation: Reset to Catalog
+  const resetMutation = useMutation({
+    mutationFn: async (id) => {
+      const res = await api.put(`/shop-owner/products/${id}`, { reset_to_catalog: true });
+      return res.data;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['my-products'] });
+      toast.success('Restored to Catalog', {
+        description: 'Listing reverted to shared catalog default title, price, and thumbnail.',
+      });
       setIsModalOpen(false);
-      fetchListings();
-    } catch (err) {
+    },
+    onError: (err) => {
       console.error(err);
-      addToast('Failed to reset listing', 'error');
-    } finally {
-      setSubmitting(false);
-    }
-  };
+      toast.error('Reset Failed', {
+        description: err.response?.data?.message || 'Could not reset listing.',
+      });
+    },
+  });
 
-  const handleRemoveFromShop = async (id, title) => {
-    if (!window.confirm(`Remove "${title}" from your store? (The product will remain safe in the shared catalog)`))
-      return;
-
-    try {
+  // Mutation: Remove from Shop
+  const removeMutation = useMutation({
+    mutationFn: async (id) => {
       await api.delete(`/shop-owner/products/${id}`);
-      addToast(`"${title}" removed from your shop`, 'success');
-      fetchListings();
-    } catch (err) {
+    },
+    onSuccess: (_, id) => {
+      queryClient.invalidateQueries({ queryKey: ['my-products'] });
+      toast.success('Product Removed', {
+        description: 'The product was removed from your store but remains in the global catalog.',
+      });
+    },
+    onError: (err) => {
       console.error(err);
-      addToast('Failed to remove product from shop', 'error');
-    }
+      toast.error('Remove Failed', {
+        description: err.response?.data?.message || 'Could not remove product from shop.',
+      });
+    },
+  });
+
+  const onModalSubmit = (data) => {
+    if (!selectedListing) return;
+    const payload = {
+      custom_price: data.custom_price !== '' ? parseFloat(data.custom_price) : null,
+      custom_title: data.custom_title || null,
+      custom_description: data.custom_description || null,
+      custom_thumbnail: data.custom_thumbnail || null,
+      clear_custom_thumbnail: data.clear_custom_thumbnail,
+      stock: parseInt(data.stock, 10),
+      is_active: data.is_active,
+    };
+    saveMutation.mutate({ id: selectedListing.id, payload });
   };
+
+  const currentPriceInput = watch('custom_price');
+  const basePrice = selectedListing?.product?.base_price || 0;
+  const marginDiff = currentPriceInput !== '' && !isNaN(parseFloat(currentPriceInput))
+    ? (parseFloat(currentPriceInput) - basePrice).toFixed(2)
+    : null;
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 bg-paper">
       {/* Title & Actions */}
-      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-6">
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 pb-6 border-b border-stone-200 mb-6">
         <div>
-          <div className="inline-flex items-center space-x-1.5 px-2.5 py-0.5 rounded-full bg-emerald-100 text-emerald-800 text-[11px] font-semibold mb-1">
-            <Package className="w-3 h-3" />
-            <span>Storefront Inventory</span>
+          <div className="inline-flex items-center space-x-1 px-2 py-0.5 rounded-md bg-stone-100 border border-stone-200 text-stone-700 text-[10px] font-mono uppercase tracking-wide mb-1.5">
+            <Package className="w-3 h-3 text-emerald-800" />
+            <span>Storefront Merchandising</span>
           </div>
-          <h1 className="text-2xl font-extrabold text-slate-900 tracking-tight">Manage My Shop Listings</h1>
-          <p className="text-xs text-slate-500 mt-1">
-            Override prices, details, and thumbnails exclusively for your shop. Customers only see products listed here.
+          <h1 className="text-xl font-bold text-stone-900 tracking-tight">Active Shop Inventory</h1>
+          <p className="text-xs text-stone-500 mt-0.5">
+            Set custom retail margins, rename listings, or override imagery exclusively for your store.
           </p>
         </div>
 
-        <div className="flex items-center space-x-2">
+        <div className="flex items-center space-x-2 self-start sm:self-auto">
           {shop?.slug && (
             <Link
               href={`/shop/${shop.slug}`}
               target="_blank"
-              className="px-3.5 py-2 rounded-xl bg-white border border-slate-200 text-slate-700 hover:bg-slate-50 text-xs font-semibold shadow-sm flex items-center space-x-1.5 transition-colors"
+              className="px-3.5 py-1.5 rounded-xl bg-white border border-stone-200 text-stone-700 hover:bg-stone-50 text-xs font-semibold shadow-subtle flex items-center space-x-1.5 transition-colors"
             >
               <span>View Live Store</span>
-              <ExternalLink className="w-3.5 h-3.5" />
+              <ExternalLink className="w-3.5 h-3.5 text-stone-400" />
             </Link>
           )}
 
           <Link
             href="/shop-owner/catalog"
-            className="px-4 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-semibold shadow-sm flex items-center space-x-1.5 transition-colors"
+            className="px-3.5 py-1.5 rounded-xl bg-stone-900 hover:bg-stone-800 text-white text-xs font-semibold shadow-subtle flex items-center space-x-1.5 transition-colors active:scale-[0.99]"
           >
-            <Plus className="w-4 h-4" />
+            <Plus className="w-3.5 h-3.5" />
             <span>Add from Shared Catalog</span>
           </Link>
         </div>
       </div>
 
       {/* Filter / Search Bar */}
-      <div className="bg-white p-4 rounded-2xl border border-slate-200 mb-6 shadow-sm flex items-center justify-between">
+      <div className="bg-white p-3.5 rounded-xl border border-stone-200 mb-6 shadow-subtle flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2.5">
         <div className="relative w-full sm:w-80">
-          <Search className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
+          <Search className="w-3.5 h-3.5 text-stone-400 absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none" />
           <input
             type="text"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            placeholder="Search your listed products..."
-            className="w-full pl-10 pr-4 py-2 text-xs border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500"
+            placeholder="Filter listed products..."
+            className="w-full pl-9 pr-3 py-1.5 text-xs bg-stone-50 border border-stone-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-stone-900 focus:bg-white text-stone-900"
           />
         </div>
-        <div className="text-xs font-semibold text-slate-500">
-          Listed in store: <span className="text-slate-900 font-bold">{listings.length}</span> products
+        <div className="text-xs font-mono text-stone-500">
+          Listed in store: <span className="text-stone-900 font-bold">{listings.length}</span> products
         </div>
       </div>
 
       {/* Listings Table */}
-      <div className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+      <div className="bg-white rounded-2xl border border-stone-200 shadow-subtle overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full text-left text-xs">
-            <thead className="bg-slate-50/80 border-b border-slate-200 text-slate-500 uppercase font-semibold text-[11px] tracking-wider">
+            <thead className="bg-stone-50 border-b border-stone-200 text-stone-500 uppercase font-mono text-[10px] tracking-wider">
               <tr>
-                <th className="px-5 py-3.5">Product & Thumbnail</th>
-                <th className="px-5 py-3.5">Store Price</th>
-                <th className="px-5 py-3.5">Catalog Base Price</th>
-                <th className="px-5 py-3.5">Customizations</th>
-                <th className="px-5 py-3.5">Stock</th>
-                <th className="px-5 py-3.5">Status</th>
-                <th className="px-5 py-3.5 text-right">Actions</th>
+                <th className="px-5 py-3">Product / Thumbnail</th>
+                <th className="px-5 py-3">Your Retail Price</th>
+                <th className="px-5 py-3">Catalog Base</th>
+                <th className="px-5 py-3">Customizations</th>
+                <th className="px-5 py-3">Stock</th>
+                <th className="px-5 py-3">Visibility</th>
+                <th className="px-5 py-3 text-right">Actions</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-slate-100">
-              {loading ? (
+            <tbody className="divide-y divide-stone-100">
+              {isLoading ? (
                 <tr>
-                  <td colSpan="7" className="px-5 py-12 text-center text-slate-400">
-                    <div className="w-6 h-6 border-2 border-emerald-600 border-t-transparent rounded-full animate-spin mx-auto mb-2" />
-                    <span>Loading your shop listings...</span>
+                  <td colSpan="7" className="px-5 py-12 text-center text-stone-400">
+                    <div className="w-6 h-6 border-2 border-stone-800 border-t-transparent rounded-full animate-spin mx-auto mb-2" />
+                    <span>Loading inventory...</span>
                   </td>
                 </tr>
               ) : listings.length === 0 ? (
                 <tr>
-                  <td colSpan="7" className="px-5 py-12 text-center text-slate-500">
-                    <Package className="w-10 h-10 text-slate-300 mx-auto mb-2" />
-                    <div className="font-semibold text-slate-700">No products assigned to your shop yet.</div>
-                    <p className="text-xs text-slate-400 mt-1">Browse the shared catalog to select and list products.</p>
+                  <td colSpan="7" className="px-5 py-14 text-center text-stone-500">
+                    <Package className="w-10 h-10 text-stone-300 mx-auto mb-2" />
+                    <div className="font-semibold text-stone-800">No products assigned to your shop yet.</div>
+                    <p className="text-xs text-stone-400 mt-0.5">Browse the shared catalog to assign and retail items.</p>
                     <Link
                       href="/shop-owner/catalog"
-                      className="mt-3 inline-flex items-center space-x-1 text-xs font-bold text-emerald-600 hover:underline"
+                      className="mt-3 inline-flex items-center space-x-1 text-xs font-semibold text-emerald-800 hover:underline"
                     >
-                      <span>Go to Shared Catalog →</span>
+                      <span>Explore Shared Catalog →</span>
                     </Link>
                   </td>
                 </tr>
               ) : (
                 listings.map((item) => (
-                  <tr key={item.id} className="hover:bg-slate-50/50 transition-colors">
+                  <tr key={item.id} className="hover:bg-stone-50/70 transition-colors">
                     {/* Thumbnail & Title */}
-                    <td className="px-5 py-4">
+                    <td className="px-5 py-3.5">
                       <div className="flex items-center space-x-3">
                         <div className="relative flex-shrink-0">
                           <img
@@ -239,7 +277,7 @@ export default function MyProductsPage() {
                               'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=100'
                             }
                             alt={item.effective_title}
-                            className="w-12 h-12 rounded-xl object-cover bg-slate-100 border border-slate-200"
+                            className="w-11 h-11 rounded-lg object-cover bg-stone-100 border border-stone-200"
                             onError={(e) => {
                               e.target.src =
                                 'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=100';
@@ -247,107 +285,110 @@ export default function MyProductsPage() {
                           />
                           {item.custom_thumbnail && (
                             <span
-                              className="absolute -top-1 -right-1 w-3.5 h-3.5 bg-emerald-600 rounded-full border-2 border-white"
+                              className="absolute -top-1 -right-1 w-3 h-3 bg-emerald-700 rounded-full border border-white"
                               title="Custom store thumbnail applied"
                             />
                           )}
                         </div>
                         <div>
-                          <div className="font-bold text-slate-900 text-sm line-clamp-1">{item.effective_title}</div>
+                          <div className="font-bold text-stone-900 text-xs line-clamp-1">{item.effective_title}</div>
                           {item.custom_title && (
-                            <div className="text-[11px] text-slate-400 line-clamp-1">
+                            <div className="text-[10px] text-stone-400 font-mono line-clamp-1">
                               Catalog title: {item.product?.name}
                             </div>
                           )}
-                          <div className="text-[10px] text-emerald-700 font-medium mt-0.5">
-                            {item.product?.category || 'General'}
+                          <div className="text-[10px] font-mono uppercase text-stone-400 mt-0.5">
+                            {item.product?.category || 'General'} • SKU: {item.product?.sku || 'N/A'}
                           </div>
                         </div>
                       </div>
                     </td>
 
                     {/* Store Price */}
-                    <td className="px-5 py-4">
-                      <div className="font-extrabold text-sm text-slate-900">
+                    <td className="px-5 py-3.5 font-mono">
+                      <div className="font-bold text-xs text-stone-900">
                         ${Number(item.effective_price).toFixed(2)}
                       </div>
                       {item.custom_price !== null && (
-                        <span className="text-[10px] font-bold text-emerald-700 bg-emerald-50 px-1.5 py-0.5 rounded border border-emerald-200 inline-block mt-0.5">
-                          Customized
+                        <span className="text-[10px] font-bold text-emerald-800 bg-emerald-50 px-1.5 py-0.2 rounded border border-emerald-200 inline-block mt-0.5">
+                          Custom Markup
                         </span>
                       )}
                     </td>
 
                     {/* Catalog Base Price */}
-                    <td className="px-5 py-4 text-slate-500 font-medium">
+                    <td className="px-5 py-3.5 text-stone-500 font-mono text-xs">
                       ${Number(item.product?.base_price || 0).toFixed(2)}
                     </td>
 
                     {/* Customizations Badges */}
-                    <td className="px-5 py-4">
+                    <td className="px-5 py-3.5">
                       {item.is_customized ? (
-                        <div className="flex flex-wrap gap-1">
+                        <div className="flex flex-wrap gap-1 font-mono text-[10px]">
                           {item.custom_price !== null && (
-                            <span className="px-2 py-0.5 rounded bg-emerald-50 text-emerald-700 border border-emerald-200 text-[10px] font-semibold">
+                            <span className="px-1.5 py-0.5 rounded bg-emerald-50 text-emerald-800 border border-emerald-200">
                               Price
                             </span>
                           )}
                           {item.custom_title && (
-                            <span className="px-2 py-0.5 rounded bg-sky-50 text-sky-700 border border-sky-200 text-[10px] font-semibold">
+                            <span className="px-1.5 py-0.5 rounded bg-stone-100 text-stone-700 border border-stone-200">
                               Title
                             </span>
                           )}
                           {item.custom_thumbnail && (
-                            <span className="px-2 py-0.5 rounded bg-purple-50 text-purple-700 border border-purple-200 text-[10px] font-semibold">
-                              Thumbnail
+                            <span className="px-1.5 py-0.5 rounded bg-stone-100 text-stone-700 border border-stone-200">
+                              Image
                             </span>
                           )}
                           {item.custom_description && (
-                            <span className="px-2 py-0.5 rounded bg-amber-50 text-amber-700 border border-amber-200 text-[10px] font-semibold">
-                              Details
+                            <span className="px-1.5 py-0.5 rounded bg-amber-50 text-amber-800 border border-amber-200">
+                              Desc
                             </span>
                           )}
                         </div>
                       ) : (
-                        <span className="text-slate-400 text-xs">Catalog Defaults</span>
+                        <span className="text-stone-400 font-mono text-[11px]">Catalog Default</span>
                       )}
                     </td>
 
                     {/* Stock */}
-                    <td className="px-5 py-4">
-                      <span className="font-bold text-slate-800">{item.stock}</span> units
+                    <td className="px-5 py-3.5 font-mono text-xs text-stone-700">
+                      {item.stock}
                     </td>
 
                     {/* Status */}
-                    <td className="px-5 py-4">
+                    <td className="px-5 py-3.5">
                       <span
-                        className={`px-2 py-0.5 rounded-full text-[10px] font-bold ${
+                        className={`px-2 py-0.5 rounded text-[10px] font-mono ${
                           item.is_active
-                            ? 'bg-emerald-50 text-emerald-700 border border-emerald-200'
-                            : 'bg-slate-100 text-slate-500'
+                            ? 'bg-emerald-50 text-emerald-800 border border-emerald-200'
+                            : 'bg-stone-100 text-stone-500 border border-stone-200'
                         }`}
                       >
-                        {item.is_active ? 'Visible' : 'Hidden'}
+                        {item.is_active ? 'Live' : 'Draft'}
                       </span>
                     </td>
 
                     {/* Actions */}
-                    <td className="px-5 py-4 text-right">
-                      <div className="flex items-center justify-end space-x-2">
+                    <td className="px-5 py-3.5 text-right">
+                      <div className="flex items-center justify-end space-x-1.5">
                         <button
                           onClick={() => handleOpenEditModal(item)}
-                          className="px-2.5 py-1.5 rounded-lg text-emerald-700 hover:bg-emerald-50 border border-emerald-200 text-xs font-semibold transition-colors flex items-center space-x-1"
-                          title="Set or modify product prices, details, and thumbnails"
+                          className="px-2.5 py-1 rounded-lg text-stone-800 hover:bg-stone-100 border border-stone-200 text-xs font-semibold transition-colors flex items-center space-x-1"
                         >
-                          <Edit2 className="w-3.5 h-3.5" />
+                          <Edit2 className="w-3 h-3 text-stone-500" />
                           <span>Customize</span>
                         </button>
                         <button
-                          onClick={() => handleRemoveFromShop(item.id, item.effective_title)}
-                          className="p-1.5 rounded-lg text-slate-400 hover:text-rose-600 hover:bg-rose-50 transition-colors"
-                          title="Remove from your shop"
+                          onClick={() => {
+                            if (window.confirm(`Remove "${item.effective_title}" from your storefront?`)) {
+                              removeMutation.mutate(item.id);
+                            }
+                          }}
+                          className="p-1.5 rounded-lg text-stone-400 hover:text-rose-600 hover:bg-rose-50 transition-colors"
+                          title="Remove from shop"
                         >
-                          <Trash2 className="w-4 h-4" />
+                          <Trash2 className="w-3.5 h-3.5" />
                         </button>
                       </div>
                     </td>
@@ -359,139 +400,147 @@ export default function MyProductsPage() {
         </div>
       </div>
 
-      {/* Modal: Set or Modify Product Prices, Details, and Thumbnails */}
+      {/* Modal: Customize Listing */}
       <Modal
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
-        title={`Customize Store Listing: ${selectedListing?.product?.name || ''}`}
-        maxWidth="max-w-2xl"
+        title={`Customize Store Listing`}
+        maxWidth="max-w-xl"
       >
-        <form onSubmit={handleSaveListing} className="space-y-4">
-          <div className="bg-slate-50 p-3.5 rounded-xl border border-slate-200 text-xs text-slate-600 flex items-center justify-between">
+        <form onSubmit={handleSubmit(onModalSubmit)} className="space-y-4">
+          <div className="bg-stone-50 p-3 rounded-xl border border-stone-200 text-xs flex items-center justify-between">
             <div>
-              <span className="font-bold text-slate-800">Shared Catalog Base Price:</span>{' '}
-              <span className="font-bold text-emerald-700">
-                ${Number(selectedListing?.product?.base_price || 0).toFixed(2)}
-              </span>
+              <span className="text-stone-500">Shared Catalog Base Price:</span>{' '}
+              <span className="font-mono font-bold text-stone-900">${Number(basePrice).toFixed(2)}</span>
             </div>
             {selectedListing?.is_customized && (
               <button
                 type="button"
-                onClick={handleResetToCatalog}
-                className="text-xs font-semibold text-rose-600 hover:underline flex items-center space-x-1"
+                onClick={() => {
+                  if (window.confirm('Reset all customizations back to shared catalog defaults?')) {
+                    resetMutation.mutate(selectedListing.id);
+                  }
+                }}
+                className="text-[11px] font-semibold text-rose-600 hover:underline flex items-center space-x-1"
               >
-                <RotateCcw className="w-3.5 h-3.5" />
-                <span>Reset to Catalog Defaults</span>
+                <RotateCcw className="w-3 h-3" />
+                <span>Reset to Catalog</span>
               </button>
             )}
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <div>
-              <label className="block text-xs font-semibold text-slate-700 mb-1">
-                Shop-Specific Price ($)
+              <label className="block text-xs font-semibold text-stone-700 mb-1">
+                Store Retail Price ($)
               </label>
               <input
                 type="number"
                 step="0.01"
                 min="0"
-                value={formData.custom_price}
-                onChange={(e) => setFormData({ ...formData, custom_price: e.target.value })}
-                className="w-full px-3 py-2 text-xs border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500"
-                placeholder={`Default is $${Number(selectedListing?.product?.base_price || 0).toFixed(2)}`}
+                {...register('custom_price')}
+                className="w-full px-3 py-2 text-xs bg-stone-50 rounded-xl border border-stone-200 focus:outline-none focus:ring-1 focus:ring-stone-900 focus:bg-white text-stone-900 font-mono"
+                placeholder={basePrice ? String(basePrice) : 'Leave blank for default'}
               />
-              <span className="text-[10px] text-slate-400 mt-1 block">
-                Leave empty to inherit catalog base price.
-              </span>
+              {marginDiff !== null && (
+                <div className="text-[10px] font-mono mt-1 text-stone-500">
+                  Margin: <span className={Number(marginDiff) >= 0 ? 'text-emerald-700 font-bold' : 'text-rose-600 font-bold'}>
+                    {Number(marginDiff) >= 0 ? `+$${marginDiff}` : `-$${Math.abs(Number(marginDiff)).toFixed(2)}`}
+                  </span>
+                </div>
+              )}
             </div>
 
             <div>
-              <label className="block text-xs font-semibold text-slate-700 mb-1">
-                Store Stock Quantity
+              <label className="block text-xs font-semibold text-stone-700 mb-1">
+                Store Inventory Units
               </label>
               <input
                 type="number"
                 min="0"
-                value={formData.stock}
-                onChange={(e) => setFormData({ ...formData, stock: e.target.value })}
-                className="w-full px-3 py-2 text-xs border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500"
-                placeholder="100"
+                {...register('stock')}
+                className={`w-full px-3 py-2 text-xs bg-stone-50 rounded-xl border ${
+                  errors.stock ? 'border-rose-400' : 'border-stone-200'
+                } focus:outline-none focus:ring-1 focus:ring-stone-900 focus:bg-white text-stone-900 font-mono`}
               />
+              {errors.stock && (
+                <span className="text-[11px] text-rose-600 mt-1">{errors.stock.message}</span>
+              )}
             </div>
           </div>
 
           <div>
-            <label className="block text-xs font-semibold text-slate-700 mb-1">
-              Shop-Specific Product Title (Override)
+            <label className="block text-xs font-semibold text-stone-700 mb-1">
+              Custom Title for this Store
             </label>
             <input
               type="text"
-              value={formData.custom_title}
-              onChange={(e) => setFormData({ ...formData, custom_title: e.target.value })}
-              className="w-full px-3 py-2 text-xs border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500"
-              placeholder={selectedListing?.product?.name || 'Leave empty to use catalog title'}
+              {...register('custom_title')}
+              className="w-full px-3 py-2 text-xs bg-stone-50 rounded-xl border border-stone-200 focus:outline-none focus:ring-1 focus:ring-stone-900 focus:bg-white text-stone-900"
+              placeholder={selectedListing?.product?.name || 'Leave blank for catalog title'}
             />
           </div>
 
           <div>
-            <label className="block text-xs font-semibold text-slate-700 mb-1">
-              Shop-Specific Product Details / Description (Override)
+            <label className="block text-xs font-semibold text-stone-700 mb-1">
+              Custom Product Description
             </label>
             <textarea
-              rows={3}
-              value={formData.custom_description}
-              onChange={(e) => setFormData({ ...formData, custom_description: e.target.value })}
-              className="w-full px-3 py-2 text-xs border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500"
-              placeholder={selectedListing?.product?.description || 'Custom store description, bundle notes, or warranty terms...'}
+              rows={2}
+              {...register('custom_description')}
+              className="w-full px-3 py-2 text-xs bg-stone-50 rounded-xl border border-stone-200 focus:outline-none focus:ring-1 focus:ring-stone-900 focus:bg-white text-stone-900"
+              placeholder="Leave blank to use default shared catalog description"
             />
           </div>
 
           <div>
-            <label className="block text-xs font-semibold text-slate-700 mb-1">
-              Shop-Specific Thumbnail Image URL (Override)
+            <label className="block text-xs font-semibold text-stone-700 mb-1">
+              Custom Thumbnail Image URL
             </label>
             <input
               type="text"
-              value={formData.custom_thumbnail}
-              onChange={(e) => setFormData({ ...formData, custom_thumbnail: e.target.value })}
-              className="w-full px-3 py-2 text-xs border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500"
-              placeholder="https://images.unsplash.com/..."
+              {...register('custom_thumbnail')}
+              className="w-full px-3 py-2 text-xs bg-stone-50 rounded-xl border border-stone-200 focus:outline-none focus:ring-1 focus:ring-stone-900 focus:bg-white text-stone-900"
+              placeholder="https://..."
             />
-            <span className="text-[10px] text-slate-400 mt-1 block">
-              Provide a custom image URL for your shop, or leave empty to use catalog image.
-            </span>
+            {selectedListing?.custom_thumbnail && (
+              <label className="flex items-center space-x-2 mt-1.5 text-xs text-rose-600 cursor-pointer">
+                <input
+                  type="checkbox"
+                  {...register('clear_custom_thumbnail')}
+                  className="rounded text-rose-600 focus:ring-rose-500"
+                />
+                <span>Remove custom image and revert to catalog photo</span>
+              </label>
+            )}
           </div>
 
           <div className="flex items-center space-x-2 pt-1">
             <input
               type="checkbox"
-              id="is_active_listing"
-              checked={formData.is_active}
-              onChange={(e) => setFormData({ ...formData, is_active: e.target.checked })}
-              className="rounded text-emerald-600 focus:ring-emerald-500 h-4 w-4"
+              id="is_active"
+              {...register('is_active')}
+              className="rounded text-stone-900 focus:ring-stone-900"
             />
-            <label htmlFor="is_active_listing" className="text-xs text-slate-700 font-semibold cursor-pointer">
-              Active in My Shop (Visible to customers visiting your storefront)
+            <label htmlFor="is_active" className="text-xs font-semibold text-stone-800 cursor-pointer">
+              Visible on Customer Storefront
             </label>
           </div>
 
-          <div className="pt-3 border-t border-slate-100 flex items-center justify-end space-x-2">
+          <div className="pt-3 border-t border-stone-200 flex justify-end space-x-2">
             <button
               type="button"
               onClick={() => setIsModalOpen(false)}
-              className="px-4 py-2 rounded-xl text-xs font-semibold text-slate-600 hover:bg-slate-100 transition-colors"
+              className="px-3.5 py-2 rounded-xl bg-stone-100 hover:bg-stone-200 text-xs font-semibold text-stone-700 transition-colors"
             >
               Cancel
             </button>
             <button
               type="submit"
-              disabled={submitting}
-              className="px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 disabled:opacity-60 text-white text-xs font-semibold transition-colors shadow-sm flex items-center space-x-1.5"
+              disabled={saveMutation.isPending || isSubmitting}
+              className="px-4 py-2 rounded-xl bg-stone-900 hover:bg-stone-800 disabled:opacity-60 text-white text-xs font-semibold transition-all shadow-subtle active:scale-[0.99]"
             >
-              {submitting ? (
-                <div className="w-3.5 h-3.5 border-2 border-white border-t-transparent rounded-full animate-spin" />
-              ) : null}
-              <span>Save Shop Customizations</span>
+              {saveMutation.isPending ? 'Saving...' : 'Save Customizations'}
             </button>
           </div>
         </form>

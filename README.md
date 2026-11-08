@@ -59,12 +59,17 @@ This system implements a **Shared Product Catalog** architecture where administr
   - Laravel Sanctum (API Token Authentication)
   - Database: SQLite (default zero-config) or MySQL
   - Pest / PHPUnit test suite (54 assertions)
-- **Frontend (Latest Versions):**
-  - Next.js 16.4.5 (App Router + Turbopack)
-  - React 19.3.1 & React DOM 19.3.1
-  - Tailwind CSS 3.4
-  - Lucide React Icons (v1.70.0)
-  - Axios (with auth interceptors & proxy rewrites)
+- **Frontend (Latest Versions & Dedicated Packages):**
+  - **Next.js 16.4.5** (App Router + Turbopack)
+  - **React 19.3.1** & **React DOM 19.3.1**
+  - **@tanstack/react-query** (`^5.104.5`) — Client-side caching, data synchronization, query invalidation
+  - **react-hook-form** (`^7.91.0`) — Form state management and high-performance input bindings
+  - **zod** (`^4.6.7`) — Type-safe validation schemas
+  - **@hookform/resolvers** (`^6.0.0`) — Zod resolver integration for React Hook Form
+  - **sonner** (`^2.0.8`) — Modern toast notifications
+  - **lucide-react** (`^1.61.0`) — Clean, consistent iconography
+  - **Tailwind CSS 3.4** — Bespoke editorial light-mode design system
+  - **Axios** — HTTP client with auth interceptors and API error normalization
 
 ---
 

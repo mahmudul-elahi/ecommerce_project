@@ -27,27 +27,27 @@ export default function Modal({ isOpen, onClose, title, children, maxWidth = 'ma
       <div className="flex min-h-screen items-center justify-center p-4 text-center sm:p-0">
         {/* Backdrop */}
         <div
-          className="fixed inset-0 bg-slate-900/60 backdrop-blur-sm transition-opacity"
+          className="fixed inset-0 bg-stone-900/40 backdrop-blur-xs transition-opacity"
           onClick={onClose}
         />
 
         {/* Modal dialog box */}
         <div
-          className={`relative transform overflow-hidden rounded-2xl bg-white text-left shadow-2xl transition-all sm:my-8 w-full ${maxWidth} border border-slate-200/80`}
+          className={`relative transform overflow-hidden rounded-2xl bg-white text-left shadow-2xl transition-all sm:my-8 w-full ${maxWidth} border border-stone-200`}
         >
           {/* Header */}
-          <div className="flex items-center justify-between border-b border-slate-100 px-6 py-4 bg-slate-50/50">
-            <h3 className="text-lg font-bold text-slate-900 tracking-tight">{title}</h3>
+          <div className="flex items-center justify-between border-b border-stone-100 px-6 py-4 bg-stone-50/60">
+            <h3 className="text-base font-bold text-stone-900 tracking-tight">{title}</h3>
             <button
               onClick={onClose}
-              className="rounded-lg p-1.5 text-slate-400 hover:bg-slate-100 hover:text-slate-600 transition-colors"
+              className="rounded-lg p-1.5 text-stone-400 hover:bg-stone-100 hover:text-stone-700 transition-colors"
             >
-              <X className="w-5 h-5" />
+              <X className="w-4 h-4" />
             </button>
           </div>
 
           {/* Body */}
-          <div className="px-6 py-5 max-h-[80vh] overflow-y-auto">{children}</div>
+          <div className="px-6 py-5 max-h-[82vh] overflow-y-auto">{children}</div>
         </div>
       </div>
     </div>
