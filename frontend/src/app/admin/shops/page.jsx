@@ -23,6 +23,7 @@ import {
   XCircle,
 } from 'lucide-react';
 import api from '../../../api/client';
+import { queryKeys } from '../../../api/queryKeys';
 import Modal from '../../../components/common/Modal';
 
 const shopSchema = z.object({
@@ -51,7 +52,7 @@ export default function ShopManagementPage() {
     isLoading: loadingShops,
     isError,
   } = useQuery({
-    queryKey: ['admin-shops', search],
+    queryKey: queryKeys.admin.shops(search),
     queryFn: async () => {
       const res = await api.get('/admin/shops', {
         params: { search: search || undefined, per_page: 50 },

@@ -18,16 +18,16 @@ class ProductListingController extends Controller
         $user = $request->user();
         $shop = $user->shop;
 
-        if (!$shop) {
-            $baseSlug = Str::slug($user->name . ' Shop');
+        if (! $shop) {
+            $baseSlug = Str::slug($user->name.' Shop');
             $slug = $baseSlug;
             $counter = 1;
             while (Shop::where('slug', $slug)->exists()) {
-                $slug = $baseSlug . '-' . $counter++;
+                $slug = $baseSlug.'-'.$counter++;
             }
             $shop = Shop::create([
                 'user_id' => $user->id,
-                'name' => $user->name . "'s Store",
+                'name' => $user->name."'s Store",
                 'slug' => $slug,
                 'status' => 'active',
             ]);
@@ -90,6 +90,7 @@ class ProductListingController extends Controller
                 'custom_thumbnail' => null,
             ]);
             $listing->load('product');
+
             return response()->json([
                 'message' => 'Reset to shared catalog defaults',
                 'listing' => $listing,

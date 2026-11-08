@@ -16,6 +16,7 @@ import {
   RotateCcw,
 } from 'lucide-react';
 import api from '../../../api/client';
+import { queryKeys } from '../../../api/queryKeys';
 
 export default function ShopOrdersPage() {
   const queryClient = useQueryClient();
@@ -25,7 +26,7 @@ export default function ShopOrdersPage() {
     isLoading,
     isError,
   } = useQuery({
-    queryKey: ['shop-orders'],
+    queryKey: queryKeys.shopOwner.orders,
     queryFn: async () => {
       const res = await api.get('/shop-owner/orders', { params: { per_page: 50 } });
       return res.data.data || [];

@@ -23,6 +23,7 @@ import {
   CheckCircle2,
 } from 'lucide-react';
 import api from '../../../api/client';
+import { queryKeys } from '../../../api/queryKeys';
 import Modal from '../../../components/common/Modal';
 
 // Schema for adding existing catalog product to own shop
@@ -65,7 +66,7 @@ export default function CatalogBrowsePage() {
     isLoading,
     isError,
   } = useQuery({
-    queryKey: ['shop-catalog', search, category, statusFilter],
+    queryKey: queryKeys.catalog.list({ search, category, status: statusFilter }),
     queryFn: async () => {
       const res = await api.get('/shop-owner/catalog', {
         params: {

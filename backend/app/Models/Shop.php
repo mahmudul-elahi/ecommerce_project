@@ -2,8 +2,12 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Facades\Storage;
 
 class Shop extends Model
@@ -25,17 +29,17 @@ class Shop extends Model
 
     protected $appends = ['logo_url', 'banner_url'];
 
-    public function owner()
+    public function owner(): BelongsTo
     {
         return $this->belongsTo(User::class, 'user_id');
     }
 
-    public function shopProducts()
+    public function shopProducts(): HasMany
     {
         return $this->hasMany(ShopProduct::class);
     }
 
-    public function products()
+    public function products(): BelongsToMany
     {
         return $this->belongsToMany(Product::class, 'shop_products')
             ->withPivot([
@@ -50,30 +54,40 @@ class Shop extends Model
             ->withTimestamps();
     }
 
-    public function orders()
+    public function orders(): HasMany
     {
         return $this->hasMany(Order::class);
     }
 
-    public function getLogoUrlAttribute(): ?string
+    protected function logoUrl(): Attribute
     {
-        if (!$this->logo) {
-            return null;
-        }
-        if (str_starts_with($this->logo, 'http')) {
-            return $this->logo;
-        }
-        return url(Storage::url($this->logo));
+        return Attribute::make(
+            get: function (): ?string {
+                if (! $this->logo) {
+                    return null;
+                }
+                if (filter_var($this->logo, FILTER_VALIDATE_URL)) {
+                    return $this->logo;
+                }
+
+                return Storage::disk('public')->url($this->logo);
+            }
+        );
     }
 
-    public function getBannerUrlAttribute(): ?string
+    protected function bannerUrl(): Attribute
     {
-        if (!$this->banner) {
-            return null;
-        }
-        if (str_starts_with($this->banner, 'http')) {
-            return $this->banner;
-        }
-        return url(Storage::url($this->banner));
+        return Attribute::make(
+            get: function (): ?string {
+                if (! $this->banner) {
+                    return null;
+                }
+                if (filter_var($this->banner, FILTER_VALIDATE_URL)) {
+                    return $this->banner;
+                }
+
+                return Storage::disk('public')->url($this->banner);
+            }
+        );
     }
 }

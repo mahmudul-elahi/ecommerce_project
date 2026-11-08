@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class OrderItem extends Model
 {
@@ -18,18 +19,26 @@ class OrderItem extends Model
         'subtotal',
     ];
 
-    protected $casts = [
-        'product_price' => 'decimal:2',
-        'subtotal' => 'decimal:2',
-        'quantity' => 'integer',
-    ];
+    /**
+     * Get the attributes that should be cast.
+     *
+     * @return array<string, string>
+     */
+    protected function casts(): array
+    {
+        return [
+            'product_price' => 'decimal:2',
+            'subtotal' => 'decimal:2',
+            'quantity' => 'integer',
+        ];
+    }
 
-    public function order()
+    public function order(): BelongsTo
     {
         return $this->belongsTo(Order::class);
     }
 
-    public function shopProduct()
+    public function shopProduct(): BelongsTo
     {
         return $this->belongsTo(ShopProduct::class);
     }

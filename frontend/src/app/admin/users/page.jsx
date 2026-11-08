@@ -21,6 +21,7 @@ import {
   UserCheck,
 } from 'lucide-react';
 import api from '../../../api/client';
+import { queryKeys } from '../../../api/queryKeys';
 import Modal from '../../../components/common/Modal';
 
 const userSchema = z.object({
@@ -49,7 +50,7 @@ export default function UserManagementPage() {
     isLoading,
     isError,
   } = useQuery({
-    queryKey: ['admin-users', search],
+    queryKey: queryKeys.admin.users(search),
     queryFn: async () => {
       const res = await api.get('/admin/users', {
         params: { search: search || undefined, per_page: 50 },

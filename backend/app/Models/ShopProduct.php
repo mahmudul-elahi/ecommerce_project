@@ -2,8 +2,10 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Facades\Storage;
 
 class ShopProduct extends Model
@@ -23,12 +25,6 @@ class ShopProduct extends Model
         'is_active',
     ];
 
-    protected $casts = [
-        'custom_price' => 'decimal:2',
-        'stock' => 'integer',
-        'is_active' => 'boolean',
-    ];
-
     protected $appends = [
         'effective_price',
         'effective_title',
@@ -37,57 +33,95 @@ class ShopProduct extends Model
         'is_customized',
     ];
 
-    public function shop()
+    /**
+     * Get the attributes that should be cast.
+     *
+     * @return array<string, string>
+     */
+    protected function casts(): array
+    {
+        return [
+            'custom_price' => 'decimal:2',
+            'stock' => 'integer',
+            'is_active' => 'boolean',
+        ];
+    }
+
+    public function shop(): BelongsTo
     {
         return $this->belongsTo(Shop::class);
     }
 
-    public function product()
+    public function product(): BelongsTo
     {
         return $this->belongsTo(Product::class);
     }
 
-    public function getEffectivePriceAttribute(): float
+    protected function effectivePrice(): Attribute
     {
-        if ($this->custom_price !== null && $this->custom_price !== '') {
-            return (float) $this->custom_price;
-        }
-        return $this->product ? (float) $this->product->base_price : 0.00;
+        return Attribute::make(
+            get: function (): float {
+                if ($this->custom_price !== null && $this->custom_price !== '') {
+                    return (float) $this->custom_price;
+                }
+
+                return $this->product ? (float) $this->product->base_price : 0.00;
+            }
+        );
     }
 
-    public function getEffectiveTitleAttribute(): string
+    protected function effectiveTitle(): Attribute
     {
-        if ($this->custom_title) {
-            return $this->custom_title;
-        }
-        return $this->product ? $this->product->name : '';
+        return Attribute::make(
+            get: function (): string {
+                if ($this->custom_title) {
+                    return (string) $this->custom_title;
+                }
+
+                return $this->product ? (string) $this->product->name : '';
+            }
+        );
     }
 
-    public function getEffectiveDescriptionAttribute(): ?string
+    protected function effectiveDescription(): Attribute
     {
-        if ($this->custom_description) {
-            return $this->custom_description;
-        }
-        return $this->product ? $this->product->description : null;
+        return Attribute::make(
+            get: function (): ?string {
+                if ($this->custom_description) {
+                    return $this->custom_description;
+                }
+
+                return $this->product ? $this->product->description : null;
+            }
+        );
     }
 
-    public function getEffectiveThumbnailUrlAttribute(): ?string
+    protected function effectiveThumbnailUrl(): Attribute
     {
-        $thumb = $this->custom_thumbnail ?: ($this->product ? $this->product->thumbnail : null);
-        if (!$thumb) {
-            return null;
-        }
-        if (str_starts_with($thumb, 'http')) {
-            return $thumb;
-        }
-        return url(Storage::url($thumb));
+        return Attribute::make(
+            get: function (): ?string {
+                $raw = $this->custom_thumbnail ?: ($this->product ? $this->product->thumbnail : null);
+                if (! $raw) {
+                    return null;
+                }
+                if (filter_var($raw, FILTER_VALIDATE_URL)) {
+                    return $raw;
+                }
+
+                return Storage::disk('public')->url($raw);
+            }
+        );
     }
 
-    public function getIsCustomizedAttribute(): bool
+    protected function isCustomized(): Attribute
     {
-        return ($this->custom_price !== null)
-            || !empty($this->custom_title)
-            || !empty($this->custom_description)
-            || !empty($this->custom_thumbnail);
+        return Attribute::make(
+            get: function (): bool {
+                return $this->custom_price !== null
+                    || ! empty($this->custom_title)
+                    || ! empty($this->custom_description)
+                    || ! empty($this->custom_thumbnail);
+            }
+        );
     }
 }

@@ -20,6 +20,7 @@ import {
   ShieldCheck,
 } from 'lucide-react';
 import api from '../../../api/client';
+import { queryKeys } from '../../../api/queryKeys';
 import Modal from '../../../components/common/Modal';
 
 const adminProductSchema = z.object({
@@ -46,7 +47,7 @@ export default function ProductManagementPage() {
     data: products = [],
     isLoading,
   } = useQuery({
-    queryKey: ['admin-products', search, category],
+    queryKey: queryKeys.admin.products({ search, category }),
     queryFn: async () => {
       const res = await api.get('/admin/products', {
         params: { search: search || undefined, category: category || undefined, per_page: 50 },

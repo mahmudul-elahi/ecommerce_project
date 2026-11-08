@@ -56,7 +56,7 @@ class ShopController extends Controller
         $slug = $baseSlug;
         $counter = 1;
         while (Shop::where('slug', $slug)->exists()) {
-            $slug = $baseSlug . '-' . $counter++;
+            $slug = $baseSlug.'-'.$counter++;
         }
         $validated['slug'] = $slug;
 
@@ -107,7 +107,7 @@ class ShopController extends Controller
             $slug = $baseSlug;
             $counter = 1;
             while (Shop::where('slug', $slug)->where('id', '!=', $shop->id)->exists()) {
-                $slug = $baseSlug . '-' . $counter++;
+                $slug = $baseSlug.'-'.$counter++;
             }
             $validated['slug'] = $slug;
         }

@@ -340,7 +340,7 @@ class DatabaseSeeder extends Seeder
         // 6. Create Demo Orders for realism
         $order1 = Order::create([
             'shop_id' => $shop1->id,
-            'order_number' => 'ORD-' . strtoupper(Str::random(8)),
+            'order_number' => 'ORD-'.strtoupper(Str::random(8)),
             'customer_name' => 'David Miller',
             'customer_email' => 'david.miller@gmail.com',
             'customer_phone' => '+1 (555) 789-0123',
@@ -370,7 +370,7 @@ class DatabaseSeeder extends Seeder
 
         $order2 = Order::create([
             'shop_id' => $shop2->id,
-            'order_number' => 'ORD-' . strtoupper(Str::random(8)),
+            'order_number' => 'ORD-'.strtoupper(Str::random(8)),
             'customer_name' => 'Emily Watson',
             'customer_email' => 'emily.w@outlook.com',
             'customer_phone' => '+1 (555) 890-1234',

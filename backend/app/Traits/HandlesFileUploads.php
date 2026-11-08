@@ -13,7 +13,7 @@ trait HandlesFileUploads
      */
     protected function handleFileUpload($file, string $directory = 'uploads'): ?string
     {
-        if (!$file) {
+        if (! $file) {
             return null;
         }
 
@@ -23,8 +23,8 @@ trait HandlesFileUploads
 
         // Check if it's base64 data url
         if (is_string($file) && str_starts_with($file, 'data:image')) {
-            @list($type, $data) = explode(';', $file);
-            @list(, $data)      = explode(',', $data);
+            @[$type, $data] = explode(';', $file);
+            @[, $data] = explode(',', $data);
             if ($data) {
                 $decoded = base64_decode($data);
                 $extension = 'png';
@@ -35,8 +35,9 @@ trait HandlesFileUploads
                 } elseif (str_contains($type, 'gif')) {
                     $extension = 'gif';
                 }
-                $filename = $directory . '/' . Str::random(32) . '.' . $extension;
+                $filename = $directory.'/'.Str::random(32).'.'.$extension;
                 Storage::disk('public')->put($filename, $decoded);
+
                 return $filename;
             }
         }

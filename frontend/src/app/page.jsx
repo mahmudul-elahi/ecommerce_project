@@ -17,6 +17,7 @@ import {
   ChevronRight,
 } from 'lucide-react';
 import api from '../api/client';
+import { queryKeys } from '../api/queryKeys';
 
 export default function HomePage() {
   const [searchInput, setSearchInput] = useState('');
@@ -34,7 +35,7 @@ export default function HomePage() {
     isLoading,
     isError,
   } = useQuery({
-    queryKey: ['shops', debouncedSearch],
+    queryKey: queryKeys.shops.list(debouncedSearch),
     queryFn: async () => {
       const res = await api.get('/customer/shops', {
         params: { search: debouncedSearch || undefined },

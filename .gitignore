@@ -98,3 +98,9 @@ backend/.env.backup
 backend/.env.production
 !*.example
 !**/.env.example
+.agents
+.claude
+opencode.json
+boost.json
+.mcp.json
+.vscode

@@ -21,9 +21,9 @@ class StorefrontController extends Controller
         $query = Shop::where('status', 'active')
             ->withCount(['shopProducts as products_count' => function ($q) {
                 $q->where('is_active', true)
-                  ->whereHas('product', function ($pq) {
-                      $pq->where('is_active', true);
-                  });
+                    ->whereHas('product', function ($pq) {
+                        $pq->where('is_active', true);
+                    });
             }]);
 
         if ($search = $request->query('search')) {
@@ -46,13 +46,13 @@ class StorefrontController extends Controller
         $shop = Shop::where('status', 'active')
             ->where(function ($q) use ($slugOrId) {
                 $q->where('id', $slugOrId)
-                  ->orWhere('slug', $slugOrId);
+                    ->orWhere('slug', $slugOrId);
             })
             ->withCount(['shopProducts as products_count' => function ($q) {
                 $q->where('is_active', true)
-                  ->whereHas('product', function ($pq) {
-                      $pq->where('is_active', true);
-                  });
+                    ->whereHas('product', function ($pq) {
+                        $pq->where('is_active', true);
+                    });
             }])
             ->firstOrFail();
 
@@ -69,7 +69,7 @@ class StorefrontController extends Controller
         $shop = Shop::where('status', 'active')
             ->where(function ($q) use ($slugOrId) {
                 $q->where('id', $slugOrId)
-                  ->orWhere('slug', $slugOrId);
+                    ->orWhere('slug', $slugOrId);
             })
             ->firstOrFail();
 
@@ -146,7 +146,7 @@ class StorefrontController extends Controller
         $shop = Shop::where('status', 'active')
             ->where(function ($q) use ($slugOrId) {
                 $q->where('id', $slugOrId)
-                  ->orWhere('slug', $slugOrId);
+                    ->orWhere('slug', $slugOrId);
             })
             ->firstOrFail();
 
@@ -232,7 +232,7 @@ class StorefrontController extends Controller
                 }
             }
 
-            $orderNumber = 'ORD-' . strtoupper(Str::random(8));
+            $orderNumber = 'ORD-'.strtoupper(Str::random(8));
 
             $order = Order::create([
                 'shop_id' => $shop->id,

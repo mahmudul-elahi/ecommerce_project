@@ -23,6 +23,7 @@ import {
   Minus,
 } from 'lucide-react';
 import api from '../../../api/client';
+import { queryKeys } from '../../../api/queryKeys';
 import { useCart } from '../../../context/CartContext';
 import Modal from '../../../components/common/Modal';
 
@@ -47,7 +48,7 @@ export default function ShopStorefrontPage() {
     isLoading: loadingShop,
     isError: shopError,
   } = useQuery({
-    queryKey: ['shop', slug],
+    queryKey: queryKeys.shops.detail(slug),
     queryFn: async () => {
       const res = await api.get(`/customer/shops/${slug}`);
       return res.data;
@@ -60,7 +61,7 @@ export default function ShopStorefrontPage() {
     data: products = [],
     isLoading: loadingProducts,
   } = useQuery({
-    queryKey: ['shop-products', slug, search, selectedCategory, sort],
+    queryKey: queryKeys.shops.products(slug, { search, selectedCategory, sort }),
     queryFn: async () => {
       const res = await api.get(`/customer/shops/${slug}/products`, {
         params: {

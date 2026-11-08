@@ -20,6 +20,7 @@ import {
   AlertCircle,
 } from 'lucide-react';
 import api from '../../../api/client';
+import { queryKeys } from '../../../api/queryKeys';
 import { useAuth } from '../../../context/AuthContext';
 
 export default function ShopOwnerDashboardPage() {
@@ -29,7 +30,7 @@ export default function ShopOwnerDashboardPage() {
     data: dashboardData,
     isLoading: loadingDashboard,
   } = useQuery({
-    queryKey: ['shop-owner-dashboard'],
+    queryKey: queryKeys.shopOwner.dashboard,
     queryFn: async () => {
       const res = await api.get('/shop-owner/dashboard');
       return res.data;
@@ -40,7 +41,7 @@ export default function ShopOwnerDashboardPage() {
     data: shopData,
     isLoading: loadingShop,
   } = useQuery({
-    queryKey: ['shop-owner-my-shop'],
+    queryKey: queryKeys.shopOwner.myShop,
     queryFn: async () => {
       const res = await api.get('/shop-owner/my-shop');
       return res.data?.shop || null;

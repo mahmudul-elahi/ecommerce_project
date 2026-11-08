@@ -19,17 +19,17 @@ class ShopController extends Controller
         $user = $request->user();
         $shop = $user->shop;
 
-        if (!$shop) {
+        if (! $shop) {
             // If shop owner doesn't have a shop yet, create a default one for them
-            $baseSlug = Str::slug($user->name . ' Shop');
+            $baseSlug = Str::slug($user->name.' Shop');
             $slug = $baseSlug;
             $counter = 1;
             while (Shop::where('slug', $slug)->exists()) {
-                $slug = $baseSlug . '-' . $counter++;
+                $slug = $baseSlug.'-'.$counter++;
             }
             $shop = Shop::create([
                 'user_id' => $user->id,
-                'name' => $user->name . "'s Store",
+                'name' => $user->name."'s Store",
                 'slug' => $slug,
                 'status' => 'active',
             ]);
@@ -67,7 +67,7 @@ class ShopController extends Controller
             $slug = $baseSlug;
             $counter = 1;
             while (Shop::where('slug', $slug)->where('id', '!=', $shop->id)->exists()) {
-                $slug = $baseSlug . '-' . $counter++;
+                $slug = $baseSlug.'-'.$counter++;
             }
             $validated['slug'] = $slug;
         }

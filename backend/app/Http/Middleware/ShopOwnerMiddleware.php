@@ -14,7 +14,7 @@ class ShopOwnerMiddleware
     public function handle(Request $request, Closure $next): Response
     {
         $user = $request->user();
-        if (!$user || (!$user->isShopOwner() && !$user->isAdmin())) {
+        if (! $user || (! $user->isShopOwner() && ! $user->isAdmin())) {
             return response()->json([
                 'message' => 'Unauthorized. Shop owner access required.',
             ], 403);

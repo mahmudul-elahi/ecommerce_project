@@ -18,6 +18,7 @@ import {
   CheckCircle2,
 } from 'lucide-react';
 import api from '../../../api/client';
+import { queryKeys } from '../../../api/queryKeys';
 
 export default function AdminDashboardPage() {
   const {
@@ -25,7 +26,7 @@ export default function AdminDashboardPage() {
     isLoading,
     isError,
   } = useQuery({
-    queryKey: ['admin-dashboard'],
+    queryKey: queryKeys.admin.dashboard,
     queryFn: async () => {
       const res = await api.get('/admin/dashboard');
       return res.data;

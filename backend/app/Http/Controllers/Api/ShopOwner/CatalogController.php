@@ -19,16 +19,16 @@ class CatalogController extends Controller
         $user = $request->user();
         $shop = $user->shop;
 
-        if (!$shop) {
-            $baseSlug = Str::slug($user->name . ' Shop');
+        if (! $shop) {
+            $baseSlug = Str::slug($user->name.' Shop');
             $slug = $baseSlug;
             $counter = 1;
             while (Shop::where('slug', $slug)->exists()) {
-                $slug = $baseSlug . '-' . $counter++;
+                $slug = $baseSlug.'-'.$counter++;
             }
             $shop = Shop::create([
                 'user_id' => $user->id,
-                'name' => $user->name . "'s Store",
+                'name' => $user->name."'s Store",
                 'slug' => $slug,
                 'status' => 'active',
             ]);
@@ -78,6 +78,7 @@ class CatalogController extends Controller
             $product->is_in_my_shop = $isInShop;
             $product->my_shop_product_id = $isInShop ? $myShopProductIds[$product->id] : null;
             $product->is_created_by_me = ($product->created_by === $user->id);
+
             return $product;
         });
 
@@ -112,7 +113,7 @@ class CatalogController extends Controller
         $slug = $baseSlug;
         $counter = 1;
         while (Product::where('slug', $slug)->exists()) {
-            $slug = $baseSlug . '-' . $counter++;
+            $slug = $baseSlug.'-'.$counter++;
         }
 
         $thumbnailPath = null;

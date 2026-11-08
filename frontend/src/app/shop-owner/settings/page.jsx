@@ -9,6 +9,7 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { toast } from 'sonner';
 import { Store, Save, ExternalLink, AlertCircle, Image, Globe, Mail, Phone, MapPin, Building2 } from 'lucide-react';
 import api from '../../../api/client';
+import { queryKeys } from '../../../api/queryKeys';
 import { useAuth } from '../../../context/AuthContext';
 
 const shopSettingsSchema = z.object({
@@ -49,7 +50,7 @@ export default function ShopSettingsPage() {
     data: shopData,
     isLoading,
   } = useQuery({
-    queryKey: ['shop-settings'],
+    queryKey: queryKeys.shopOwner.settings,
     queryFn: async () => {
       const res = await api.get('/shop-owner/my-shop');
       return res.data.shop;

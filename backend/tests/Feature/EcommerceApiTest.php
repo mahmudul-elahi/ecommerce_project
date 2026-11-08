@@ -32,7 +32,7 @@ class EcommerceApiTest extends TestCase
 
         $token = $response->json('token');
 
-        $dashboardResponse = $this->withHeader('Authorization', 'Bearer ' . $token)
+        $dashboardResponse = $this->withHeader('Authorization', 'Bearer '.$token)
             ->getJson('/api/admin/dashboard');
 
         $dashboardResponse->assertStatus(200)

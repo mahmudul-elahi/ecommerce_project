@@ -21,13 +21,13 @@ class AuthController extends Controller
 
         $user = User::where('email', $validated['email'])->first();
 
-        if (!$user || !Hash::check($validated['password'], $user->password)) {
+        if (! $user || ! Hash::check($validated['password'], $user->password)) {
             throw ValidationException::withMessages([
                 'email' => ['The provided credentials do not match our records.'],
             ]);
         }
 
-        if (!$user->is_active) {
+        if (! $user->is_active) {
             return response()->json([
                 'message' => 'Your account is deactivated. Please contact support.',
             ], 403);
@@ -74,7 +74,7 @@ class AuthController extends Controller
         $slug = $baseSlug;
         $counter = 1;
         while (Shop::where('slug', $slug)->exists()) {
-            $slug = $baseSlug . '-' . $counter++;
+            $slug = $baseSlug.'-'.$counter++;
         }
 
         $shop = Shop::create([
@@ -104,6 +104,7 @@ class AuthController extends Controller
     public function me(Request $request)
     {
         $user = $request->user()->load('shop');
+
         return response()->json([
             'user' => [
                 'id' => $user->id,

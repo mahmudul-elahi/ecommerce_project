@@ -58,18 +58,18 @@ class UserController extends Controller
         ]);
 
         // If existing shop_id is provided, attach to shop
-        if (!empty($validated['shop_id'])) {
+        if (! empty($validated['shop_id'])) {
             $shop = Shop::find($validated['shop_id']);
             if ($shop) {
                 $shop->update(['user_id' => $user->id]);
             }
-        } elseif (!empty($validated['shop_name'])) {
+        } elseif (! empty($validated['shop_name'])) {
             // Create a new shop for this owner
             $baseSlug = Str::slug($validated['shop_name']);
             $slug = $baseSlug;
             $counter = 1;
             while (Shop::where('slug', $slug)->exists()) {
-                $slug = $baseSlug . '-' . $counter++;
+                $slug = $baseSlug.'-'.$counter++;
             }
             Shop::create([
                 'user_id' => $user->id,
@@ -90,6 +90,7 @@ class UserController extends Controller
     public function show($id)
     {
         $user = User::with('shop')->findOrFail($id);
+
         return response()->json($user);
     }
 
@@ -114,11 +115,11 @@ class UserController extends Controller
             'is_active' => $request->has('is_active') ? (bool) $request->input('is_active') : $user->is_active,
         ];
 
-        if (!empty($validated['role'])) {
+        if (! empty($validated['role'])) {
             $updateData['role'] = $validated['role'];
         }
 
-        if (!empty($validated['password'])) {
+        if (! empty($validated['password'])) {
             $updateData['password'] = Hash::make($validated['password']);
         }
 
@@ -130,7 +131,7 @@ class UserController extends Controller
             if ($user->shop && $user->shop->id !== $validated['shop_id']) {
                 $user->shop->update(['user_id' => null]);
             }
-            if (!empty($validated['shop_id'])) {
+            if (! empty($validated['shop_id'])) {
                 $newShop = Shop::find($validated['shop_id']);
                 if ($newShop) {
                     $newShop->update(['user_id' => $user->id]);

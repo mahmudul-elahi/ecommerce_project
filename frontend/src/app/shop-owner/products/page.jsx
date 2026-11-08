@@ -22,6 +22,7 @@ import {
   XCircle,
 } from 'lucide-react';
 import api from '../../../api/client';
+import { queryKeys } from '../../../api/queryKeys';
 import { useAuth } from '../../../context/AuthContext';
 import Modal from '../../../components/common/Modal';
 
@@ -49,7 +50,7 @@ export default function MyProductsPage() {
     data: listings = [],
     isLoading,
   } = useQuery({
-    queryKey: ['my-products', search],
+    queryKey: queryKeys.shopOwner.products(search),
     queryFn: async () => {
       const res = await api.get('/shop-owner/products', {
         params: { search: search || undefined, per_page: 50 },

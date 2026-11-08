@@ -55,7 +55,7 @@ class ProductController extends Controller
         $slug = $baseSlug;
         $counter = 1;
         while (Product::where('slug', $slug)->exists()) {
-            $slug = $baseSlug . '-' . $counter++;
+            $slug = $baseSlug.'-'.$counter++;
         }
         $validated['slug'] = $slug;
         $validated['created_by'] = $request->user()->id;
@@ -102,7 +102,7 @@ class ProductController extends Controller
             $slug = $baseSlug;
             $counter = 1;
             while (Product::where('slug', $slug)->where('id', '!=', $product->id)->exists()) {
-                $slug = $baseSlug . '-' . $counter++;
+                $slug = $baseSlug.'-'.$counter++;
             }
             $validated['slug'] = $slug;
         }
