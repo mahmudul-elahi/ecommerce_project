@@ -8,8 +8,7 @@ import { z } from 'zod';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { toast } from 'sonner';
 import { Store, Save, ExternalLink, AlertCircle, Image, Globe, Mail, Phone, MapPin, Building2 } from 'lucide-react';
-import api from '../../../api/client';
-import { queryKeys } from '../../../api/queryKeys';
+import { useMyShopQuery, useUpdateMyShopMutation } from '../../../hooks/useShopOwner';
 import { useAuth } from '../../../context/AuthContext';
 
 const shopSettingsSchema = z.object({
@@ -24,7 +23,6 @@ const shopSettingsSchema = z.object({
 
 export default function ShopSettingsPage() {
   const { updateUserShop } = useAuth();
-  const queryClient = useQueryClient();
 
   const {
     register,
@@ -45,17 +43,11 @@ export default function ShopSettingsPage() {
     },
   });
 
-  // Query settings via TanStack React Query
+  // Query settings via custom hook
   const {
     data: shopData,
     isLoading,
-  } = useQuery({
-    queryKey: queryKeys.shopOwner.settings,
-    queryFn: async () => {
-      const res = await api.get('/shop-owner/my-shop');
-      return res.data.shop;
-    },
-  });
+  } = useMyShopQuery();
 
   useEffect(() => {
     if (shopData) {
@@ -71,16 +63,10 @@ export default function ShopSettingsPage() {
     }
   }, [shopData, reset]);
 
-  // Mutation via TanStack React Query
-  const mutation = useMutation({
-    mutationFn: async (payload) => {
-      const res = await api.put('/shop-owner/my-shop', payload);
-      return res.data;
-    },
+  // Mutation via custom hook
+  const mutation = useUpdateMyShopMutation({
     onSuccess: (data) => {
       updateUserShop(data.shop);
-      queryClient.invalidateQueries({ queryKey: ['shop-settings'] });
-      queryClient.invalidateQueries({ queryKey: ['shops'] });
       toast.success('Store Settings Updated', {
         description: 'Your storefront details and branding have been saved successfully.',
       });

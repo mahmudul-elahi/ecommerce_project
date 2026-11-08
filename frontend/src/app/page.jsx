@@ -1,8 +1,7 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import Link from 'next/link';
-import { useQuery } from '@tanstack/react-query';
 import {
   Store,
   Search,
@@ -16,33 +15,18 @@ import {
   SlidersHorizontal,
   ChevronRight,
 } from 'lucide-react';
-import api from '../api/client';
-import { queryKeys } from '../api/queryKeys';
+import { useDebounce } from '../hooks/useDebounce';
+import { useShopsQuery } from '../hooks/useShops';
 
 export default function HomePage() {
   const [searchInput, setSearchInput] = useState('');
-  const [debouncedSearch, setDebouncedSearch] = useState('');
-
-  useEffect(() => {
-    const handler = setTimeout(() => {
-      setDebouncedSearch(searchInput);
-    }, 250);
-    return () => clearTimeout(handler);
-  }, [searchInput]);
+  const debouncedSearch = useDebounce(searchInput, 250);
 
   const {
     data: shops = [],
     isLoading,
     isError,
-  } = useQuery({
-    queryKey: queryKeys.shops.list(debouncedSearch),
-    queryFn: async () => {
-      const res = await api.get('/customer/shops', {
-        params: { search: debouncedSearch || undefined },
-      });
-      return res.data;
-    },
-  });
+  } = useShopsQuery(debouncedSearch);
 
   return (
     <div className="min-h-screen pb-20 bg-paper">

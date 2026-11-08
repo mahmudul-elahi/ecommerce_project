@@ -19,7 +19,7 @@ import {
   PackageCheck,
 } from 'lucide-react';
 import { useCart } from '../../context/CartContext';
-import api from '../../api/client';
+import { useCheckoutMutation } from '../../hooks/useShops';
 
 const checkoutSchema = z.object({
   customer_name: z.string().min(2, 'Your name is required'),
@@ -45,6 +45,24 @@ export default function CartDrawer() {
   const [isCheckingOut, setIsCheckingOut] = useState(false);
   const [orderComplete, setOrderComplete] = useState(null);
 
+  const checkoutMutation = useCheckoutMutation({
+    onSuccess: (data) => {
+      setOrderComplete(data.order);
+      clearCart();
+      reset();
+      setIsCheckingOut(false);
+      toast.success('Order Placed Successfully!', {
+        description: `Order #${data.order.order_number} confirmed with ${cartShop?.name}.`,
+      });
+    },
+    onError: (err) => {
+      console.error(err);
+      toast.error('Checkout Failed', {
+        description: err.response?.data?.message || 'Unable to place order. Please review your details.',
+      });
+    },
+  });
+
   const {
     register,
     handleSubmit,
@@ -63,40 +81,26 @@ export default function CartDrawer() {
 
   if (!isCartOpen) return null;
 
-  const onCheckoutSubmit = async (data) => {
+  const onCheckoutSubmit = (data) => {
     if (!cartShop) {
       toast.error('Cart Error', { description: 'No active shop associated with this cart.' });
       return;
     }
 
-    try {
-      const payload = {
-        shop_id: cartShop.id,
-        customer_name: data.customer_name,
-        customer_phone: data.customer_phone,
-        customer_email: data.customer_email || null,
-        shipping_address: data.shipping_address,
-        notes: data.notes || null,
-        items: items.map((i) => ({
-          shop_product_id: i.shop_product_id,
-          quantity: i.quantity,
-        })),
-      };
+    const payload = {
+      shop_id: cartShop.id,
+      customer_name: data.customer_name,
+      customer_phone: data.customer_phone,
+      customer_email: data.customer_email || null,
+      shipping_address: data.shipping_address,
+      notes: data.notes || null,
+      items: items.map((i) => ({
+        shop_product_id: i.shop_product_id,
+        quantity: i.quantity,
+      })),
+    };
 
-      const res = await api.post('/customer/checkout', payload);
-      setOrderComplete(res.data.order);
-      clearCart();
-      reset();
-      setIsCheckingOut(false);
-      toast.success('Order Placed Successfully!', {
-        description: `Order #${res.data.order.order_number} confirmed with ${cartShop.name}.`,
-      });
-    } catch (err) {
-      console.error(err);
-      toast.error('Checkout Failed', {
-        description: err.response?.data?.message || 'Unable to place order. Please review your details.',
-      });
-    }
+    checkoutMutation.mutate(payload);
   };
 
   const handleClose = () => {
@@ -302,10 +306,10 @@ export default function CartDrawer() {
                 <div className="pt-2">
                   <button
                     type="submit"
-                    disabled={isSubmitting}
+                    disabled={checkoutMutation.isPending || isSubmitting}
                     className="w-full py-2.5 rounded-xl bg-stone-900 hover:bg-stone-800 disabled:opacity-60 text-white font-medium text-xs transition-all flex items-center justify-center space-x-2 shadow-subtle active:scale-[0.99]"
                   >
-                    {isSubmitting ? (
+                    {checkoutMutation.isPending || isSubmitting ? (
                       <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
                     ) : (
                       <>

@@ -1,7 +1,7 @@
 'use client';
 
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import api from '../api/client';
+import { authService } from '../api/services/authService';
 
 const AuthContext = createContext(null);
 
@@ -26,10 +26,10 @@ export const AuthProvider = ({ children }) => {
     const verifyAuth = async () => {
       if (token) {
         try {
-          const res = await api.get('/auth/me');
-          setUser(res.data.user);
+          const res = await authService.me();
+          setUser(res.user);
           if (typeof window !== 'undefined') {
-            localStorage.setItem('auth_user', JSON.stringify(res.data.user));
+            localStorage.setItem('auth_user', JSON.stringify(res.user));
           }
         } catch (err) {
           console.warn('Failed to verify token', err);
@@ -47,8 +47,8 @@ export const AuthProvider = ({ children }) => {
   }, [token]);
 
   const login = async (email, password) => {
-    const res = await api.post('/auth/login', { email, password });
-    const { token: newToken, user: newUser } = res.data;
+    const res = await authService.login(email, password);
+    const { token: newToken, user: newUser } = res;
     setToken(newToken);
     setUser(newUser);
     if (typeof window !== 'undefined') {
@@ -59,8 +59,8 @@ export const AuthProvider = ({ children }) => {
   };
 
   const register = async (data) => {
-    const res = await api.post('/auth/register', data);
-    const { token: newToken, user: newUser } = res.data;
+    const res = await authService.register(data);
+    const { token: newToken, user: newUser } = res;
     setToken(newToken);
     setUser(newUser);
     if (typeof window !== 'undefined') {
@@ -73,7 +73,7 @@ export const AuthProvider = ({ children }) => {
   const logout = async () => {
     try {
       if (token) {
-        await api.post('/auth/logout');
+        await authService.logout();
       }
     } catch (e) {
       // Ignore logout failure

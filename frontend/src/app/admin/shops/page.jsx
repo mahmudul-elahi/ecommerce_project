@@ -2,7 +2,6 @@
 
 import React, { useState } from 'react';
 import Link from 'next/link';
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
@@ -22,9 +21,14 @@ import {
   CheckCircle2,
   XCircle,
 } from 'lucide-react';
-import api from '../../../api/client';
-import { queryKeys } from '../../../api/queryKeys';
 import Modal from '../../../components/common/Modal';
+import { useDebounce } from '../../../hooks/useDebounce';
+import {
+  useAdminShopsQuery,
+  useAdminOwnersQuery,
+  useSaveAdminShopMutation,
+  useDeleteAdminShopMutation,
+} from '../../../hooks/useAdmin';
 
 const shopSchema = z.object({
   name: z.string().min(2, 'Shop name must be at least 2 characters'),
@@ -39,38 +43,21 @@ const shopSchema = z.object({
 });
 
 export default function ShopManagementPage() {
-  const queryClient = useQueryClient();
   const [search, setSearch] = useState('');
+  const debouncedSearch = useDebounce(search, 250);
 
   // Modal states
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingShop, setEditingShop] = useState(null);
 
-  // TanStack Query: Shops
+  // TanStack Query: Shops & Owners via custom hooks
   const {
     data: shops = [],
     isLoading: loadingShops,
     isError,
-  } = useQuery({
-    queryKey: queryKeys.admin.shops(search),
-    queryFn: async () => {
-      const res = await api.get('/admin/shops', {
-        params: { search: search || undefined, per_page: 50 },
-      });
-      return res.data.data || [];
-    },
-  });
+  } = useAdminShopsQuery(debouncedSearch);
 
-  // TanStack Query: Shop Owners
-  const { data: owners = [] } = useQuery({
-    queryKey: ['admin-owners'],
-    queryFn: async () => {
-      const res = await api.get('/admin/users', {
-        params: { role: 'shop_owner', per_page: 100 },
-      });
-      return res.data.data || [];
-    },
-  });
+  const { data: owners = [] } = useAdminOwnersQuery();
 
   // React Hook Form
   const {
@@ -93,31 +80,9 @@ export default function ShopManagementPage() {
     },
   });
 
-  // Mutation: Save Shop (Create or Update)
-  const saveMutation = useMutation({
-    mutationFn: async (formData) => {
-      const payload = {
-        name: formData.name,
-        user_id: formData.user_id ? parseInt(formData.user_id, 10) : null,
-        description: formData.description || null,
-        phone: formData.phone || null,
-        email: formData.email || null,
-        address: formData.address || null,
-        status: formData.status,
-        logo: formData.logo || null,
-        banner: formData.banner || null,
-      };
-
-      if (editingShop) {
-        return (await api.put(`/admin/shops/${editingShop.id}`, payload)).data;
-      } else {
-        return (await api.post('/admin/shops', payload)).data;
-      }
-    },
+  // Mutations via custom hooks
+  const saveMutation = useSaveAdminShopMutation({
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['admin-shops'] });
-      queryClient.invalidateQueries({ queryKey: ['admin-dashboard'] });
-      queryClient.invalidateQueries({ queryKey: ['shops'] });
       setIsModalOpen(false);
       toast.success(editingShop ? 'Shop Updated Successfully' : 'Shop Created Successfully');
     },
@@ -128,15 +93,8 @@ export default function ShopManagementPage() {
     },
   });
 
-  // Mutation: Delete Shop
-  const deleteMutation = useMutation({
-    mutationFn: async (id) => {
-      await api.delete(`/admin/shops/${id}`);
-    },
+  const deleteMutation = useDeleteAdminShopMutation({
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['admin-shops'] });
-      queryClient.invalidateQueries({ queryKey: ['admin-dashboard'] });
-      queryClient.invalidateQueries({ queryKey: ['shops'] });
       toast.success('Shop deleted successfully');
     },
     onError: (err) => {
@@ -186,7 +144,18 @@ export default function ShopManagementPage() {
   };
 
   const onFormSubmit = (data) => {
-    saveMutation.mutate(data);
+    const payload = {
+      name: data.name,
+      user_id: data.user_id ? parseInt(data.user_id, 10) : null,
+      description: data.description || null,
+      phone: data.phone || null,
+      email: data.email || null,
+      address: data.address || null,
+      status: data.status,
+      logo: data.logo || null,
+      banner: data.banner || null,
+    };
+    saveMutation.mutate({ id: editingShop?.id, payload });
   };
 
   return (

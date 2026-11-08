@@ -1,7 +1,6 @@
 'use client';
 
 import React, { useState } from 'react';
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
@@ -19,9 +18,13 @@ import {
   CheckCircle2,
   ShieldCheck,
 } from 'lucide-react';
-import api from '../../../api/client';
-import { queryKeys } from '../../../api/queryKeys';
 import Modal from '../../../components/common/Modal';
+import { useDebounce } from '../../../hooks/useDebounce';
+import {
+  useAdminProductsQuery,
+  useSaveAdminProductMutation,
+  useDeleteAdminProductMutation,
+} from '../../../hooks/useAdmin';
 
 const adminProductSchema = z.object({
   name: z.string().min(2, 'Product name is required'),
@@ -34,27 +37,19 @@ const adminProductSchema = z.object({
 });
 
 export default function ProductManagementPage() {
-  const queryClient = useQueryClient();
   const [search, setSearch] = useState('');
   const [category, setCategory] = useState('');
+  const debouncedSearch = useDebounce(search, 250);
 
   // Modal
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingProduct, setEditingProduct] = useState(null);
 
-  // TanStack React Query
+  // TanStack React Query via custom hook
   const {
     data: products = [],
     isLoading,
-  } = useQuery({
-    queryKey: queryKeys.admin.products({ search, category }),
-    queryFn: async () => {
-      const res = await api.get('/admin/products', {
-        params: { search: search || undefined, category: category || undefined, per_page: 50 },
-      });
-      return res.data.data || [];
-    },
-  });
+  } = useAdminProductsQuery({ search: debouncedSearch, category });
 
   // React Hook Form
   const {
@@ -75,20 +70,9 @@ export default function ProductManagementPage() {
     },
   });
 
-  // Save Mutation
-  const saveMutation = useMutation({
-    mutationFn: async ({ id, payload }) => {
-      if (id) {
-        const res = await api.put(`/admin/products/${id}`, payload);
-        return res.data;
-      } else {
-        const res = await api.post('/admin/products', payload);
-        return res.data;
-      }
-    },
+  // Save Mutation via custom hook
+  const saveMutation = useSaveAdminProductMutation({
     onSuccess: (_, vars) => {
-      queryClient.invalidateQueries({ queryKey: ['admin-products'] });
-      queryClient.invalidateQueries({ queryKey: ['shared-catalog'] });
       toast.success(vars.id ? 'Product Updated' : 'Product Added to Shared Catalog', {
         description: 'Changes are immediately synchronized across all store frontends.',
       });
@@ -102,14 +86,9 @@ export default function ProductManagementPage() {
     },
   });
 
-  // Delete Mutation
-  const deleteMutation = useMutation({
-    mutationFn: async (id) => {
-      await api.delete(`/admin/products/${id}`);
-    },
+  // Delete Mutation via custom hook
+  const deleteMutation = useDeleteAdminProductMutation({
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['admin-products'] });
-      queryClient.invalidateQueries({ queryKey: ['shared-catalog'] });
       toast.success('Catalog Product Deleted', {
         description: 'Product removed from global inventory and store listings.',
       });

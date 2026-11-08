@@ -19,8 +19,7 @@ import {
   CheckCircle2,
   AlertCircle,
 } from 'lucide-react';
-import api from '../../../api/client';
-import { queryKeys } from '../../../api/queryKeys';
+import { useShopOwnerDashboardQuery, useMyShopQuery } from '../../../hooks/useShopOwner';
 import { useAuth } from '../../../context/AuthContext';
 
 export default function ShopOwnerDashboardPage() {
@@ -29,24 +28,12 @@ export default function ShopOwnerDashboardPage() {
   const {
     data: dashboardData,
     isLoading: loadingDashboard,
-  } = useQuery({
-    queryKey: queryKeys.shopOwner.dashboard,
-    queryFn: async () => {
-      const res = await api.get('/shop-owner/dashboard');
-      return res.data;
-    },
-  });
+  } = useShopOwnerDashboardQuery();
 
   const {
     data: shopData,
     isLoading: loadingShop,
-  } = useQuery({
-    queryKey: queryKeys.shopOwner.myShop,
-    queryFn: async () => {
-      const res = await api.get('/shop-owner/my-shop');
-      return res.data?.shop || null;
-    },
-  });
+  } = useMyShopQuery();
 
   const loading = loadingDashboard || loadingShop;
 

@@ -15,32 +15,17 @@ import {
   Truck,
   RotateCcw,
 } from 'lucide-react';
-import api from '../../../api/client';
-import { queryKeys } from '../../../api/queryKeys';
+import { useShopOrdersQuery, useUpdateOrderStatusMutation } from '../../../hooks/useShopOwner';
 
 export default function ShopOrdersPage() {
-  const queryClient = useQueryClient();
-
   const {
     data: orders = [],
     isLoading,
     isError,
-  } = useQuery({
-    queryKey: queryKeys.shopOwner.orders,
-    queryFn: async () => {
-      const res = await api.get('/shop-owner/orders', { params: { per_page: 50 } });
-      return res.data.data || [];
-    },
-  });
+  } = useShopOrdersQuery();
 
-  const updateStatusMutation = useMutation({
-    mutationFn: async ({ orderId, status }) => {
-      const res = await api.put(`/shop-owner/orders/${orderId}/status`, { status });
-      return res.data;
-    },
+  const updateStatusMutation = useUpdateOrderStatusMutation({
     onSuccess: (_, variables) => {
-      queryClient.invalidateQueries({ queryKey: ['shop-orders'] });
-      queryClient.invalidateQueries({ queryKey: ['shop-owner-dashboard'] });
       toast.success('Order Status Updated', {
         description: `Order #${variables.orderId} is now marked as "${variables.status}".`,
       });

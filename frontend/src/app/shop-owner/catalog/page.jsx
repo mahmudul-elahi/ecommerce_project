@@ -2,7 +2,6 @@
 
 import React, { useState } from 'react';
 import Link from 'next/link';
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
@@ -22,8 +21,12 @@ import {
   HelpCircle,
   CheckCircle2,
 } from 'lucide-react';
-import api from '../../../api/client';
-import { queryKeys } from '../../../api/queryKeys';
+import { useDebounce } from '../../../hooks/useDebounce';
+import {
+  useCatalogQuery,
+  useAddToShopMutation,
+  useCreateCatalogProductMutation,
+} from '../../../hooks/useCatalog';
 import Modal from '../../../components/common/Modal';
 
 // Schema for adding existing catalog product to own shop
@@ -48,11 +51,10 @@ const createSharedProductSchema = z.object({
 });
 
 export default function CatalogBrowsePage() {
-  const queryClient = useQueryClient();
-
   const [search, setSearch] = useState('');
   const [category, setCategory] = useState('');
   const [statusFilter, setStatusFilter] = useState('');
+  const debouncedSearch = useDebounce(search, 250);
 
   // Modals
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
@@ -60,25 +62,12 @@ export default function CatalogBrowsePage() {
 
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
 
-  // TanStack Query: Fetch Shared Catalog
+  // Clean custom query hook
   const {
     data: catalogProducts = [],
     isLoading,
     isError,
-  } = useQuery({
-    queryKey: queryKeys.catalog.list({ search, category, status: statusFilter }),
-    queryFn: async () => {
-      const res = await api.get('/shop-owner/catalog', {
-        params: {
-          search: search || undefined,
-          category: category || undefined,
-          status: statusFilter || undefined,
-          per_page: 100,
-        },
-      });
-      return res.data.data || [];
-    },
-  });
+  } = useCatalogQuery({ search: debouncedSearch, category, status: statusFilter });
 
   // React Hook Form: Add To Shop
   const {
@@ -118,24 +107,9 @@ export default function CatalogBrowsePage() {
     },
   });
 
-  // Mutation: Add to Shop
-  const addToShopMutation = useMutation({
-    mutationFn: async ({ productId, data }) => {
-      const payload = {
-        product_id: productId,
-        custom_price: data.custom_price ? parseFloat(data.custom_price) : null,
-        custom_title: data.custom_title || null,
-        custom_description: data.custom_description || null,
-        custom_thumbnail: data.custom_thumbnail || null,
-        stock: parseInt(data.stock, 10) || 100,
-      };
-      const res = await api.post('/shop-owner/products', payload);
-      return res.data;
-    },
-    onSuccess: (_, variables) => {
-      queryClient.invalidateQueries({ queryKey: ['shop-catalog'] });
-      queryClient.invalidateQueries({ queryKey: ['my-products'] });
-      queryClient.invalidateQueries({ queryKey: ['shop-owner-dashboard'] });
+  // Clean custom mutations
+  const addToShopMutation = useAddToShopMutation({
+    onSuccess: () => {
       setIsAddModalOpen(false);
       resetAdd();
       toast.success('Product Added to Your Storefront!', {
@@ -149,26 +123,8 @@ export default function CatalogBrowsePage() {
     },
   });
 
-  // Mutation: Create Shared Product
-  const createSharedProductMutation = useMutation({
-    mutationFn: async (data) => {
-      const payload = {
-        name: data.name,
-        sku: data.sku,
-        category: data.category,
-        description: data.description || '',
-        base_price: parseFloat(data.base_price),
-        thumbnail: data.thumbnail || null,
-        custom_price: data.custom_price ? parseFloat(data.custom_price) : null,
-        stock: parseInt(data.stock, 10) || 100,
-      };
-      const res = await api.post('/shop-owner/catalog', payload);
-      return res.data;
-    },
+  const createSharedProductMutation = useCreateCatalogProductMutation({
     onSuccess: (res) => {
-      queryClient.invalidateQueries({ queryKey: ['shop-catalog'] });
-      queryClient.invalidateQueries({ queryKey: ['my-products'] });
-      queryClient.invalidateQueries({ queryKey: ['shop-owner-dashboard'] });
       setIsCreateModalOpen(false);
       resetCreate();
       toast.success('Shared Product Created Successfully!', {

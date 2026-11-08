@@ -1,7 +1,6 @@
 'use client';
 
 import React, { useState } from 'react';
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
@@ -20,9 +19,14 @@ import {
   KeyRound,
   UserCheck,
 } from 'lucide-react';
-import api from '../../../api/client';
-import { queryKeys } from '../../../api/queryKeys';
 import Modal from '../../../components/common/Modal';
+import { useDebounce } from '../../../hooks/useDebounce';
+import {
+  useAdminUsersQuery,
+  useAdminShopsLookupQuery,
+  useSaveAdminUserMutation,
+  useDeleteAdminUserMutation,
+} from '../../../hooks/useAdmin';
 
 const userSchema = z.object({
   name: z.string().min(2, 'Name is required'),
@@ -36,37 +40,21 @@ const userSchema = z.object({
 });
 
 export default function UserManagementPage() {
-  const queryClient = useQueryClient();
-
   const [search, setSearch] = useState('');
+  const debouncedSearch = useDebounce(search, 250);
 
   // Modal
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingUser, setEditingUser] = useState(null);
 
-  // TanStack Query: Users
+  // TanStack Query: Users & Shops lookup via custom hooks
   const {
     data: users = [],
     isLoading,
     isError,
-  } = useQuery({
-    queryKey: queryKeys.admin.users(search),
-    queryFn: async () => {
-      const res = await api.get('/admin/users', {
-        params: { search: search || undefined, per_page: 50 },
-      });
-      return res.data.data || [];
-    },
-  });
+  } = useAdminUsersQuery(debouncedSearch);
 
-  // TanStack Query: Shops (for assigning store)
-  const { data: shops = [] } = useQuery({
-    queryKey: ['admin-shops-for-users'],
-    queryFn: async () => {
-      const res = await api.get('/admin/shops', { params: { per_page: 100 } });
-      return res.data.data || [];
-    },
-  });
+  const { data: shops = [] } = useAdminShopsLookupQuery();
 
   // React Hook Form
   const {
@@ -89,33 +77,9 @@ export default function UserManagementPage() {
     },
   });
 
-  // Mutation: Save User (Create/Update)
-  const saveMutation = useMutation({
-    mutationFn: async (formData) => {
-      const payload = {
-        name: formData.name,
-        email: formData.email,
-        phone: formData.phone || null,
-        role: formData.role,
-        shop_id: formData.shop_id ? parseInt(formData.shop_id, 10) : null,
-        shop_name: formData.shop_name || null,
-        is_active: formData.is_active,
-      };
-
-      if (formData.password) {
-        payload.password = formData.password;
-      }
-
-      if (editingUser) {
-        return (await api.put(`/admin/users/${editingUser.id}`, payload)).data;
-      } else {
-        return (await api.post('/admin/users', payload)).data;
-      }
-    },
+  // Mutations via custom hooks
+  const saveMutation = useSaveAdminUserMutation({
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['admin-users'] });
-      queryClient.invalidateQueries({ queryKey: ['admin-dashboard'] });
-      queryClient.invalidateQueries({ queryKey: ['admin-owners'] });
       setIsModalOpen(false);
       toast.success(
         editingUser
@@ -130,15 +94,8 @@ export default function UserManagementPage() {
     },
   });
 
-  // Mutation: Delete User
-  const deleteMutation = useMutation({
-    mutationFn: async (id) => {
-      await api.delete(`/admin/users/${id}`);
-    },
+  const deleteMutation = useDeleteAdminUserMutation({
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['admin-users'] });
-      queryClient.invalidateQueries({ queryKey: ['admin-dashboard'] });
-      queryClient.invalidateQueries({ queryKey: ['admin-owners'] });
       toast.success('User account removed');
     },
     onError: (err) => {
@@ -190,7 +147,21 @@ export default function UserManagementPage() {
       toast.error('Password is required for new accounts');
       return;
     }
-    saveMutation.mutate(data);
+    const payload = {
+      name: data.name,
+      email: data.email,
+      phone: data.phone || null,
+      role: data.role,
+      shop_id: data.shop_id ? parseInt(data.shop_id, 10) : null,
+      shop_name: data.shop_name || null,
+      is_active: data.is_active,
+    };
+
+    if (data.password) {
+      payload.password = data.password;
+    }
+
+    saveMutation.mutate({ id: editingUser?.id, payload });
   };
 
   return (

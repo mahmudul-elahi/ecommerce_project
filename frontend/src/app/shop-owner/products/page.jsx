@@ -2,7 +2,6 @@
 
 import React, { useState } from 'react';
 import Link from 'next/link';
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
@@ -21,8 +20,13 @@ import {
   CheckCircle2,
   XCircle,
 } from 'lucide-react';
-import api from '../../../api/client';
-import { queryKeys } from '../../../api/queryKeys';
+import { useDebounce } from '../../../hooks/useDebounce';
+import {
+  useShopOwnerProductsQuery,
+  useUpdateShopProductMutation,
+  useResetShopProductMutation,
+  useRemoveShopProductMutation,
+} from '../../../hooks/useShopOwner';
 import { useAuth } from '../../../context/AuthContext';
 import Modal from '../../../components/common/Modal';
 
@@ -38,26 +42,18 @@ const customizeSchema = z.object({
 
 export default function MyProductsPage() {
   const { shop } = useAuth();
-  const queryClient = useQueryClient();
   const [search, setSearch] = useState('');
+  const debouncedSearch = useDebounce(search, 250);
 
   // Modal State
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedListing, setSelectedListing] = useState(null);
 
-  // TanStack React Query: Listings
+  // Clean custom query hook
   const {
     data: listings = [],
     isLoading,
-  } = useQuery({
-    queryKey: queryKeys.shopOwner.products(search),
-    queryFn: async () => {
-      const res = await api.get('/shop-owner/products', {
-        params: { search: search || undefined, per_page: 50 },
-      });
-      return res.data.data || [];
-    },
-  });
+  } = useShopOwnerProductsQuery(debouncedSearch);
 
   // React Hook Form for Customize Modal
   const {
@@ -93,14 +89,9 @@ export default function MyProductsPage() {
     setIsModalOpen(true);
   };
 
-  // Mutation: Save Customizations
-  const saveMutation = useMutation({
-    mutationFn: async ({ id, payload }) => {
-      const res = await api.put(`/shop-owner/products/${id}`, payload);
-      return res.data;
-    },
+  // Custom Mutations
+  const saveMutation = useUpdateShopProductMutation({
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['my-products'] });
       toast.success('Customizations Saved', {
         description: 'Shop pricing and product details updated successfully.',
       });
@@ -114,14 +105,8 @@ export default function MyProductsPage() {
     },
   });
 
-  // Mutation: Reset to Catalog
-  const resetMutation = useMutation({
-    mutationFn: async (id) => {
-      const res = await api.put(`/shop-owner/products/${id}`, { reset_to_catalog: true });
-      return res.data;
-    },
+  const resetMutation = useResetShopProductMutation({
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['my-products'] });
       toast.success('Restored to Catalog', {
         description: 'Listing reverted to shared catalog default title, price, and thumbnail.',
       });
@@ -135,13 +120,8 @@ export default function MyProductsPage() {
     },
   });
 
-  // Mutation: Remove from Shop
-  const removeMutation = useMutation({
-    mutationFn: async (id) => {
-      await api.delete(`/shop-owner/products/${id}`);
-    },
-    onSuccess: (_, id) => {
-      queryClient.invalidateQueries({ queryKey: ['my-products'] });
+  const removeMutation = useRemoveShopProductMutation({
+    onSuccess: () => {
       toast.success('Product Removed', {
         description: 'The product was removed from your store but remains in the global catalog.',
       });

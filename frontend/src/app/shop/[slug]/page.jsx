@@ -22,8 +22,8 @@ import {
   Plus,
   Minus,
 } from 'lucide-react';
-import api from '../../../api/client';
-import { queryKeys } from '../../../api/queryKeys';
+import { useDebounce } from '../../../hooks/useDebounce';
+import { useShopDetailQuery, useShopProductsQuery } from '../../../hooks/useShops';
 import { useCart } from '../../../context/CartContext';
 import Modal from '../../../components/common/Modal';
 
@@ -36,43 +36,27 @@ export default function ShopStorefrontPage() {
   const [search, setSearch] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('');
   const [sort, setSort] = useState('');
+  const debouncedSearch = useDebounce(search, 250);
 
   // Selected product modal
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [modalQuantity, setModalQuantity] = useState(1);
   const [addedItemEffect, setAddedItemEffect] = useState(null);
 
-  // Shop Query via TanStack React Query
+  // Clean custom hooks for data fetching
   const {
     data: shop,
     isLoading: loadingShop,
     isError: shopError,
-  } = useQuery({
-    queryKey: queryKeys.shops.detail(slug),
-    queryFn: async () => {
-      const res = await api.get(`/customer/shops/${slug}`);
-      return res.data;
-    },
-    enabled: !!slug,
-  });
+  } = useShopDetailQuery(slug);
 
-  // Shop Products Query via TanStack React Query
   const {
     data: products = [],
     isLoading: loadingProducts,
-  } = useQuery({
-    queryKey: queryKeys.shops.products(slug, { search, selectedCategory, sort }),
-    queryFn: async () => {
-      const res = await api.get(`/customer/shops/${slug}/products`, {
-        params: {
-          search: search || undefined,
-          category: selectedCategory || undefined,
-          sort: sort || undefined,
-        },
-      });
-      return res.data.data || [];
-    },
-    enabled: !!slug,
+  } = useShopProductsQuery(slug, {
+    search: debouncedSearch,
+    category: selectedCategory,
+    sort,
   });
 
   const handleAddToCart = (e, product, qty = 1) => {
