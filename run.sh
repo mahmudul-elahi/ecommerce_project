@@ -11,13 +11,13 @@ trap 'kill $(jobs -p)' EXIT
 echo "1. Starting Laravel Backend on http://127.0.0.1:8000..."
 (cd backend && php artisan serve --port=8000) &
 
-echo "2. Starting React Vite Frontend on http://localhost:5173..."
+echo "2. Starting Next.js Frontend on http://localhost:3000..."
 (cd frontend && npm run dev) &
 
 echo ""
 echo "🚀 Application is running:"
-echo "   - Frontend Storefront & Admin: http://localhost:5173"
-echo "   - Backend RESTful API:         http://127.0.0.1:8000/api"
+echo "   - Frontend (Next.js):   http://localhost:3000"
+echo "   - Backend (Laravel):    http://127.0.0.1:8000/api"
 echo ""
 echo "Press Ctrl+C to stop both servers."
 

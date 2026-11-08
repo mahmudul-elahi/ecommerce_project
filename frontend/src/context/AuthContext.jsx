@@ -1,15 +1,26 @@
+'use client';
+
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import api from '../api/client';
 
 const AuthContext = createContext(null);
 
 export const AuthProvider = ({ children }) => {
-  const [user, setUser] = useState(() => {
-    const saved = localStorage.getItem('auth_user');
-    return saved ? JSON.parse(saved) : null;
-  });
-  const [token, setToken] = useState(() => localStorage.getItem('auth_token'));
+  const [user, setUser] = useState(null);
+  const [token, setToken] = useState(null);
   const [loading, setLoading] = useState(true);
+
+  // Initialize from localStorage on mount (client-only)
+  useEffect(() => {
+    try {
+      const savedToken = localStorage.getItem('auth_token');
+      const savedUser = localStorage.getItem('auth_user');
+      if (savedToken) setToken(savedToken);
+      if (savedUser) setUser(JSON.parse(savedUser));
+    } catch (e) {
+      console.warn('Could not read auth from localStorage', e);
+    }
+  }, []);
 
   useEffect(() => {
     const verifyAuth = async () => {
@@ -17,7 +28,9 @@ export const AuthProvider = ({ children }) => {
         try {
           const res = await api.get('/auth/me');
           setUser(res.data.user);
-          localStorage.setItem('auth_user', JSON.stringify(res.data.user));
+          if (typeof window !== 'undefined') {
+            localStorage.setItem('auth_user', JSON.stringify(res.data.user));
+          }
         } catch (err) {
           console.warn('Failed to verify token', err);
           logout();
@@ -26,7 +39,11 @@ export const AuthProvider = ({ children }) => {
       setLoading(false);
     };
 
-    verifyAuth();
+    if (token !== null) {
+      verifyAuth();
+    } else {
+      setLoading(false);
+    }
   }, [token]);
 
   const login = async (email, password) => {
@@ -34,8 +51,10 @@ export const AuthProvider = ({ children }) => {
     const { token: newToken, user: newUser } = res.data;
     setToken(newToken);
     setUser(newUser);
-    localStorage.setItem('auth_token', newToken);
-    localStorage.setItem('auth_user', JSON.stringify(newUser));
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('auth_token', newToken);
+      localStorage.setItem('auth_user', JSON.stringify(newUser));
+    }
     return newUser;
   };
 
@@ -44,8 +63,10 @@ export const AuthProvider = ({ children }) => {
     const { token: newToken, user: newUser } = res.data;
     setToken(newToken);
     setUser(newUser);
-    localStorage.setItem('auth_token', newToken);
-    localStorage.setItem('auth_user', JSON.stringify(newUser));
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('auth_token', newToken);
+      localStorage.setItem('auth_user', JSON.stringify(newUser));
+    }
     return newUser;
   };
 
@@ -59,8 +80,10 @@ export const AuthProvider = ({ children }) => {
     } finally {
       setToken(null);
       setUser(null);
-      localStorage.removeItem('auth_token');
-      localStorage.removeItem('auth_user');
+      if (typeof window !== 'undefined') {
+        localStorage.removeItem('auth_token');
+        localStorage.removeItem('auth_user');
+      }
     }
   };
 
@@ -68,7 +91,9 @@ export const AuthProvider = ({ children }) => {
     setUser((prev) => {
       if (!prev) return prev;
       const next = { ...prev, shop: updatedShop };
-      localStorage.setItem('auth_user', JSON.stringify(next));
+      if (typeof window !== 'undefined') {
+        localStorage.setItem('auth_user', JSON.stringify(next));
+      }
       return next;
     });
   };

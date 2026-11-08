@@ -1,10 +1,13 @@
-import React, { useState, useEffect } from 'react';
-import { Store, Save, ExternalLink } from 'lucide-react';
-import api from '../../api/client';
-import { useToast } from '../../context/ToastContext';
-import { useAuth } from '../../context/AuthContext';
+'use client';
 
-export default function ShopSettings() {
+import React, { useState, useEffect } from 'react';
+import Link from 'next/link';
+import { Store, Save, ExternalLink } from 'lucide-react';
+import api from '../../../api/client';
+import { useToast } from '../../../context/ToastContext';
+import { useAuth } from '../../../context/AuthContext';
+
+export default function ShopSettingsPage() {
   const { addToast } = useToast();
   const { updateUserShop } = useAuth();
   const [loading, setLoading] = useState(true);
@@ -85,15 +88,14 @@ export default function ShopSettings() {
         </div>
 
         {formData.slug && (
-          <a
+          <Link
             href={`/shop/${formData.slug}`}
             target="_blank"
-            rel="noreferrer"
             className="px-3.5 py-2 rounded-xl bg-white border border-slate-200 text-xs font-semibold text-slate-700 hover:bg-slate-50 flex items-center space-x-1.5 transition-colors shadow-sm"
           >
             <span>View Public Store</span>
             <ExternalLink className="w-3.5 h-3.5" />
-          </a>
+          </Link>
         )}
       </div>
 

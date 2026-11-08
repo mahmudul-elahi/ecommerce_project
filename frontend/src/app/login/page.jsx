@@ -1,13 +1,16 @@
+'use client';
+
 import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { Store, ShieldCheck, UserCheck, Lock, Mail, ArrowRight } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import { useToast } from '../../context/ToastContext';
 
-export default function Login() {
+export default function LoginPage() {
   const { login } = useAuth();
   const { addToast } = useToast();
-  const navigate = useNavigate();
+  const router = useRouter();
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -20,9 +23,9 @@ export default function Login() {
       const user = await login(email, password);
       addToast(`Welcome back, ${user.name}!`, 'success');
       if (user.role === 'admin') {
-        navigate('/admin/dashboard');
+        router.push('/admin/dashboard');
       } else {
-        navigate('/shop-owner/dashboard');
+        router.push('/shop-owner/dashboard');
       }
     } catch (err) {
       console.error(err);
@@ -145,7 +148,7 @@ export default function Login() {
         <div className="text-center pt-2 border-t border-slate-100">
           <p className="text-xs text-slate-500">
             Want to launch your own store?{' '}
-            <Link to="/register" className="font-semibold text-emerald-600 hover:underline">
+            <Link href="/register" className="font-semibold text-emerald-600 hover:underline">
               Create a shop owner account
             </Link>
           </p>

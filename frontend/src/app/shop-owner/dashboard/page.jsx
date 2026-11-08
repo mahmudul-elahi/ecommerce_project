@@ -1,22 +1,23 @@
+'use client';
+
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import Link from 'next/link';
 import {
   Store,
   Package,
   Layers,
   ShoppingBag,
   DollarSign,
-  Plus,
   ArrowRight,
   ExternalLink,
   Settings,
   Clock,
   Sparkles,
 } from 'lucide-react';
-import api from '../../api/client';
-import { useAuth } from '../../context/AuthContext';
+import api from '../../../api/client';
+import { useAuth } from '../../../context/AuthContext';
 
-export default function ShopDashboard() {
+export default function ShopOwnerDashboardPage() {
   const { user } = useAuth();
   const [data, setData] = useState(null);
   const [shop, setShop] = useState(null);
@@ -81,7 +82,7 @@ export default function ShopDashboard() {
 
             <div className="flex flex-wrap items-center gap-2">
               <Link
-                to={`/shop/${shop.slug}`}
+                href={`/shop/${shop.slug}`}
                 target="_blank"
                 className="px-3.5 py-2 rounded-xl bg-white/10 hover:bg-white/20 text-white text-xs font-semibold backdrop-blur-md transition-colors border border-white/10 flex items-center space-x-1.5"
               >
@@ -89,7 +90,7 @@ export default function ShopDashboard() {
                 <ExternalLink className="w-3.5 h-3.5" />
               </Link>
               <Link
-                to="/shop-owner/settings"
+                href="/shop-owner/settings"
                 className="p-2 rounded-xl bg-white/10 hover:bg-white/20 text-white transition-colors border border-white/10"
                 title="Store Settings"
               >
@@ -107,7 +108,7 @@ export default function ShopDashboard() {
           <div>
             <span className="text-xs font-semibold text-slate-400 uppercase tracking-wider">My Shop Listings</span>
             <div className="text-2xl font-extrabold text-slate-900 mt-1">{stats.my_products_count || 0}</div>
-            <Link to="/shop-owner/products" className="text-[11px] text-emerald-600 font-semibold hover:underline mt-1 block">
+            <Link href="/shop-owner/products" className="text-[11px] text-emerald-600 font-semibold hover:underline mt-1 block">
               Manage custom prices →
             </Link>
           </div>
@@ -121,7 +122,7 @@ export default function ShopDashboard() {
           <div>
             <span className="text-xs font-semibold text-slate-400 uppercase tracking-wider">Shared Catalog</span>
             <div className="text-2xl font-extrabold text-slate-900 mt-1">{stats.total_catalog_count || 0}</div>
-            <Link to="/shop-owner/catalog" className="text-[11px] text-sky-600 font-semibold hover:underline mt-1 block">
+            <Link href="/shop-owner/catalog" className="text-[11px] text-sky-600 font-semibold hover:underline mt-1 block">
               Browse & add products →
             </Link>
           </div>
@@ -135,7 +136,7 @@ export default function ShopDashboard() {
           <div>
             <span className="text-xs font-semibold text-slate-400 uppercase tracking-wider">Store Orders</span>
             <div className="text-2xl font-extrabold text-slate-900 mt-1">{stats.total_orders || 0}</div>
-            <Link to="/shop-owner/orders" className="text-[11px] text-purple-600 font-semibold hover:underline mt-1 block">
+            <Link href="/shop-owner/orders" className="text-[11px] text-purple-600 font-semibold hover:underline mt-1 block">
               View customer orders →
             </Link>
           </div>
@@ -172,7 +173,7 @@ export default function ShopDashboard() {
             </p>
           </div>
           <Link
-            to="/shop-owner/catalog"
+            href="/shop-owner/catalog"
             className="mt-4 inline-flex items-center space-x-1.5 text-xs font-bold text-emerald-700 hover:text-emerald-800"
           >
             <span>Browse Catalog</span>
@@ -191,7 +192,7 @@ export default function ShopDashboard() {
             </p>
           </div>
           <Link
-            to="/shop-owner/catalog"
+            href="/shop-owner/catalog"
             className="mt-4 inline-flex items-center space-x-1.5 text-xs font-bold text-sky-700 hover:text-sky-800"
           >
             <span>Create a Product Now</span>
@@ -207,7 +208,7 @@ export default function ShopDashboard() {
             <ShoppingBag className="w-4 h-4 text-emerald-600" />
             <span>Recent Customer Orders</span>
           </h3>
-          <Link to="/shop-owner/orders" className="text-xs font-semibold text-emerald-600 hover:underline flex items-center space-x-1">
+          <Link href="/shop-owner/orders" className="text-xs font-semibold text-emerald-600 hover:underline flex items-center space-x-1">
             <span>View all orders</span>
             <ArrowRight className="w-3 h-3" />
           </Link>

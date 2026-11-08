@@ -1,5 +1,7 @@
+'use client';
+
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import Link from 'next/link';
 import {
   Store,
   Layers,
@@ -8,12 +10,10 @@ import {
   DollarSign,
   Plus,
   ArrowRight,
-  TrendingUp,
-  ShieldCheck,
 } from 'lucide-react';
-import api from '../../api/client';
+import api from '../../../api/client';
 
-export default function AdminDashboard() {
+export default function AdminDashboardPage() {
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
 
@@ -61,14 +61,14 @@ export default function AdminDashboard() {
         {/* Quick action shortcuts */}
         <div className="flex items-center space-x-2">
           <Link
-            to="/admin/shops"
+            href="/admin/shops"
             className="px-3.5 py-2 rounded-xl bg-white border border-slate-200 text-xs font-semibold text-slate-700 hover:bg-slate-50 transition-colors shadow-sm flex items-center space-x-1.5"
           >
             <Plus className="w-3.5 h-3.5 text-emerald-600" />
             <span>New Shop</span>
           </Link>
           <Link
-            to="/admin/products"
+            href="/admin/products"
             className="px-3.5 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-xs font-semibold text-white transition-colors shadow-sm flex items-center space-x-1.5"
           >
             <Plus className="w-3.5 h-3.5" />
@@ -139,7 +139,7 @@ export default function AdminDashboard() {
               <Store className="w-4 h-4 text-emerald-600" />
               <span>Registered Stores</span>
             </h3>
-            <Link to="/admin/shops" className="text-xs font-semibold text-emerald-600 hover:underline flex items-center space-x-1">
+            <Link href="/admin/shops" className="text-xs font-semibold text-emerald-600 hover:underline flex items-center space-x-1">
               <span>View all</span>
               <ArrowRight className="w-3 h-3" />
             </Link>
@@ -186,7 +186,7 @@ export default function AdminDashboard() {
               <Layers className="w-4 h-4 text-sky-600" />
               <span>Catalog Products</span>
             </h3>
-            <Link to="/admin/products" className="text-xs font-semibold text-sky-600 hover:underline flex items-center space-x-1">
+            <Link href="/admin/products" className="text-xs font-semibold text-sky-600 hover:underline flex items-center space-x-1">
               <span>Manage catalog</span>
               <ArrowRight className="w-3 h-3" />
             </Link>

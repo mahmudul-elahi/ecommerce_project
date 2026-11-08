@@ -1,6 +1,6 @@
 # 🛍️ Small E-commerce Management System (Shared Catalog Engine)
 
-A full-stack multi-vendor e-commerce management platform built with **Laravel 12** and **React 18 (Vite + Tailwind CSS)**.
+A full-stack multi-vendor e-commerce management platform built with **Laravel 12** and **Next.js 16 (App Router + Turbopack + React 19 + Tailwind CSS)**.
 
 This system implements a **Shared Product Catalog** architecture where administrators and shop owners collaborate on a shared global catalog. Shop owners can curate products for their independent storefronts with customized pricing, tailored titles/descriptions, and exclusive thumbnails. Customers only see products assigned to each specific shop.
 
@@ -51,7 +51,7 @@ This system implements a **Shared Product Catalog** architecture where administr
 
 ---
 
-## 💻 Technology Stack
+## 💻 Technology Stack (Latest Versions)
 
 - **Backend:**
   - PHP 8.2+ / 8.5
@@ -59,12 +59,12 @@ This system implements a **Shared Product Catalog** architecture where administr
   - Laravel Sanctum (API Token Authentication)
   - Database: SQLite (default zero-config) or MySQL
   - Pest / PHPUnit test suite (54 assertions)
-- **Frontend:**
-  - React 18 + Vite 6
+- **Frontend (Latest Versions):**
+  - Next.js 16.4.5 (App Router + Turbopack)
+  - React 19.3.1 & React DOM 19.3.1
   - Tailwind CSS 3.4
-  - React Router DOM 6
-  - Lucide React Icons
-  - Axios (with auth interceptors & proxy)
+  - Lucide React Icons (v1.70.0)
+  - Axios (with auth interceptors & proxy rewrites)
 
 ---
 
@@ -124,7 +124,7 @@ Ensure you have the following installed on your machine:
 
 ---
 
-### 3. Frontend Setup
+### 3. Frontend Setup (Next.js)
 
 1. Open a **new terminal window** and navigate to the frontend directory:
    ```bash
@@ -141,11 +141,11 @@ Ensure you have the following installed on your machine:
    npm install
    ```
 
-4. Start the frontend development server:
+4. Start the Next.js development server:
    ```bash
    npm run dev
    ```
-   *The application will be accessible at: **`http://localhost:5173`**.*
+   *The application will be accessible at: **`http://localhost:3000`**.*
 
 ---
 
@@ -197,7 +197,7 @@ PASS  Tests\Feature\EcommerceApiTest
 ✓ customer can checkout and place order
 
 Tests:    9 passed (54 assertions)
-Duration: 0.54s
+Duration: 0.51s
 ```
 
 ---
@@ -205,7 +205,7 @@ Duration: 0.54s
 ## 📖 Step-by-Step Functional Walkthrough
 
 ### 1. Customer View
-1. Visit `http://localhost:5173`.
+1. Visit `http://localhost:3000`.
 2. Browse the active stores (e.g., **Tech Haven**, **Urban Apparel & Lifestyle**, **Nordic Living Essentials**).
 3. Click on **Tech Haven**:
    - Notice that the **AcousticPro Wireless Studio Edition** is displayed at **$249.99** with a *"Store Special Price"* badge (customized from catalog base price of $299.99).
@@ -213,7 +213,7 @@ Duration: 0.54s
 4. Add items to cart and click **Proceed to Checkout**. Fill in delivery details to place an order and receive an order confirmation number.
 
 ### 2. Shop Owner Management
-1. Log in as `owner1@ecommerce.com` (Alex Rivera) or use the **Demo Switcher**.
+1. Log in as `owner1@ecommerce.com` (Alex Rivera) or use the **Demo Switcher** in the navbar.
 2. Go to **Shared Catalog**:
    - Browse products created by Admin, by yourself, or by other shop owners.
    - Click **"Create New Product"**: create a product (e.g. *"MagSafe Ultra Powerbank"*). It is automatically listed in your shop **and** added to the shared catalog.

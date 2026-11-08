@@ -1,9 +1,11 @@
-import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
-import { Store, Search, ArrowRight, ShieldCheck, ShoppingBag, MapPin, Sparkles } from 'lucide-react';
-import api from '../../api/client';
+'use client';
 
-export default function ShopList() {
+import React, { useState, useEffect } from 'react';
+import Link from 'next/link';
+import { Store, Search, ArrowRight, ShieldCheck, ShoppingBag, MapPin, Sparkles } from 'lucide-react';
+import api from '../api/client';
+
+export default function HomePage() {
   const [shops, setShops] = useState([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState('');
@@ -113,7 +115,7 @@ export default function ShopList() {
             {shops.map((shop) => (
               <Link
                 key={shop.id}
-                to={`/shop/${shop.slug}`}
+                href={`/shop/${shop.slug}`}
                 className="group bg-white rounded-2xl border border-slate-200/90 overflow-hidden shadow-sm hover:shadow-xl hover:border-emerald-500/40 transition-all duration-300 flex flex-col"
               >
                 {/* Banner & Logo */}

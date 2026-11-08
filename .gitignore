@@ -18,6 +18,8 @@ vendor/
 # Build artifacts
 dist/
 build/
+.next/
+out/
 backend/public/build
 backend/public/storage
 backend/storage/*.key

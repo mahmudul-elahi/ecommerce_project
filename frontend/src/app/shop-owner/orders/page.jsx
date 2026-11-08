@@ -1,9 +1,11 @@
-import React, { useState, useEffect } from 'react';
-import { ShoppingBag, Search, Clock, CheckCircle2, AlertCircle, XCircle } from 'lucide-react';
-import api from '../../api/client';
-import { useToast } from '../../context/ToastContext';
+'use client';
 
-export default function ShopOrders() {
+import React, { useState, useEffect } from 'react';
+import { ShoppingBag, Clock } from 'lucide-react';
+import api from '../../../api/client';
+import { useToast } from '../../../context/ToastContext';
+
+export default function ShopOrdersPage() {
   const { addToast } = useToast();
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);

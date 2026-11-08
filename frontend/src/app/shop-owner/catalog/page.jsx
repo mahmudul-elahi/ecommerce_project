@@ -1,28 +1,26 @@
+'use client';
+
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import Link from 'next/link';
 import {
   Layers,
   Plus,
   Search,
   Check,
-  ShoppingBag,
   Sparkles,
-  Store,
-  Tag,
   ArrowRight,
-  Filter,
 } from 'lucide-react';
-import api from '../../api/client';
-import { useToast } from '../../context/ToastContext';
-import Modal from '../../components/common/Modal';
+import api from '../../../api/client';
+import { useToast } from '../../../context/ToastContext';
+import Modal from '../../../components/common/Modal';
 
-export default function CatalogBrowse() {
+export default function CatalogBrowsePage() {
   const { addToast } = useToast();
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState('');
   const [category, setCategory] = useState('');
-  const [statusFilter, setStatusFilter] = useState(''); // '', 'available', 'added'
+  const [statusFilter, setStatusFilter] = useState('');
 
   // Add To Shop Modal
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
@@ -36,7 +34,7 @@ export default function CatalogBrowse() {
     stock: 100,
   });
 
-  // Create New Product Modal (Enters shared catalog + adds to shop)
+  // Create New Product Modal
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
   const [submittingCreate, setSubmittingCreate] = useState(false);
   const [createForm, setCreateForm] = useState({
@@ -330,7 +328,7 @@ export default function CatalogBrowse() {
 
                   {item.is_in_my_shop ? (
                     <Link
-                      to="/shop-owner/products"
+                      href="/shop-owner/products"
                       className="px-3 py-1.5 rounded-xl bg-emerald-50 hover:bg-emerald-100 text-emerald-800 text-xs font-semibold transition-colors flex items-center space-x-1"
                     >
                       <span>Edit Listing</span>

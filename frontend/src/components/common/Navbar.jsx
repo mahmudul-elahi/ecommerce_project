@@ -1,5 +1,8 @@
+'use client';
+
 import React, { useState } from 'react';
-import { Link, useNavigate, useLocation } from 'react-router-dom';
+import Link from 'next/link';
+import { useRouter, usePathname } from 'next/navigation';
 import {
   ShoppingBag,
   Store,
@@ -22,15 +25,15 @@ export default function Navbar() {
   const { user, isAdmin, isShopOwner, shop, logout, login } = useAuth();
   const { totalCount, setIsCartOpen } = useCart();
   const { addToast } = useToast();
-  const navigate = useNavigate();
-  const location = useLocation();
+  const router = useRouter();
+  const pathname = usePathname();
 
   const [demoMenuOpen, setDemoMenuOpen] = useState(false);
 
   const handleLogout = async () => {
     await logout();
     addToast('Logged out successfully', 'info');
-    navigate('/');
+    router.push('/');
   };
 
   const handleQuickLogin = async (email, password, roleLabel) => {
@@ -39,16 +42,16 @@ export default function Navbar() {
       await login(email, password);
       addToast(`Logged in as ${roleLabel}`, 'success');
       if (email === 'admin@ecommerce.com') {
-        navigate('/admin/dashboard');
+        router.push('/admin/dashboard');
       } else {
-        navigate('/shop-owner/dashboard');
+        router.push('/shop-owner/dashboard');
       }
     } catch (err) {
       addToast('Quick login failed', 'error');
     }
   };
 
-  const isActive = (path) => location.pathname === path;
+  const isActive = (path) => pathname === path;
 
   return (
     <header className="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-slate-200/80 transition-all">
@@ -56,7 +59,7 @@ export default function Navbar() {
         <div className="flex items-center justify-between h-16">
           {/* Logo & Main Nav */}
           <div className="flex items-center space-x-8">
-            <Link to="/" className="flex items-center space-x-2.5 group">
+            <Link href="/" className="flex items-center space-x-2.5 group">
               <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-emerald-600 to-teal-500 flex items-center justify-center text-white shadow-md shadow-emerald-500/20 group-hover:scale-105 transition-transform">
                 <Store className="w-5 h-5" />
               </div>
@@ -73,7 +76,7 @@ export default function Navbar() {
             {/* Navigation links */}
             <nav className="hidden md:flex items-center space-x-1">
               <Link
-                to="/"
+                href="/"
                 className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-colors ${
                   isActive('/')
                     ? 'bg-emerald-50 text-emerald-700'
@@ -88,7 +91,7 @@ export default function Navbar() {
                 <>
                   <div className="h-4 w-[1px] bg-slate-200 mx-1" />
                   <Link
-                    to="/admin/dashboard"
+                    href="/admin/dashboard"
                     className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-colors flex items-center space-x-1.5 ${
                       isActive('/admin/dashboard')
                         ? 'bg-emerald-50 text-emerald-700'
@@ -99,7 +102,7 @@ export default function Navbar() {
                     <span>Dashboard</span>
                   </Link>
                   <Link
-                    to="/admin/shops"
+                    href="/admin/shops"
                     className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-colors flex items-center space-x-1.5 ${
                       isActive('/admin/shops')
                         ? 'bg-emerald-50 text-emerald-700'
@@ -110,7 +113,7 @@ export default function Navbar() {
                     <span>Manage Shops</span>
                   </Link>
                   <Link
-                    to="/admin/products"
+                    href="/admin/products"
                     className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-colors flex items-center space-x-1.5 ${
                       isActive('/admin/products')
                         ? 'bg-emerald-50 text-emerald-700'
@@ -121,7 +124,7 @@ export default function Navbar() {
                     <span>Catalog Products</span>
                   </Link>
                   <Link
-                    to="/admin/users"
+                    href="/admin/users"
                     className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-colors flex items-center space-x-1.5 ${
                       isActive('/admin/users')
                         ? 'bg-emerald-50 text-emerald-700'
@@ -139,7 +142,7 @@ export default function Navbar() {
                 <>
                   <div className="h-4 w-[1px] bg-slate-200 mx-1" />
                   <Link
-                    to="/shop-owner/dashboard"
+                    href="/shop-owner/dashboard"
                     className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-colors flex items-center space-x-1.5 ${
                       isActive('/shop-owner/dashboard')
                         ? 'bg-emerald-50 text-emerald-700'
@@ -150,7 +153,7 @@ export default function Navbar() {
                     <span>My Store</span>
                   </Link>
                   <Link
-                    to="/shop-owner/products"
+                    href="/shop-owner/products"
                     className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-colors flex items-center space-x-1.5 ${
                       isActive('/shop-owner/products')
                         ? 'bg-emerald-50 text-emerald-700'
@@ -161,7 +164,7 @@ export default function Navbar() {
                     <span>My Listed Products</span>
                   </Link>
                   <Link
-                    to="/shop-owner/catalog"
+                    href="/shop-owner/catalog"
                     className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-colors flex items-center space-x-1.5 ${
                       isActive('/shop-owner/catalog')
                         ? 'bg-emerald-50 text-emerald-700'
@@ -178,7 +181,7 @@ export default function Navbar() {
 
           {/* Right Actions */}
           <div className="flex items-center space-x-3">
-            {/* Quick Demo Switcher Dropdown for Evaluator convenience */}
+            {/* Quick Demo Switcher Dropdown */}
             <div className="relative">
               <button
                 onClick={() => setDemoMenuOpen(!demoMenuOpen)}
@@ -279,14 +282,14 @@ export default function Navbar() {
             ) : (
               <div className="flex items-center space-x-2">
                 <Link
-                  to="/login"
+                  href="/login"
                   className="px-3.5 py-1.5 rounded-xl text-xs font-semibold text-slate-700 hover:text-slate-900 hover:bg-slate-100 transition-colors flex items-center space-x-1"
                 >
                   <LogIn className="w-3.5 h-3.5" />
                   <span>Sign In</span>
                 </Link>
                 <Link
-                  to="/register"
+                  href="/register"
                   className="px-3.5 py-1.5 rounded-xl text-xs font-semibold bg-emerald-600 hover:bg-emerald-700 text-white transition-colors shadow-sm"
                 >
                   Open a Shop

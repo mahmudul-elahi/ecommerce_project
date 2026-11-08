@@ -1,26 +1,28 @@
+'use client';
+
 import React, { useState, useEffect } from 'react';
-import { useParams, Link } from 'react-router-dom';
+import { useParams } from 'next/navigation';
+import Link from 'next/link';
 import {
   Store,
   Search,
   ShoppingBag,
   ArrowLeft,
-  Tag,
   Check,
   Phone,
   Mail,
   MapPin,
   Sparkles,
-  Layers,
-  Filter,
 } from 'lucide-react';
-import api from '../../api/client';
-import { useCart } from '../../context/CartContext';
-import { useToast } from '../../context/ToastContext';
-import Modal from '../../components/common/Modal';
+import api from '../../../api/client';
+import { useCart } from '../../../context/CartContext';
+import { useToast } from '../../../context/ToastContext';
+import Modal from '../../../components/common/Modal';
 
-export default function ShopStorefront() {
-  const { slug } = useParams();
+export default function ShopStorefrontPage() {
+  const params = useParams();
+  const slug = params?.slug;
+
   const { addToCart } = useCart();
   const { addToast } = useToast();
 
@@ -40,6 +42,7 @@ export default function ShopStorefront() {
 
   // Fetch shop details
   useEffect(() => {
+    if (!slug) return;
     const fetchShop = async () => {
       try {
         setLoadingShop(true);
@@ -76,6 +79,7 @@ export default function ShopStorefront() {
   };
 
   useEffect(() => {
+    if (!slug) return;
     const timer = setTimeout(() => {
       fetchProducts();
     }, 250);
@@ -114,7 +118,7 @@ export default function ShopStorefront() {
         <h2 className="text-xl font-bold text-slate-800">Shop Not Found</h2>
         <p className="text-sm text-slate-500 mt-2">The shop you are looking for does not exist or is inactive.</p>
         <Link
-          to="/"
+          href="/"
           className="inline-flex items-center space-x-2 mt-6 px-4 py-2 rounded-xl bg-emerald-600 text-white text-sm font-semibold hover:bg-emerald-700 transition-colors"
         >
           <ArrowLeft className="w-4 h-4" />
@@ -194,7 +198,7 @@ export default function ShopStorefront() {
         {/* Navigation & Breadcrumb */}
         <div className="flex items-center justify-between mb-6">
           <Link
-            to="/"
+            href="/"
             className="inline-flex items-center space-x-1.5 text-xs font-semibold text-slate-500 hover:text-emerald-600 transition-colors"
           >
             <ArrowLeft className="w-4 h-4" />
@@ -220,7 +224,6 @@ export default function ShopStorefront() {
           </div>
 
           <div className="flex items-center space-x-3 w-full md:w-auto">
-            {/* Category filter */}
             {categories.length > 0 && (
               <select
                 value={selectedCategory}
@@ -236,7 +239,6 @@ export default function ShopStorefront() {
               </select>
             )}
 
-            {/* Sort filter */}
             <select
               value={sort}
               onChange={(e) => setSort(e.target.value)}
@@ -280,7 +282,7 @@ export default function ShopStorefront() {
                 }}
                 className="group bg-white rounded-2xl border border-slate-200/90 overflow-hidden shadow-sm hover:shadow-xl hover:border-emerald-500/40 transition-all duration-300 flex flex-col cursor-pointer"
               >
-                {/* Product Thumbnail (shop-specific) */}
+                {/* Product Thumbnail */}
                 <div className="relative h-52 bg-slate-100 overflow-hidden">
                   <img
                     src={item.thumbnail || 'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=500'}

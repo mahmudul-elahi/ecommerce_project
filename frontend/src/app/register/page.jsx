@@ -1,13 +1,16 @@
+'use client';
+
 import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { Store, User, Mail, Lock, Phone, ArrowRight } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import { useToast } from '../../context/ToastContext';
 
-export default function Register() {
+export default function RegisterPage() {
   const { register } = useAuth();
   const { addToast } = useToast();
-  const navigate = useNavigate();
+  const router = useRouter();
 
   const [formData, setFormData] = useState({
     name: '',
@@ -29,7 +32,7 @@ export default function Register() {
       setSubmitting(true);
       await register(formData);
       addToast('Shop registered successfully! Welcome to your store.', 'success');
-      navigate('/shop-owner/dashboard');
+      router.push('/shop-owner/dashboard');
     } catch (err) {
       console.error(err);
       addToast(err.response?.data?.message || 'Registration failed', 'error');
@@ -154,7 +157,7 @@ export default function Register() {
         <div className="text-center pt-2 border-t border-slate-100">
           <p className="text-xs text-slate-500">
             Already have an account?{' '}
-            <Link to="/login" className="font-semibold text-emerald-600 hover:underline">
+            <Link href="/login" className="font-semibold text-emerald-600 hover:underline">
               Sign in here
             </Link>
           </p>

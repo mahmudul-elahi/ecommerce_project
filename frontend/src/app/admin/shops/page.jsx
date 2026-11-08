@@ -1,10 +1,13 @@
-import React, { useState, useEffect } from 'react';
-import { Store, Plus, Search, Edit2, Trash2, ExternalLink, User, Phone, Mail } from 'lucide-react';
-import api from '../../api/client';
-import { useToast } from '../../context/ToastContext';
-import Modal from '../../components/common/Modal';
+'use client';
 
-export default function ShopManagement() {
+import React, { useState, useEffect } from 'react';
+import Link from 'next/link';
+import { Store, Plus, Search, Edit2, Trash2, ExternalLink, User, Phone, Mail } from 'lucide-react';
+import api from '../../../api/client';
+import { useToast } from '../../../context/ToastContext';
+import Modal from '../../../components/common/Modal';
+
+export default function ShopManagementPage() {
   const { addToast } = useToast();
   const [shops, setShops] = useState([]);
   const [owners, setOwners] = useState([]);
@@ -222,15 +225,14 @@ export default function ShopManagement() {
                         <div>
                           <div className="font-bold text-slate-900 text-sm flex items-center space-x-1.5">
                             <span>{shop.name}</span>
-                            <a
+                            <Link
                               href={`/shop/${shop.slug}`}
                               target="_blank"
-                              rel="noreferrer"
                               className="text-slate-400 hover:text-emerald-600"
                               title="Visit public storefront"
                             >
                               <ExternalLink className="w-3.5 h-3.5" />
-                            </a>
+                            </Link>
                           </div>
                           <div className="text-[11px] text-slate-400 font-mono">/shop/{shop.slug}</div>
                         </div>

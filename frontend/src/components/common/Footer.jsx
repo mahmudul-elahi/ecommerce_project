@@ -1,5 +1,5 @@
 import React from 'react';
-import { Store, ShieldCheck, Heart } from 'lucide-react';
+import { Store, ShieldCheck } from 'lucide-react';
 
 export default function Footer() {
   return (
@@ -14,7 +14,7 @@ export default function Footer() {
           </div>
 
           <p className="text-xs text-slate-500 flex items-center space-x-1">
-            <span>Built with Laravel 12 & React 18 for multi-tenant shared catalog e-commerce</span>
+            <span>Built with Laravel 12 & Next.js 16 for multi-tenant shared catalog e-commerce</span>
           </p>
 
           <div className="flex items-center space-x-4 text-xs text-slate-400">

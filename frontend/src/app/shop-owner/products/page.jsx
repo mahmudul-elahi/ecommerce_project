@@ -1,5 +1,7 @@
+'use client';
+
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import Link from 'next/link';
 import {
   Package,
   Plus,
@@ -7,18 +9,14 @@ import {
   Edit2,
   Trash2,
   RotateCcw,
-  Sparkles,
   ExternalLink,
-  Tag,
-  CheckCircle2,
-  XCircle,
 } from 'lucide-react';
-import api from '../../api/client';
-import { useToast } from '../../context/ToastContext';
-import { useAuth } from '../../context/AuthContext';
-import Modal from '../../components/common/Modal';
+import api from '../../../api/client';
+import { useToast } from '../../../context/ToastContext';
+import { useAuth } from '../../../context/AuthContext';
+import Modal from '../../../components/common/Modal';
 
-export default function MyProducts() {
+export default function MyProductsPage() {
   const { addToast } = useToast();
   const { shop } = useAuth();
   const [listings, setListings] = useState([]);
@@ -155,7 +153,7 @@ export default function MyProducts() {
         <div className="flex items-center space-x-2">
           {shop?.slug && (
             <Link
-              to={`/shop/${shop.slug}`}
+              href={`/shop/${shop.slug}`}
               target="_blank"
               className="px-3.5 py-2 rounded-xl bg-white border border-slate-200 text-slate-700 hover:bg-slate-50 text-xs font-semibold shadow-sm flex items-center space-x-1.5 transition-colors"
             >
@@ -165,7 +163,7 @@ export default function MyProducts() {
           )}
 
           <Link
-            to="/shop-owner/catalog"
+            href="/shop-owner/catalog"
             className="px-4 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-semibold shadow-sm flex items-center space-x-1.5 transition-colors"
           >
             <Plus className="w-4 h-4" />
@@ -221,7 +219,7 @@ export default function MyProducts() {
                     <div className="font-semibold text-slate-700">No products assigned to your shop yet.</div>
                     <p className="text-xs text-slate-400 mt-1">Browse the shared catalog to select and list products.</p>
                     <Link
-                      to="/shop-owner/catalog"
+                      href="/shop-owner/catalog"
                       className="mt-3 inline-flex items-center space-x-1 text-xs font-bold text-emerald-600 hover:underline"
                     >
                       <span>Go to Shared Catalog →</span>

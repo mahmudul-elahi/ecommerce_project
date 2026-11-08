@@ -1,10 +1,12 @@
-import React, { useState, useEffect } from 'react';
-import { Layers, Plus, Search, Edit2, Trash2, Store, Sparkles, Filter, CheckCircle2 } from 'lucide-react';
-import api from '../../api/client';
-import { useToast } from '../../context/ToastContext';
-import Modal from '../../components/common/Modal';
+'use client';
 
-export default function ProductManagement() {
+import React, { useState, useEffect } from 'react';
+import { Layers, Plus, Search, Edit2, Trash2, Store } from 'lucide-react';
+import api from '../../../api/client';
+import { useToast } from '../../../context/ToastContext';
+import Modal from '../../../components/common/Modal';
+
+export default function ProductManagementPage() {
   const { addToast } = useToast();
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);

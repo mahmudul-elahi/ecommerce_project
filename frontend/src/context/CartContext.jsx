@@ -1,32 +1,43 @@
+'use client';
+
 import React, { createContext, useContext, useState, useEffect } from 'react';
 
 const CartContext = createContext(null);
 
 export const CartProvider = ({ children }) => {
-  const [cartShop, setCartShop] = useState(() => {
-    const saved = localStorage.getItem('cart_shop');
-    return saved ? JSON.parse(saved) : null;
-  });
-
-  const [items, setItems] = useState(() => {
-    const saved = localStorage.getItem('cart_items');
-    return saved ? JSON.parse(saved) : [];
-  });
-
+  const [cartShop, setCartShop] = useState(null);
+  const [items, setItems] = useState([]);
   const [isCartOpen, setIsCartOpen] = useState(false);
+  const [initialized, setInitialized] = useState(false);
 
   useEffect(() => {
-    localStorage.setItem('cart_items', JSON.stringify(items));
-    if (items.length === 0) {
-      setCartShop(null);
-      localStorage.removeItem('cart_shop');
-    } else if (cartShop) {
-      localStorage.setItem('cart_shop', JSON.stringify(cartShop));
+    try {
+      const savedItems = localStorage.getItem('cart_items');
+      const savedShop = localStorage.getItem('cart_shop');
+      if (savedItems) setItems(JSON.parse(savedItems));
+      if (savedShop) setCartShop(JSON.parse(savedShop));
+    } catch (e) {
+      console.warn('Failed to parse cart from localStorage', e);
     }
-  }, [items, cartShop]);
+    setInitialized(true);
+  }, []);
+
+  useEffect(() => {
+    if (!initialized) return;
+    try {
+      localStorage.setItem('cart_items', JSON.stringify(items));
+      if (items.length === 0) {
+        setCartShop(null);
+        localStorage.removeItem('cart_shop');
+      } else if (cartShop) {
+        localStorage.setItem('cart_shop', JSON.stringify(cartShop));
+      }
+    } catch (e) {
+      console.warn('Failed to save cart to localStorage', e);
+    }
+  }, [items, cartShop, initialized]);
 
   const addToCart = (shop, product, quantity = 1) => {
-    // If cart has items from another shop, confirm replacement
     if (cartShop && cartShop.id !== shop.id && items.length > 0) {
       const confirmSwitch = window.confirm(
         `Your cart already has items from "${cartShop.name}". Starting a new order with "${shop.name}" will clear existing items. Proceed?`
@@ -82,8 +93,10 @@ export const CartProvider = ({ children }) => {
   const clearCart = () => {
     setItems([]);
     setCartShop(null);
-    localStorage.removeItem('cart_items');
-    localStorage.removeItem('cart_shop');
+    if (typeof window !== 'undefined') {
+      localStorage.removeItem('cart_items');
+      localStorage.removeItem('cart_shop');
+    }
   };
 
   const totalCount = items.reduce((acc, curr) => acc + curr.quantity, 0);

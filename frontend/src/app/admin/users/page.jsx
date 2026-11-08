@@ -1,10 +1,12 @@
-import React, { useState, useEffect } from 'react';
-import { Users, Plus, Search, Edit2, Trash2, Store, ShieldCheck, Mail, Phone } from 'lucide-react';
-import api from '../../api/client';
-import { useToast } from '../../context/ToastContext';
-import Modal from '../../components/common/Modal';
+'use client';
 
-export default function UserManagement() {
+import React, { useState, useEffect } from 'react';
+import { Users, Plus, Search, Edit2, Trash2, Store, Mail, Phone } from 'lucide-react';
+import api from '../../../api/client';
+import { useToast } from '../../../context/ToastContext';
+import Modal from '../../../components/common/Modal';
+
+export default function UserManagementPage() {
   const { addToast } = useToast();
   const [users, setUsers] = useState([]);
   const [shops, setShops] = useState([]);
