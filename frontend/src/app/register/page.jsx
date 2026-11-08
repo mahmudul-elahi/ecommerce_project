@@ -72,31 +72,31 @@ export default function RegisterPage() {
 
   return (
     <div className="min-h-[85vh] flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8 bg-slate-50">
-      <div className="max-w-md w-full space-y-7 bg-white p-8 sm:p-9 rounded-2xl border border-stone-200 shadow-craft">
+      <div className="max-w-md w-full space-y-7 bg-white p-8 sm:p-9 rounded-2xl border border-slate-200 shadow-craft">
         {/* Header */}
         <div className="text-center">
           <div className="inline-flex items-center justify-center w-12 h-12 rounded-xl bg-blue-50 text-blue-700 border border-blue-100 mb-4 shadow-subtle">
             <Store className="w-6 h-6 text-blue-700" />
           </div>
-          <h1 className="text-2xl font-bold tracking-tight text-stone-900">Launch Your Store</h1>
-          <p className="text-xs text-stone-500 mt-1.5 font-normal">
+          <h1 className="text-2xl font-bold tracking-tight text-slate-900">Launch Your Store</h1>
+          <p className="text-xs text-slate-500 mt-1.5 font-normal">
             Give your shop a home online. Add your details and start building your collection.
           </p>
         </div>
 
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
           <div>
-            <label className="block text-xs font-semibold text-stone-700 mb-1.5">
+            <label className="block text-xs font-semibold text-slate-700 mb-1.5">
               Store / Shop Name <span className="text-rose-500">*</span>
             </label>
             <div className="relative">
-              <Store className="w-4 h-4 text-stone-400 absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
+              <Store className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
               <input
                 type="text"
                 {...register('shop_name')}
-                className={`w-full pl-10 pr-3.5 py-2.5 text-xs bg-stone-50/60 rounded-xl border ${
-                  errors.shop_name ? 'border-rose-400 focus:ring-rose-500' : 'border-stone-200 focus:ring-blue-500'
-                } focus:outline-none focus:ring-1 focus:bg-white text-stone-900 transition-all`}
+                className={`w-full pl-10 pr-3.5 py-2.5 text-xs bg-slate-50/60 rounded-xl border ${
+                  errors.shop_name ? 'border-rose-400 focus:ring-rose-500' : 'border-slate-200 focus:ring-blue-500'
+                } focus:outline-none focus:ring-1 focus:bg-white text-slate-900 transition-all`}
                 placeholder="e.g. Skyline Goods"
               />
             </div>
@@ -109,17 +109,17 @@ export default function RegisterPage() {
           </div>
 
           <div>
-            <label className="block text-xs font-semibold text-stone-700 mb-1.5">
+            <label className="block text-xs font-semibold text-slate-700 mb-1.5">
               Your Full Name <span className="text-rose-500">*</span>
             </label>
             <div className="relative">
-              <User className="w-4 h-4 text-stone-400 absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
+              <User className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
               <input
                 type="text"
                 {...register('name')}
-                className={`w-full pl-10 pr-3.5 py-2.5 text-xs bg-stone-50/60 rounded-xl border ${
-                  errors.name ? 'border-rose-400 focus:ring-rose-500' : 'border-stone-200 focus:ring-blue-500'
-                } focus:outline-none focus:ring-1 focus:bg-white text-stone-900 transition-all`}
+                className={`w-full pl-10 pr-3.5 py-2.5 text-xs bg-slate-50/60 rounded-xl border ${
+                  errors.name ? 'border-rose-400 focus:ring-rose-500' : 'border-slate-200 focus:ring-blue-500'
+                } focus:outline-none focus:ring-1 focus:bg-white text-slate-900 transition-all`}
                 placeholder="e.g. Jordan Hayes"
               />
             </div>
@@ -132,17 +132,17 @@ export default function RegisterPage() {
           </div>
 
           <div>
-            <label className="block text-xs font-semibold text-stone-700 mb-1.5">
+            <label className="block text-xs font-semibold text-slate-700 mb-1.5">
               Email Address <span className="text-rose-500">*</span>
             </label>
             <div className="relative">
-              <Mail className="w-4 h-4 text-stone-400 absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
+              <Mail className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
               <input
                 type="email"
                 {...register('email')}
-                className={`w-full pl-10 pr-3.5 py-2.5 text-xs bg-stone-50/60 rounded-xl border ${
-                  errors.email ? 'border-rose-400 focus:ring-rose-500' : 'border-stone-200 focus:ring-blue-500'
-                } focus:outline-none focus:ring-1 focus:bg-white text-stone-900 transition-all`}
+                className={`w-full pl-10 pr-3.5 py-2.5 text-xs bg-slate-50/60 rounded-xl border ${
+                  errors.email ? 'border-rose-400 focus:ring-rose-500' : 'border-slate-200 focus:ring-blue-500'
+                } focus:outline-none focus:ring-1 focus:bg-white text-slate-900 transition-all`}
                 placeholder="jordan@example.com"
               />
             </div>
@@ -155,32 +155,32 @@ export default function RegisterPage() {
           </div>
 
           <div>
-            <label className="block text-xs font-semibold text-stone-700 mb-1.5">
-              Phone Number <span className="text-stone-400 font-normal">(Optional)</span>
+            <label className="block text-xs font-semibold text-slate-700 mb-1.5">
+              Phone Number <span className="text-slate-400 font-normal">(Optional)</span>
             </label>
             <div className="relative">
-              <Phone className="w-4 h-4 text-stone-400 absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
+              <Phone className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
               <input
                 type="text"
                 {...register('phone')}
-                className="w-full pl-10 pr-3.5 py-2.5 text-xs bg-stone-50/60 rounded-xl border border-stone-200 focus:ring-blue-500 focus:outline-none focus:ring-1 focus:bg-white text-stone-900 transition-all"
+                className="w-full pl-10 pr-3.5 py-2.5 text-xs bg-slate-50/60 rounded-xl border border-slate-200 focus:ring-blue-500 focus:outline-none focus:ring-1 focus:bg-white text-slate-900 transition-all"
                 placeholder="+1 (555) 012-3456"
               />
             </div>
           </div>
 
           <div>
-            <label className="block text-xs font-semibold text-stone-700 mb-1.5">
+            <label className="block text-xs font-semibold text-slate-700 mb-1.5">
               Password (Min. 6 characters) <span className="text-rose-500">*</span>
             </label>
             <div className="relative">
-              <Lock className="w-4 h-4 text-stone-400 absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
+              <Lock className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
               <input
                 type="password"
                 {...register('password')}
-                className={`w-full pl-10 pr-3.5 py-2.5 text-xs bg-stone-50/60 rounded-xl border ${
-                  errors.password ? 'border-rose-400 focus:ring-rose-500' : 'border-stone-200 focus:ring-blue-500'
-                } focus:outline-none focus:ring-1 focus:bg-white text-stone-900 transition-all`}
+                className={`w-full pl-10 pr-3.5 py-2.5 text-xs bg-slate-50/60 rounded-xl border ${
+                  errors.password ? 'border-rose-400 focus:ring-rose-500' : 'border-slate-200 focus:ring-blue-500'
+                } focus:outline-none focus:ring-1 focus:bg-white text-slate-900 transition-all`}
                 placeholder="••••••••"
               />
             </div>
@@ -208,8 +208,8 @@ export default function RegisterPage() {
           </button>
         </form>
 
-        <div className="text-center pt-3 border-t border-stone-100">
-          <p className="text-xs text-stone-500">
+        <div className="text-center pt-3 border-t border-slate-100">
+          <p className="text-xs text-slate-500">
             Already have an account?{' '}
             <Link href="/login" className="font-semibold text-blue-700 hover:underline">
               Sign in here

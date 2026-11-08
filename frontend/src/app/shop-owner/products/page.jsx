@@ -157,14 +157,14 @@ export default function MyProductsPage() {
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 bg-slate-50">
       {/* Title & Actions */}
-      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 pb-6 border-b border-stone-200 mb-6">
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 pb-6 border-b border-slate-200 mb-6">
         <div>
-          <div className="inline-flex items-center space-x-1 px-2 py-0.5 rounded-md bg-stone-100 border border-stone-200 text-stone-700 text-[10px] font-mono uppercase tracking-wide mb-1.5">
+          <div className="inline-flex items-center space-x-1 px-2 py-0.5 rounded-md bg-slate-100 border border-slate-200 text-slate-700 text-[10px] font-mono uppercase tracking-wide mb-1.5">
             <Package className="w-3 h-3 text-blue-700" />
             <span>Storefront Merchandising</span>
           </div>
-          <h1 className="text-xl font-bold text-stone-900 tracking-tight">Active Shop Inventory</h1>
-          <p className="text-xs text-stone-500 mt-0.5">
+          <h1 className="text-xl font-bold text-slate-900 tracking-tight">Active Shop Inventory</h1>
+          <p className="text-xs text-slate-500 mt-0.5">
             Set custom retail margins, rename listings, or override imagery exclusively for your store.
           </p>
         </div>
@@ -174,10 +174,10 @@ export default function MyProductsPage() {
             <Link
               href={`/shop/${shop.slug}`}
               target="_blank"
-              className="px-3.5 py-1.5 rounded-xl bg-white border border-stone-200 text-stone-700 hover:bg-stone-50 text-xs font-semibold shadow-subtle flex items-center space-x-1.5 transition-colors"
+              className="px-3.5 py-1.5 rounded-xl bg-white border border-slate-200 text-slate-700 hover:bg-slate-50 text-xs font-semibold shadow-subtle flex items-center space-x-1.5 transition-colors"
             >
               <span>View Live Store</span>
-              <ExternalLink className="w-3.5 h-3.5 text-stone-400" />
+              <ExternalLink className="w-3.5 h-3.5 text-slate-400" />
             </Link>
           )}
 
@@ -192,27 +192,27 @@ export default function MyProductsPage() {
       </div>
 
       {/* Filter / Search Bar */}
-      <div className="bg-white p-3.5 rounded-xl border border-stone-200 mb-6 shadow-subtle flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2.5">
+      <div className="bg-white p-3.5 rounded-xl border border-slate-200 mb-6 shadow-subtle flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2.5">
         <div className="relative w-full sm:w-80">
-          <Search className="w-3.5 h-3.5 text-stone-400 absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none" />
+          <Search className="w-3.5 h-3.5 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none" />
           <input
             type="text"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             placeholder="Filter listed products..."
-            className="w-full pl-9 pr-3 py-1.5 text-xs bg-stone-50 border border-stone-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-blue-500 focus:bg-white text-stone-900"
+            className="w-full pl-9 pr-3 py-1.5 text-xs bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-blue-500 focus:bg-white text-slate-900"
           />
         </div>
-        <div className="text-xs font-mono text-stone-500">
-          Listed in store: <span className="text-stone-900 font-bold">{listings.length}</span> products
+        <div className="text-xs font-mono text-slate-500">
+          Listed in store: <span className="text-slate-900 font-bold">{listings.length}</span> products
         </div>
       </div>
 
       {/* Listings Table */}
-      <div className="bg-white rounded-2xl border border-stone-200 shadow-subtle overflow-hidden">
+      <div className="bg-white rounded-2xl border border-slate-200 shadow-subtle overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full text-left text-xs">
-            <thead className="bg-stone-50 border-b border-stone-200 text-stone-500 uppercase font-mono text-[10px] tracking-wider">
+            <thead className="bg-slate-50 border-b border-slate-200 text-slate-500 uppercase font-mono text-[10px] tracking-wider">
               <tr>
                 <th className="px-5 py-3">Product / Thumbnail</th>
                 <th className="px-5 py-3">Your Retail Price</th>
@@ -226,17 +226,17 @@ export default function MyProductsPage() {
             <tbody className="divide-y divide-stone-100">
               {isLoading ? (
                 <tr>
-                  <td colSpan="7" className="px-5 py-12 text-center text-stone-400">
-                    <div className="w-6 h-6 border-2 border-stone-800 border-t-transparent rounded-full animate-spin mx-auto mb-2" />
+                  <td colSpan="7" className="px-5 py-12 text-center text-slate-400">
+                    <div className="w-6 h-6 border-2 border-slate-800 border-t-transparent rounded-full animate-spin mx-auto mb-2" />
                     <span>Loading inventory...</span>
                   </td>
                 </tr>
               ) : listings.length === 0 ? (
                 <tr>
-                  <td colSpan="7" className="px-5 py-14 text-center text-stone-500">
-                    <Package className="w-10 h-10 text-stone-300 mx-auto mb-2" />
-                    <div className="font-semibold text-stone-800">No products assigned to your shop yet.</div>
-                    <p className="text-xs text-stone-400 mt-0.5">Browse the shared catalog to assign and retail items.</p>
+                  <td colSpan="7" className="px-5 py-14 text-center text-slate-500">
+                    <Package className="w-10 h-10 text-slate-300 mx-auto mb-2" />
+                    <div className="font-semibold text-slate-800">No products assigned to your shop yet.</div>
+                    <p className="text-xs text-slate-400 mt-0.5">Browse the shared catalog to assign and retail items.</p>
                     <Link
                       href="/shop-owner/catalog"
                       className="mt-3 inline-flex items-center space-x-1 text-xs font-semibold text-blue-700 hover:underline"
@@ -247,7 +247,7 @@ export default function MyProductsPage() {
                 </tr>
               ) : (
                 listings.map((item) => (
-                  <tr key={item.id} className="hover:bg-stone-50/70 transition-colors">
+                  <tr key={item.id} className="hover:bg-slate-50/70 transition-colors">
                     {/* Thumbnail & Title */}
                     <td className="px-5 py-3.5">
                       <div className="flex items-center space-x-3">
@@ -258,7 +258,7 @@ export default function MyProductsPage() {
                               'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=100'
                             }
                             alt={item.effective_title}
-                            className="w-11 h-11 rounded-lg object-cover bg-stone-100 border border-stone-200"
+                            className="w-11 h-11 rounded-lg object-cover bg-slate-100 border border-slate-200"
                             onError={(e) => {
                               e.target.src =
                                 'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=100';
@@ -272,13 +272,13 @@ export default function MyProductsPage() {
                           )}
                         </div>
                         <div>
-                          <div className="font-bold text-stone-900 text-xs line-clamp-1">{item.effective_title}</div>
+                          <div className="font-bold text-slate-900 text-xs line-clamp-1">{item.effective_title}</div>
                           {item.custom_title && (
-                            <div className="text-[10px] text-stone-400 font-mono line-clamp-1">
+                            <div className="text-[10px] text-slate-400 font-mono line-clamp-1">
                               Catalog title: {item.product?.name}
                             </div>
                           )}
-                          <div className="text-[10px] font-mono uppercase text-stone-400 mt-0.5">
+                          <div className="text-[10px] font-mono uppercase text-slate-400 mt-0.5">
                             {item.product?.category || 'General'} • SKU: {item.product?.sku || 'N/A'}
                           </div>
                         </div>
@@ -287,7 +287,7 @@ export default function MyProductsPage() {
 
                     {/* Store Price */}
                     <td className="px-5 py-3.5 font-mono">
-                      <div className="font-bold text-xs text-stone-900">
+                      <div className="font-bold text-xs text-slate-900">
                         ${Number(item.effective_price).toFixed(2)}
                       </div>
                       {item.custom_price !== null && (
@@ -298,7 +298,7 @@ export default function MyProductsPage() {
                     </td>
 
                     {/* Catalog Base Price */}
-                    <td className="px-5 py-3.5 text-stone-500 font-mono text-xs">
+                    <td className="px-5 py-3.5 text-slate-500 font-mono text-xs">
                       ${Number(item.product?.base_price || 0).toFixed(2)}
                     </td>
 
@@ -312,12 +312,12 @@ export default function MyProductsPage() {
                             </span>
                           )}
                           {item.custom_title && (
-                            <span className="px-1.5 py-0.5 rounded bg-stone-100 text-stone-700 border border-stone-200">
+                            <span className="px-1.5 py-0.5 rounded bg-slate-100 text-slate-700 border border-slate-200">
                               Title
                             </span>
                           )}
                           {item.custom_thumbnail && (
-                            <span className="px-1.5 py-0.5 rounded bg-stone-100 text-stone-700 border border-stone-200">
+                            <span className="px-1.5 py-0.5 rounded bg-slate-100 text-slate-700 border border-slate-200">
                               Image
                             </span>
                           )}
@@ -328,12 +328,12 @@ export default function MyProductsPage() {
                           )}
                         </div>
                       ) : (
-                        <span className="text-stone-400 font-mono text-[11px]">Catalog Default</span>
+                        <span className="text-slate-400 font-mono text-[11px]">Catalog Default</span>
                       )}
                     </td>
 
                     {/* Stock */}
-                    <td className="px-5 py-3.5 font-mono text-xs text-stone-700">
+                    <td className="px-5 py-3.5 font-mono text-xs text-slate-700">
                       {item.stock}
                     </td>
 
@@ -343,7 +343,7 @@ export default function MyProductsPage() {
                         className={`px-2 py-0.5 rounded text-[10px] font-mono ${
                           item.is_active
                             ? 'bg-blue-50 text-blue-700 border border-blue-100'
-                            : 'bg-stone-100 text-stone-500 border border-stone-200'
+                            : 'bg-slate-100 text-slate-500 border border-slate-200'
                         }`}
                       >
                         {item.is_active ? 'Live' : 'Draft'}
@@ -355,9 +355,9 @@ export default function MyProductsPage() {
                       <div className="flex items-center justify-end space-x-1.5">
                         <button
                           onClick={() => handleOpenEditModal(item)}
-                          className="px-2.5 py-1 rounded-lg text-stone-800 hover:bg-stone-100 border border-stone-200 text-xs font-semibold transition-colors flex items-center space-x-1"
+                          className="px-2.5 py-1 rounded-lg text-slate-800 hover:bg-slate-100 border border-slate-200 text-xs font-semibold transition-colors flex items-center space-x-1"
                         >
-                          <Edit2 className="w-3 h-3 text-stone-500" />
+                          <Edit2 className="w-3 h-3 text-slate-500" />
                           <span>Customize</span>
                         </button>
                         <button
@@ -366,7 +366,7 @@ export default function MyProductsPage() {
                               removeMutation.mutate(item.id);
                             }
                           }}
-                          className="p-1.5 rounded-lg text-stone-400 hover:text-rose-600 hover:bg-rose-50 transition-colors"
+                          className="p-1.5 rounded-lg text-slate-400 hover:text-rose-600 hover:bg-rose-50 transition-colors"
                           title="Remove from shop"
                         >
                           <Trash2 className="w-3.5 h-3.5" />
@@ -389,10 +389,10 @@ export default function MyProductsPage() {
         maxWidth="max-w-xl"
       >
         <form onSubmit={handleSubmit(onModalSubmit)} className="space-y-4">
-          <div className="bg-stone-50 p-3 rounded-xl border border-stone-200 text-xs flex items-center justify-between">
+          <div className="bg-slate-50 p-3 rounded-xl border border-slate-200 text-xs flex items-center justify-between">
             <div>
-              <span className="text-stone-500">Shared Catalog Base Price:</span>{' '}
-              <span className="font-mono font-bold text-stone-900">${Number(basePrice).toFixed(2)}</span>
+              <span className="text-slate-500">Shared Catalog Base Price:</span>{' '}
+              <span className="font-mono font-bold text-slate-900">${Number(basePrice).toFixed(2)}</span>
             </div>
             {selectedListing?.is_customized && (
               <button
@@ -412,7 +412,7 @@ export default function MyProductsPage() {
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <div>
-              <label className="block text-xs font-semibold text-stone-700 mb-1">
+              <label className="block text-xs font-semibold text-slate-700 mb-1">
                 Store Retail Price ($)
               </label>
               <input
@@ -420,11 +420,11 @@ export default function MyProductsPage() {
                 step="0.01"
                 min="0"
                 {...register('custom_price')}
-                className="w-full px-3 py-2 text-xs bg-stone-50 rounded-xl border border-stone-200 focus:outline-none focus:ring-1 focus:ring-blue-500 focus:bg-white text-stone-900 font-mono"
+                className="w-full px-3 py-2 text-xs bg-slate-50 rounded-xl border border-slate-200 focus:outline-none focus:ring-1 focus:ring-blue-500 focus:bg-white text-slate-900 font-mono"
                 placeholder={basePrice ? String(basePrice) : 'Leave blank for default'}
               />
               {marginDiff !== null && (
-                <div className="text-[10px] font-mono mt-1 text-stone-500">
+                <div className="text-[10px] font-mono mt-1 text-slate-500">
                   Margin: <span className={Number(marginDiff) >= 0 ? 'text-emerald-700 font-bold' : 'text-rose-600 font-bold'}>
                     {Number(marginDiff) >= 0 ? `+$${marginDiff}` : `-$${Math.abs(Number(marginDiff)).toFixed(2)}`}
                   </span>
@@ -433,16 +433,16 @@ export default function MyProductsPage() {
             </div>
 
             <div>
-              <label className="block text-xs font-semibold text-stone-700 mb-1">
+              <label className="block text-xs font-semibold text-slate-700 mb-1">
                 Store Inventory Units
               </label>
               <input
                 type="number"
                 min="0"
                 {...register('stock')}
-                className={`w-full px-3 py-2 text-xs bg-stone-50 rounded-xl border ${
-                  errors.stock ? 'border-rose-400' : 'border-stone-200'
-                } focus:outline-none focus:ring-1 focus:ring-blue-500 focus:bg-white text-stone-900 font-mono`}
+                className={`w-full px-3 py-2 text-xs bg-slate-50 rounded-xl border ${
+                  errors.stock ? 'border-rose-400' : 'border-slate-200'
+                } focus:outline-none focus:ring-1 focus:ring-blue-500 focus:bg-white text-slate-900 font-mono`}
               />
               {errors.stock && (
                 <span className="text-[11px] text-rose-600 mt-1">{errors.stock.message}</span>
@@ -451,37 +451,37 @@ export default function MyProductsPage() {
           </div>
 
           <div>
-            <label className="block text-xs font-semibold text-stone-700 mb-1">
+            <label className="block text-xs font-semibold text-slate-700 mb-1">
               Custom Title for this Store
             </label>
             <input
               type="text"
               {...register('custom_title')}
-              className="w-full px-3 py-2 text-xs bg-stone-50 rounded-xl border border-stone-200 focus:outline-none focus:ring-1 focus:ring-blue-500 focus:bg-white text-stone-900"
+              className="w-full px-3 py-2 text-xs bg-slate-50 rounded-xl border border-slate-200 focus:outline-none focus:ring-1 focus:ring-blue-500 focus:bg-white text-slate-900"
               placeholder={selectedListing?.product?.name || 'Leave blank for catalog title'}
             />
           </div>
 
           <div>
-            <label className="block text-xs font-semibold text-stone-700 mb-1">
+            <label className="block text-xs font-semibold text-slate-700 mb-1">
               Custom Product Description
             </label>
             <textarea
               rows={2}
               {...register('custom_description')}
-              className="w-full px-3 py-2 text-xs bg-stone-50 rounded-xl border border-stone-200 focus:outline-none focus:ring-1 focus:ring-blue-500 focus:bg-white text-stone-900"
+              className="w-full px-3 py-2 text-xs bg-slate-50 rounded-xl border border-slate-200 focus:outline-none focus:ring-1 focus:ring-blue-500 focus:bg-white text-slate-900"
               placeholder="Leave blank to use default shared catalog description"
             />
           </div>
 
           <div>
-            <label className="block text-xs font-semibold text-stone-700 mb-1">
+            <label className="block text-xs font-semibold text-slate-700 mb-1">
               Custom Thumbnail Image URL
             </label>
             <input
               type="text"
               {...register('custom_thumbnail')}
-              className="w-full px-3 py-2 text-xs bg-stone-50 rounded-xl border border-stone-200 focus:outline-none focus:ring-1 focus:ring-blue-500 focus:bg-white text-stone-900"
+              className="w-full px-3 py-2 text-xs bg-slate-50 rounded-xl border border-slate-200 focus:outline-none focus:ring-1 focus:ring-blue-500 focus:bg-white text-slate-900"
               placeholder="https://..."
             />
             {selectedListing?.custom_thumbnail && (
@@ -501,18 +501,18 @@ export default function MyProductsPage() {
               type="checkbox"
               id="is_active"
               {...register('is_active')}
-              className="rounded text-stone-900 focus:ring-blue-500"
+              className="rounded text-slate-900 focus:ring-blue-500"
             />
-            <label htmlFor="is_active" className="text-xs font-semibold text-stone-800 cursor-pointer">
+            <label htmlFor="is_active" className="text-xs font-semibold text-slate-800 cursor-pointer">
               Visible on Customer Storefront
             </label>
           </div>
 
-          <div className="pt-3 border-t border-stone-200 flex justify-end space-x-2">
+          <div className="pt-3 border-t border-slate-200 flex justify-end space-x-2">
             <button
               type="button"
               onClick={() => setIsModalOpen(false)}
-              className="px-3.5 py-2 rounded-xl bg-stone-100 hover:bg-stone-200 text-xs font-semibold text-stone-700 transition-colors"
+              className="px-3.5 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-xs font-semibold text-slate-700 transition-colors"
             >
               Cancel
             </button>

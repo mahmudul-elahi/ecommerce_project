@@ -76,7 +76,7 @@ export default function ShopStorefrontPage() {
   if (loadingShop) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-slate-50">
-        <div className="w-8 h-8 border-2 border-stone-800 border-t-transparent rounded-full animate-spin" />
+        <div className="w-8 h-8 border-2 border-slate-800 border-t-transparent rounded-full animate-spin" />
       </div>
     );
   }
@@ -84,9 +84,9 @@ export default function ShopStorefrontPage() {
   if (shopError || !shop) {
     return (
       <div className="max-w-7xl mx-auto px-4 py-20 text-center bg-slate-50">
-        <Store className="w-12 h-12 text-stone-300 mx-auto mb-3" />
-        <h2 className="text-lg font-bold text-stone-900">Storefront Not Found</h2>
-        <p className="text-xs text-stone-500 mt-1 max-w-sm mx-auto">
+        <Store className="w-12 h-12 text-slate-300 mx-auto mb-3" />
+        <h2 className="text-lg font-bold text-slate-900">Storefront Not Found</h2>
+        <p className="text-xs text-slate-500 mt-1 max-w-sm mx-auto">
           The requested store does not exist or has been temporarily suspended.
         </p>
         <Link
@@ -334,7 +334,7 @@ export default function ShopStorefrontPage() {
       >
         {selectedProduct && (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div className="rounded-xl overflow-hidden bg-stone-100 h-64 sm:h-72 border border-stone-200">
+            <div className="rounded-xl overflow-hidden bg-slate-100 h-64 sm:h-72 border border-slate-200">
               <img
                 src={selectedProduct.thumbnail || 'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=600'}
                 alt={selectedProduct.name}
@@ -348,15 +348,15 @@ export default function ShopStorefrontPage() {
             <div className="flex flex-col justify-between">
               <div>
                 <div className="flex items-center space-x-2 mb-2">
-                  <span className="text-[10px] font-mono uppercase px-2 py-0.5 rounded bg-stone-100 text-stone-700 border border-stone-200">
+                  <span className="text-[10px] font-mono uppercase px-2 py-0.5 rounded bg-slate-100 text-slate-700 border border-slate-200">
                     {selectedProduct.category || 'General'}
                   </span>
                   {selectedProduct.sku && (
-                    <span className="text-[10px] font-mono text-stone-400">SKU: {selectedProduct.sku}</span>
+                    <span className="text-[10px] font-mono text-slate-400">SKU: {selectedProduct.sku}</span>
                   )}
                 </div>
 
-                <h2 className="text-base font-bold text-stone-900 mb-1.5">{selectedProduct.name}</h2>
+                <h2 className="text-base font-bold text-slate-900 mb-1.5">{selectedProduct.name}</h2>
 
                 <div className="flex items-baseline space-x-2.5 mb-3">
                   <span className="text-xl font-bold text-blue-700">
@@ -364,16 +364,16 @@ export default function ShopStorefrontPage() {
                   </span>
                 </div>
 
-                <div className="text-xs text-stone-600 space-y-1 mb-4">
-                  <h4 className="font-semibold text-stone-900">Description:</h4>
-                  <p className="leading-relaxed text-[11px] text-stone-500">
+                <div className="text-xs text-slate-600 space-y-1 mb-4">
+                  <h4 className="font-semibold text-slate-900">Description:</h4>
+                  <p className="leading-relaxed text-[11px] text-slate-500">
                     {selectedProduct.description || 'No additional details provided by the shop owner.'}
                   </p>
                 </div>
 
-                <div className="flex items-center space-x-2 text-xs text-stone-500 mb-4 pb-3 border-b border-stone-100">
+                <div className="flex items-center space-x-2 text-xs text-slate-500 mb-4 pb-3 border-b border-slate-100">
                   <span>Merchant:</span>
-                  <span className="font-bold text-stone-900">{shop.name}</span>
+                  <span className="font-bold text-slate-900">{shop.name}</span>
                   <span>•</span>
                   <span>Stock:</span>
                   <span className={selectedProduct.in_stock ? 'text-emerald-700 font-semibold' : 'text-rose-600 font-semibold'}>
@@ -385,18 +385,18 @@ export default function ShopStorefrontPage() {
               {/* Action buttons */}
               <div>
                 <div className="flex items-center space-x-3 mb-3">
-                  <span className="text-xs font-semibold text-stone-700">Quantity:</span>
-                  <div className="flex items-center space-x-1 border border-stone-200 rounded-lg p-0.5 bg-stone-50">
+                  <span className="text-xs font-semibold text-slate-700">Quantity:</span>
+                  <div className="flex items-center space-x-1 border border-slate-200 rounded-lg p-0.5 bg-slate-50">
                     <button
                       onClick={() => setModalQuantity(Math.max(1, modalQuantity - 1))}
-                      className="w-6 h-6 rounded bg-white border border-stone-200 flex items-center justify-center text-stone-700 hover:bg-stone-100"
+                      className="w-6 h-6 rounded bg-white border border-slate-200 flex items-center justify-center text-slate-700 hover:bg-slate-100"
                     >
                       <Minus className="w-3 h-3" />
                     </button>
-                    <span className="font-mono font-bold text-xs text-stone-900 w-8 text-center">{modalQuantity}</span>
+                    <span className="font-mono font-bold text-xs text-slate-900 w-8 text-center">{modalQuantity}</span>
                     <button
                       onClick={() => setModalQuantity(Math.min(selectedProduct.stock || 99, modalQuantity + 1))}
-                      className="w-6 h-6 rounded bg-white border border-stone-200 flex items-center justify-center text-stone-700 hover:bg-stone-100"
+                      className="w-6 h-6 rounded bg-white border border-slate-200 flex items-center justify-center text-slate-700 hover:bg-slate-100"
                     >
                       <Plus className="w-3 h-3" />
                     </button>

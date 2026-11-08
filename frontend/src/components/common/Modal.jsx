@@ -33,14 +33,14 @@ export default function Modal({ isOpen, onClose, title, children, maxWidth = 'ma
 
         {/* Modal dialog box */}
         <div
-          className={`relative transform overflow-hidden rounded-2xl bg-white text-left shadow-2xl transition-all sm:my-8 w-full ${maxWidth} border border-stone-200`}
+          className={`relative transform overflow-hidden rounded-2xl bg-white text-left shadow-2xl transition-all sm:my-8 w-full ${maxWidth} border border-slate-200`}
         >
           {/* Header */}
-          <div className="flex items-center justify-between border-b border-stone-100 px-6 py-4 bg-stone-50/60">
-            <h3 className="text-base font-bold text-stone-900 tracking-tight">{title}</h3>
+          <div className="flex items-center justify-between border-b border-slate-100 px-6 py-4 bg-slate-50/60">
+            <h3 className="text-base font-bold text-slate-900 tracking-tight">{title}</h3>
             <button
               onClick={onClose}
-              className="rounded-lg p-1.5 text-stone-400 hover:bg-stone-100 hover:text-stone-700 transition-colors"
+              className="rounded-lg p-1.5 text-slate-400 hover:bg-slate-100 hover:text-slate-700 transition-colors"
             >
               <X className="w-4 h-4" />
             </button>

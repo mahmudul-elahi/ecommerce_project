@@ -23,7 +23,7 @@ export default function AdminDashboardPage() {
   if (isLoading) {
     return (
       <div className="max-w-7xl mx-auto px-4 py-20 flex items-center justify-center">
-        <div className="w-8 h-8 border-2 border-stone-800 border-t-transparent rounded-full animate-spin" />
+        <div className="w-8 h-8 border-2 border-slate-800 border-t-transparent rounded-full animate-spin" />
       </div>
     );
   }
@@ -33,16 +33,16 @@ export default function AdminDashboardPage() {
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-10">
       {/* Marketplace header */}
-      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 pb-6 border-b border-neutral-200 mb-8">
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 pb-6 border-b border-slate-200 mb-8">
         <div>
           <div className="inline-flex items-center space-x-1.5 px-3 py-1 rounded-full bg-blue-50 text-blue-700 text-[11px] font-bold border border-blue-100 mb-2 shadow-2xs">
             <ShieldCheck className="w-3.5 h-3.5 text-blue-700" />
             <span className="font-mono uppercase tracking-wider">Marketplace desk</span>
           </div>
-          <h1 className="text-3xl sm:text-4xl font-extrabold text-black tracking-tight font-sans">
+          <h1 className="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight font-sans">
             Your marketplace
           </h1>
-          <p className="text-xs text-neutral-500 mt-1 max-w-xl font-normal">
+          <p className="text-xs text-slate-500 mt-1 max-w-xl font-normal">
             The shops, people and products that make OmniShop what it is.
           </p>
         </div>
@@ -51,9 +51,9 @@ export default function AdminDashboardPage() {
         <div className="flex items-center space-x-2.5">
           <Link
             href="/admin/shops"
-            className="px-4 py-2 rounded-full bg-white border border-neutral-300 text-xs font-semibold text-black hover:bg-neutral-50 transition-all shadow-2xs active:scale-95 flex items-center space-x-1.5"
+            className="px-4 py-2 rounded-lg bg-white border border-slate-300 text-sm font-semibold text-slate-900 hover:bg-slate-50 transition-colors flex items-center space-x-1.5"
           >
-            <Plus className="w-3.5 h-3.5 text-neutral-600" />
+            <Plus className="w-3.5 h-3.5 text-slate-600" />
             <span>New Shop</span>
           </Link>
           <Link
@@ -69,72 +69,72 @@ export default function AdminDashboardPage() {
       {/* Metrics Grid */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5 mb-8">
         {/* Total Active Shops */}
-        <div className="bg-white p-5 rounded-2xl border border-neutral-200/90 shadow-2xs hover:shadow-md hover:border-neutral-300 transition-all flex items-center justify-between">
+        <div className="bg-white p-5 rounded-2xl border border-slate-200/90 shadow-2xs hover:shadow-md hover:border-slate-300 transition-all flex items-center justify-between">
           <div>
-            <span className="text-[10px] font-mono uppercase tracking-wider text-neutral-500 font-bold">
+            <span className="text-[10px] font-mono uppercase tracking-wider text-slate-500 font-bold">
               Open shops
             </span>
-            <div className="text-3xl font-extrabold text-black mt-1 font-mono tracking-tight">
+            <div className="text-3xl font-extrabold text-slate-900 mt-1 font-mono tracking-tight">
               {stats.active_shops || 0}
             </div>
-            <div className="text-[11px] text-neutral-500 mt-1 flex items-center space-x-1">
+            <div className="text-[11px] text-slate-500 mt-1 flex items-center space-x-1">
               <span className="text-blue-700 font-semibold font-mono text-[10px] bg-blue-50 px-2 py-0.5 rounded-full border border-blue-100">100% Online</span>
               <span>of {stats.total_shops || 0} stores</span>
             </div>
           </div>
-            <div className="w-12 h-12 rounded-full bg-neutral-100 text-slate-700 border border-neutral-200 flex items-center justify-center shadow-2xs">
-            <Store className="w-5 h-5 text-black" />
+            <div className="w-12 h-12 rounded-full bg-slate-100 text-slate-700 border border-slate-200 flex items-center justify-center shadow-2xs">
+            <Store className="w-5 h-5 text-slate-900" />
           </div>
         </div>
 
         {/* Product count */}
-        <div className="bg-white p-5 rounded-2xl border border-neutral-200/90 shadow-2xs hover:shadow-md hover:border-neutral-300 transition-all flex items-center justify-between">
+        <div className="bg-white p-5 rounded-2xl border border-slate-200/90 shadow-2xs hover:shadow-md hover:border-slate-300 transition-all flex items-center justify-between">
           <div>
-            <span className="text-[10px] font-mono uppercase tracking-wider text-neutral-500 font-bold">
+            <span className="text-[10px] font-mono uppercase tracking-wider text-slate-500 font-bold">
               Products
             </span>
-            <div className="text-3xl font-extrabold text-black mt-1 font-mono tracking-tight">
+            <div className="text-3xl font-extrabold text-slate-900 mt-1 font-mono tracking-tight">
               {stats.total_products || 0}
             </div>
-            <div className="text-[11px] text-neutral-500 mt-1 flex items-center space-x-1">
-              <span className="text-neutral-700 font-semibold font-mono text-[10px] bg-neutral-100 px-2 py-0.5 rounded-full border border-neutral-200">Available</span>
+            <div className="text-[11px] text-slate-500 mt-1 flex items-center space-x-1">
+              <span className="text-slate-700 font-semibold font-mono text-[10px] bg-slate-100 px-2 py-0.5 rounded-full border border-slate-200">Available</span>
               <span>to shops</span>
             </div>
           </div>
-          <div className="w-12 h-12 rounded-full bg-neutral-100 text-black border border-neutral-200 flex items-center justify-center shadow-2xs">
-            <Layers className="w-5 h-5 text-black" />
+          <div className="w-12 h-12 rounded-full bg-slate-100 text-slate-900 border border-slate-200 flex items-center justify-center shadow-2xs">
+            <Layers className="w-5 h-5 text-slate-900" />
           </div>
         </div>
 
         {/* Shop Owners */}
-        <div className="bg-white p-5 rounded-2xl border border-neutral-200/90 shadow-2xs hover:shadow-md hover:border-neutral-300 transition-all flex items-center justify-between">
+        <div className="bg-white p-5 rounded-2xl border border-slate-200/90 shadow-2xs hover:shadow-md hover:border-slate-300 transition-all flex items-center justify-between">
           <div>
-            <span className="text-[10px] font-mono uppercase tracking-wider text-neutral-500 font-bold">
+            <span className="text-[10px] font-mono uppercase tracking-wider text-slate-500 font-bold">
               Shop owners
             </span>
-            <div className="text-3xl font-extrabold text-black mt-1 font-mono tracking-tight">
+            <div className="text-3xl font-extrabold text-slate-900 mt-1 font-mono tracking-tight">
               {stats.total_owners || 0}
             </div>
-            <div className="text-[11px] text-neutral-500 mt-1 flex items-center space-x-1">
-              <span className="text-neutral-700 font-semibold font-mono text-[10px] bg-neutral-100 px-2 py-0.5 rounded-full border border-neutral-200">Tenants</span>
+            <div className="text-[11px] text-slate-500 mt-1 flex items-center space-x-1">
+              <span className="text-slate-700 font-semibold font-mono text-[10px] bg-slate-100 px-2 py-0.5 rounded-full border border-slate-200">Tenants</span>
               <span>registered</span>
             </div>
           </div>
-          <div className="w-12 h-12 rounded-full bg-neutral-100 text-black border border-neutral-200 flex items-center justify-center shadow-2xs">
-            <Users className="w-5 h-5 text-black" />
+          <div className="w-12 h-12 rounded-full bg-slate-100 text-slate-900 border border-slate-200 flex items-center justify-center shadow-2xs">
+            <Users className="w-5 h-5 text-slate-900" />
           </div>
         </div>
 
         {/* Total Platform Revenue */}
-        <div className="bg-white p-5 rounded-2xl border border-neutral-200/90 shadow-2xs hover:shadow-md hover:border-neutral-300 transition-all flex items-center justify-between">
+        <div className="bg-white p-5 rounded-2xl border border-slate-200/90 shadow-2xs hover:shadow-md hover:border-slate-300 transition-all flex items-center justify-between">
           <div>
-            <span className="text-[10px] font-mono uppercase tracking-wider text-neutral-500 font-bold">
+            <span className="text-[10px] font-mono uppercase tracking-wider text-slate-500 font-bold">
               Sales to date
             </span>
-            <div className="text-3xl font-extrabold text-black mt-1 font-mono tracking-tight">
+            <div className="text-3xl font-extrabold text-slate-900 mt-1 font-mono tracking-tight">
               ${Number(stats.total_revenue || 0).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
             </div>
-            <div className="text-[11px] text-neutral-500 mt-1 flex items-center space-x-1">
+            <div className="text-[11px] text-slate-500 mt-1 flex items-center space-x-1">
               <span className="text-blue-700 font-semibold font-mono text-[10px] bg-blue-50 px-2 py-0.5 rounded-full border border-blue-100">Settled</span>
               <span>across all checkout flows</span>
             </div>
@@ -149,15 +149,15 @@ export default function AdminDashboardPage() {
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         {/* Quick Management Links */}
         <div className="lg:col-span-2 space-y-4">
-          <div className="bg-white rounded-2xl border border-neutral-200/90 shadow-2xs p-6">
+          <div className="bg-white rounded-2xl border border-slate-200/90 shadow-2xs p-6">
             <div className="flex items-center justify-between mb-4">
               <div>
-                <h3 className="text-base font-bold text-black">Keep things running</h3>
-                <p className="text-xs text-neutral-500 mt-0.5">
+                <h3 className="text-base font-bold text-slate-900">Keep things running</h3>
+                <p className="text-xs text-slate-500 mt-0.5">
                   The everyday work behind a healthy marketplace.
                 </p>
               </div>
-              <span className="text-[10px] font-mono uppercase tracking-wider px-3 py-1 rounded-full bg-neutral-100 text-neutral-700 border border-neutral-200 font-bold">
+              <span className="text-[10px] font-mono uppercase tracking-wider px-3 py-1 rounded-full bg-slate-100 text-slate-700 border border-slate-200 font-bold">
                 Shortcuts
               </span>
             </div>
@@ -165,16 +165,16 @@ export default function AdminDashboardPage() {
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
               <Link
                 href="/admin/shops"
-                className="p-5 rounded-2xl border border-neutral-200 hover:border-neutral-400 bg-neutral-50/50 hover:bg-white hover:-translate-y-0.5 transition-all duration-200 group shadow-2xs"
+                className="p-5 rounded-2xl border border-slate-200 hover:border-slate-400 bg-slate-50/50 hover:bg-white hover:-translate-y-0.5 transition-all duration-200 group shadow-2xs"
               >
-                <div className="w-10 h-10 rounded-full bg-white border border-neutral-200 flex items-center justify-center text-black mb-3.5 shadow-2xs group-hover:bg-blue-600 group-hover:text-white transition-colors">
+                <div className="w-10 h-10 rounded-full bg-white border border-slate-200 flex items-center justify-center text-slate-900 mb-3.5 shadow-2xs group-hover:bg-blue-600 group-hover:text-white transition-colors">
                   <Store className="w-5 h-5" />
                 </div>
-                <div className="font-bold text-black text-xs">Shops</div>
-                <div className="text-[11px] text-neutral-500 mt-1 leading-snug">
+                <div className="font-bold text-slate-900 text-xs">Shops</div>
+                <div className="text-[11px] text-slate-500 mt-1 leading-snug">
                   Add a shop, update its details, and connect its owner.
                 </div>
-                <div className="mt-4 pt-2.5 border-t border-neutral-100 flex items-center text-[11px] font-semibold text-black group-hover:text-neutral-600">
+                <div className="mt-4 pt-2.5 border-t border-slate-100 flex items-center text-[11px] font-semibold text-slate-900 group-hover:text-slate-600">
                   <span>Manage Shops</span>
                   <ArrowRight className="w-3 h-3 ml-1 group-hover:translate-x-0.5 transition-transform" />
                 </div>
@@ -182,16 +182,16 @@ export default function AdminDashboardPage() {
 
               <Link
                 href="/admin/products"
-                className="p-5 rounded-2xl border border-neutral-200 hover:border-neutral-400 bg-neutral-50/50 hover:bg-white hover:-translate-y-0.5 transition-all duration-200 group shadow-2xs"
+                className="p-5 rounded-2xl border border-slate-200 hover:border-slate-400 bg-slate-50/50 hover:bg-white hover:-translate-y-0.5 transition-all duration-200 group shadow-2xs"
               >
-                <div className="w-10 h-10 rounded-full bg-white border border-neutral-200 flex items-center justify-center text-black mb-3.5 shadow-2xs group-hover:bg-blue-600 group-hover:text-white transition-colors">
+                <div className="w-10 h-10 rounded-full bg-white border border-slate-200 flex items-center justify-center text-slate-900 mb-3.5 shadow-2xs group-hover:bg-blue-600 group-hover:text-white transition-colors">
                   <Layers className="w-5 h-5" />
                 </div>
-                <div className="font-bold text-black text-xs">Products</div>
-                <div className="text-[11px] text-neutral-500 mt-1 leading-snug">
+                <div className="font-bold text-slate-900 text-xs">Products</div>
+                <div className="text-[11px] text-slate-500 mt-1 leading-snug">
                   Add and edit the products shops can offer.
                 </div>
-                <div className="mt-4 pt-2.5 border-t border-neutral-100 flex items-center text-[11px] font-semibold text-black group-hover:text-neutral-600">
+                <div className="mt-4 pt-2.5 border-t border-slate-100 flex items-center text-[11px] font-semibold text-slate-900 group-hover:text-slate-600">
                   <span>Browse Catalog</span>
                   <ArrowRight className="w-3 h-3 ml-1 group-hover:translate-x-0.5 transition-transform" />
                 </div>
@@ -199,16 +199,16 @@ export default function AdminDashboardPage() {
 
               <Link
                 href="/admin/users"
-                className="p-5 rounded-2xl border border-neutral-200 hover:border-neutral-400 bg-neutral-50/50 hover:bg-white hover:-translate-y-0.5 transition-all duration-200 group shadow-2xs"
+                className="p-5 rounded-2xl border border-slate-200 hover:border-slate-400 bg-slate-50/50 hover:bg-white hover:-translate-y-0.5 transition-all duration-200 group shadow-2xs"
               >
-                <div className="w-10 h-10 rounded-full bg-white border border-neutral-200 flex items-center justify-center text-black mb-3.5 shadow-2xs group-hover:bg-blue-600 group-hover:text-white transition-colors">
+                <div className="w-10 h-10 rounded-full bg-white border border-slate-200 flex items-center justify-center text-slate-900 mb-3.5 shadow-2xs group-hover:bg-blue-600 group-hover:text-white transition-colors">
                   <Users className="w-5 h-5" />
                 </div>
-                <div className="font-bold text-black text-xs">People</div>
-                <div className="text-[11px] text-neutral-500 mt-1 leading-snug">
+                <div className="font-bold text-slate-900 text-xs">People</div>
+                <div className="text-[11px] text-slate-500 mt-1 leading-snug">
                   Create shop owner accounts and link them to a shop.
                 </div>
-                <div className="mt-4 pt-2.5 border-t border-neutral-100 flex items-center text-[11px] font-semibold text-black group-hover:text-neutral-600">
+                <div className="mt-4 pt-2.5 border-t border-slate-100 flex items-center text-[11px] font-semibold text-slate-900 group-hover:text-slate-600">
                   <span>Manage Accounts</span>
                   <ArrowRight className="w-3 h-3 ml-1 group-hover:translate-x-0.5 transition-transform" />
                 </div>

@@ -3,7 +3,7 @@ import { Store } from 'lucide-react';
 
 export default function Footer() {
   return (
-    <footer className="bg-white border-t border-stone-200 mt-auto py-8 text-stone-600">
+    <footer className="bg-white border-t border-slate-200 mt-auto py-8 text-slate-600">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
           <div className="flex items-center space-x-3">
@@ -11,19 +11,19 @@ export default function Footer() {
               <Store className="w-4 h-4" />
             </div>
             <div>
-              <div className="font-bold text-stone-900 text-sm tracking-tight">
+              <div className="font-bold text-slate-900 text-sm tracking-tight">
                 OmniShop
               </div>
-              <p className="text-xs text-stone-500">
+              <p className="text-xs text-slate-500">
                 A little marketplace for independent shops.
               </p>
             </div>
           </div>
 
-            <div className="text-sm text-stone-500">Discover a shop. Find something you love. Shop small.</div>
+          <div className="text-sm text-slate-500">Discover a shop. Find something you love. Shop small.</div>
         </div>
 
-        <div className="mt-8 pt-6 border-t border-stone-100 flex flex-col sm:flex-row items-center justify-between text-[11px] text-stone-400 gap-2">
+        <div className="mt-8 pt-6 border-t border-slate-100 flex flex-col sm:flex-row items-center justify-between text-[11px] text-slate-400 gap-2">
           <div>© 2026 OmniShop</div>
           <div>Made for good finds and the people who make them.</div>
         </div>

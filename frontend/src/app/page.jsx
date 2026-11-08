@@ -55,47 +55,47 @@ export default function HomePage() {
                 Browse products from independent shops and discover something new.
               </p>
               <div className="mt-7 max-w-2xl">
-              <div className="relative flex items-center">
-                <Search className="w-5 h-5 text-slate-400 absolute left-4 pointer-events-none" />
-                <input
-                  type="text"
-                  value={searchInput}
-                  onChange={(e) => setSearchInput(e.target.value)}
-                  placeholder="Search shops by name or specialty"
-                  className="w-full pl-12 pr-28 py-3 rounded-lg bg-white border border-slate-300 text-sm text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all shadow-sm"
-                />
-                <div className="absolute right-3.5 flex items-center space-x-1.5">
-                  {searchInput ? (
+                <div className="relative flex items-center">
+                  <Search className="w-5 h-5 text-slate-400 absolute left-4 pointer-events-none" />
+                  <input
+                    type="text"
+                    value={searchInput}
+                    onChange={(e) => setSearchInput(e.target.value)}
+                    placeholder="Search shops by name or specialty"
+                    className="w-full pl-12 pr-28 py-3 rounded-lg bg-white border border-slate-300 text-sm text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all shadow-sm"
+                  />
+                  <div className="absolute right-3.5 flex items-center space-x-1.5">
+                    {searchInput ? (
+                      <button
+                        onClick={() => setSearchInput('')}
+                        className="text-slate-600 hover:text-slate-900 text-xs font-medium px-3 py-1.5 rounded-lg bg-slate-100 border border-slate-200 transition-colors"
+                      >
+                        Clear
+                      </button>
+                    ) : (
+                      <kbd className="hidden sm:inline-block text-[11px] font-mono bg-slate-100 px-2.5 py-1 rounded text-slate-500 border border-slate-200">
+                        /
+                      </kbd>
+                    )}
+                  </div>
+                </div>
+
+                <div className="flex items-center gap-2 mt-4 overflow-x-auto pb-1 text-xs">
+                  {CATEGORY_FILTERS.map((cat) => (
                     <button
-                      onClick={() => setSearchInput('')}
-                      className="text-slate-600 hover:text-slate-900 text-xs font-medium px-3 py-1.5 rounded-lg bg-slate-100 border border-slate-200 transition-colors"
+                      key={cat.id}
+                      onClick={() => setActiveCategory(cat.id)}
+                      className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors whitespace-nowrap ${
+                        activeCategory === cat.id
+                          ? 'bg-blue-600 text-white shadow-sm'
+                          : 'bg-white text-slate-700 hover:text-blue-700 hover:bg-blue-50 border border-slate-300'
+                      }`}
                     >
-                      Clear
+                      <span>{cat.label}</span>
                     </button>
-                  ) : (
-                    <kbd className="hidden sm:inline-block text-[11px] font-mono bg-slate-100 px-2.5 py-1 rounded text-slate-500 border border-slate-200">
-                      /
-                    </kbd>
-                  )}
+                  ))}
                 </div>
               </div>
-
-              <div className="flex items-center gap-2 mt-4 overflow-x-auto pb-1 text-xs">
-                {CATEGORY_FILTERS.map((cat) => (
-                  <button
-                    key={cat.id}
-                    onClick={() => setActiveCategory(cat.id)}
-                    className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors whitespace-nowrap ${
-                      activeCategory === cat.id
-                        ? 'bg-blue-600 text-white shadow-sm'
-                        : 'bg-white text-slate-700 hover:text-blue-700 hover:bg-blue-50 border border-slate-300'
-                    }`}
-                  >
-                    <span>{cat.label}</span>
-                  </button>
-                ))}
-              </div>
-            </div>
             </div>
             <div className="relative min-h-[280px] sm:min-h-[360px]">
               <img
@@ -114,7 +114,7 @@ export default function HomePage() {
       </section>
 
       <section id="stores" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-14">
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between pb-4 border-b border-neutral-200 mb-6 gap-2">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between pb-4 border-b border-slate-200 mb-6 gap-2">
           <div>
             <h2 className="text-2xl font-bold text-slate-900 tracking-tight flex items-center space-x-2.5">
               <Store className="w-5 h-5 text-blue-600" />
@@ -134,25 +134,25 @@ export default function HomePage() {
         {isLoading ? (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {[1, 2, 3].map((n) => (
-              <div key={n} className="bg-white rounded-2xl border border-neutral-200 overflow-hidden shadow-2xs animate-pulse">
-                <div className="aspect-[16/9] bg-neutral-100" />
+              <div key={n} className="bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-2xs animate-pulse">
+                <div className="aspect-[16/9] bg-slate-100" />
                 <div className="p-5 space-y-3">
-                  <div className="h-4 bg-neutral-200 rounded w-2/3" />
-                  <div className="h-3 bg-neutral-100 rounded w-full" />
-                  <div className="h-3 bg-neutral-100 rounded w-4/5" />
+                  <div className="h-4 bg-slate-200 rounded w-2/3" />
+                  <div className="h-3 bg-slate-100 rounded w-full" />
+                  <div className="h-3 bg-slate-100 rounded w-4/5" />
                 </div>
               </div>
             ))}
           </div>
         ) : isError ? (
-          <div className="text-center py-16 bg-white rounded-2xl border border-neutral-200 shadow-2xs">
+          <div className="text-center py-16 bg-white rounded-2xl border border-slate-200 shadow-2xs">
             <p className="text-xs text-rose-600 font-semibold">Unable to load merchant stores at this time.</p>
           </div>
         ) : shops.length === 0 ? (
-          <div className="text-center py-20 bg-white rounded-2xl border border-neutral-200 shadow-2xs">
-            <Store className="w-10 h-10 text-neutral-300 mx-auto mb-3" />
-            <h3 className="text-sm font-bold text-neutral-900">No matching stores found</h3>
-            <p className="text-xs text-neutral-500 mt-1 max-w-sm mx-auto">
+          <div className="text-center py-20 bg-white rounded-2xl border border-slate-200 shadow-2xs">
+            <Store className="w-10 h-10 text-slate-300 mx-auto mb-3" />
+            <h3 className="text-sm font-bold text-slate-900">No matching stores found</h3>
+            <p className="text-xs text-slate-500 mt-1 max-w-sm mx-auto">
               We couldn't find any stores matching your query. Try another keyword or filter chip.
             </p>
           </div>
@@ -173,7 +173,7 @@ export default function HomePage() {
                       e.target.src = 'https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=800';
                     }}
                   />
-                  <div className="absolute inset-0 bg-black/10 group-hover:bg-blue-600/0 transition-colors" />
+                  <div className="absolute inset-0 bg-black/10 group-hover:bg-black/0 transition-colors" />
 
                   {/* Logo overlay badge */}
                   <div className="absolute bottom-4 left-4">
