@@ -1,0 +1,13 @@
+{
+  "name": "small-ecommerce-management",
+  "version": "1.0.0",
+  "description": "Small E-Commerce Management System with Shared Product Catalog",
+  "private": true,
+  "scripts": {
+    "setup": "cd backend && cp -n .env.example .env || true && touch database/database.sqlite && composer install && php artisan key:generate && php artisan migrate:fresh --seed && php artisan storage:link && cd ../frontend && npm install",
+    "dev:backend": "cd backend && php artisan serve --port=8000",
+    "dev:frontend": "cd frontend && npm run dev",
+    "build:frontend": "cd frontend && npm run build",
+    "test:backend": "cd backend && php artisan test"
+  }
+}
