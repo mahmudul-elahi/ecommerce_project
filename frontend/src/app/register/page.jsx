@@ -71,16 +71,16 @@ export default function RegisterPage() {
   };
 
   return (
-    <div className="min-h-[85vh] flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8 bg-paper">
+    <div className="min-h-[85vh] flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8 bg-slate-50">
       <div className="max-w-md w-full space-y-7 bg-white p-8 sm:p-9 rounded-2xl border border-stone-200 shadow-craft">
         {/* Header */}
         <div className="text-center">
-          <div className="inline-flex items-center justify-center w-12 h-12 rounded-xl bg-stone-100 text-stone-800 border border-stone-200 mb-4 shadow-subtle">
-            <Store className="w-6 h-6 text-emerald-800" />
+          <div className="inline-flex items-center justify-center w-12 h-12 rounded-xl bg-blue-50 text-blue-700 border border-blue-100 mb-4 shadow-subtle">
+            <Store className="w-6 h-6 text-blue-700" />
           </div>
           <h1 className="text-2xl font-bold tracking-tight text-stone-900">Launch Your Store</h1>
           <p className="text-xs text-stone-500 mt-1.5 font-normal">
-            Gain immediate access to the shared global catalog and curate your shop.
+            Give your shop a home online. Add your details and start building your collection.
           </p>
         </div>
 
@@ -95,7 +95,7 @@ export default function RegisterPage() {
                 type="text"
                 {...register('shop_name')}
                 className={`w-full pl-10 pr-3.5 py-2.5 text-xs bg-stone-50/60 rounded-xl border ${
-                  errors.shop_name ? 'border-rose-400 focus:ring-rose-500' : 'border-stone-200 focus:ring-stone-900'
+                  errors.shop_name ? 'border-rose-400 focus:ring-rose-500' : 'border-stone-200 focus:ring-blue-500'
                 } focus:outline-none focus:ring-1 focus:bg-white text-stone-900 transition-all`}
                 placeholder="e.g. Skyline Goods"
               />
@@ -118,7 +118,7 @@ export default function RegisterPage() {
                 type="text"
                 {...register('name')}
                 className={`w-full pl-10 pr-3.5 py-2.5 text-xs bg-stone-50/60 rounded-xl border ${
-                  errors.name ? 'border-rose-400 focus:ring-rose-500' : 'border-stone-200 focus:ring-stone-900'
+                  errors.name ? 'border-rose-400 focus:ring-rose-500' : 'border-stone-200 focus:ring-blue-500'
                 } focus:outline-none focus:ring-1 focus:bg-white text-stone-900 transition-all`}
                 placeholder="e.g. Jordan Hayes"
               />
@@ -141,7 +141,7 @@ export default function RegisterPage() {
                 type="email"
                 {...register('email')}
                 className={`w-full pl-10 pr-3.5 py-2.5 text-xs bg-stone-50/60 rounded-xl border ${
-                  errors.email ? 'border-rose-400 focus:ring-rose-500' : 'border-stone-200 focus:ring-stone-900'
+                  errors.email ? 'border-rose-400 focus:ring-rose-500' : 'border-stone-200 focus:ring-blue-500'
                 } focus:outline-none focus:ring-1 focus:bg-white text-stone-900 transition-all`}
                 placeholder="jordan@example.com"
               />
@@ -163,7 +163,7 @@ export default function RegisterPage() {
               <input
                 type="text"
                 {...register('phone')}
-                className="w-full pl-10 pr-3.5 py-2.5 text-xs bg-stone-50/60 rounded-xl border border-stone-200 focus:ring-stone-900 focus:outline-none focus:ring-1 focus:bg-white text-stone-900 transition-all"
+                className="w-full pl-10 pr-3.5 py-2.5 text-xs bg-stone-50/60 rounded-xl border border-stone-200 focus:ring-blue-500 focus:outline-none focus:ring-1 focus:bg-white text-stone-900 transition-all"
                 placeholder="+1 (555) 012-3456"
               />
             </div>
@@ -179,7 +179,7 @@ export default function RegisterPage() {
                 type="password"
                 {...register('password')}
                 className={`w-full pl-10 pr-3.5 py-2.5 text-xs bg-stone-50/60 rounded-xl border ${
-                  errors.password ? 'border-rose-400 focus:ring-rose-500' : 'border-stone-200 focus:ring-stone-900'
+                  errors.password ? 'border-rose-400 focus:ring-rose-500' : 'border-stone-200 focus:ring-blue-500'
                 } focus:outline-none focus:ring-1 focus:bg-white text-stone-900 transition-all`}
                 placeholder="••••••••"
               />
@@ -195,13 +195,13 @@ export default function RegisterPage() {
           <button
             type="submit"
             disabled={isSubmitting}
-            className="w-full py-2.5 px-4 rounded-xl bg-stone-900 hover:bg-stone-800 disabled:opacity-60 text-white font-medium text-xs transition-all flex items-center justify-center space-x-2 shadow-sm mt-3 active:scale-[0.99]"
+            className="w-full py-2.5 px-4 rounded-lg bg-blue-600 hover:bg-blue-700 disabled:opacity-60 text-white font-semibold text-sm transition-colors flex items-center justify-center space-x-2 shadow-sm mt-3"
           >
             {isSubmitting ? (
               <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
             ) : (
               <>
-                <span>Register Store & Continue</span>
+                <span>Create my store</span>
                 <ArrowRight className="w-3.5 h-3.5" />
               </>
             )}
@@ -211,7 +211,7 @@ export default function RegisterPage() {
         <div className="text-center pt-3 border-t border-stone-100">
           <p className="text-xs text-stone-500">
             Already have an account?{' '}
-            <Link href="/login" className="font-semibold text-emerald-800 hover:underline">
+            <Link href="/login" className="font-semibold text-blue-700 hover:underline">
               Sign in here
             </Link>
           </p>

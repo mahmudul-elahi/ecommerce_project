@@ -193,7 +193,7 @@ export default function CatalogBrowsePage() {
               resetCreate();
               setIsCreateModalOpen(true);
             }}
-            className="px-4 py-2.5 rounded-xl bg-stone-900 hover:bg-stone-800 text-stone-50 text-xs font-semibold transition-colors shadow-xs flex items-center space-x-1.5"
+            className="px-4 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-stone-50 text-xs font-semibold transition-colors shadow-xs flex items-center space-x-1.5"
           >
             <Plus className="w-4 h-4" />
             <span>Create Shared Product</span>
@@ -210,7 +210,7 @@ export default function CatalogBrowsePage() {
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             placeholder="Search shared catalog by title, SKU, or keyword..."
-            className="w-full pl-10 pr-4 py-2 text-xs bg-stone-50 rounded-xl border border-stone-200 text-stone-900 placeholder:text-stone-400 focus:outline-none focus:ring-1 focus:ring-stone-900 focus:bg-white transition-all"
+            className="w-full pl-10 pr-4 py-2 text-xs bg-stone-50 rounded-xl border border-stone-200 text-stone-900 placeholder:text-stone-400 focus:outline-none focus:ring-1 focus:ring-blue-500 focus:bg-white transition-all"
           />
         </div>
 
@@ -219,7 +219,7 @@ export default function CatalogBrowsePage() {
           <select
             value={category}
             onChange={(e) => setCategory(e.target.value)}
-            className="px-3 py-2 text-xs bg-stone-50 border border-stone-200 rounded-xl text-stone-700 focus:outline-none focus:ring-1 focus:ring-stone-900"
+            className="px-3 py-2 text-xs bg-stone-50 border border-stone-200 rounded-xl text-stone-700 focus:outline-none focus:ring-1 focus:ring-blue-500"
           >
             <option value="">All Categories ({catalogProducts.length})</option>
             {categories.map((c) => (
@@ -233,7 +233,7 @@ export default function CatalogBrowsePage() {
           <select
             value={statusFilter}
             onChange={(e) => setStatusFilter(e.target.value)}
-            className="px-3 py-2 text-xs bg-stone-50 border border-stone-200 rounded-xl text-stone-700 focus:outline-none focus:ring-1 focus:ring-stone-900"
+            className="px-3 py-2 text-xs bg-stone-50 border border-stone-200 rounded-xl text-stone-700 focus:outline-none focus:ring-1 focus:ring-blue-500"
           >
             <option value="">All Listing Statuses</option>
             <option value="in_shop">Already In My Shop</option>
@@ -298,7 +298,7 @@ export default function CatalogBrowsePage() {
 
                     {/* Status badge */}
                     {alreadyInShop && (
-                      <span className="absolute top-3 right-3 px-2 py-0.5 rounded-md bg-stone-900 text-stone-50 text-[10px] font-mono uppercase shadow-xs flex items-center space-x-1">
+                      <span className="absolute top-3 right-3 px-2 py-0.5 rounded-md bg-blue-600 text-stone-50 text-[10px] font-mono uppercase shadow-xs flex items-center space-x-1">
                         <Check className="w-3 h-3" />
                         <span>In Store</span>
                       </span>
@@ -359,7 +359,7 @@ export default function CatalogBrowsePage() {
                   ) : (
                     <button
                       onClick={() => handleOpenAddModal(product)}
-                      className="w-full py-2.5 px-3 rounded-xl bg-stone-900 hover:bg-stone-800 text-stone-50 text-xs font-semibold flex items-center justify-center space-x-1.5 transition-colors shadow-xs"
+                      className="w-full py-2.5 px-3 rounded-xl bg-blue-600 hover:bg-blue-700 text-stone-50 text-xs font-semibold flex items-center justify-center space-x-1.5 transition-colors shadow-xs"
                     >
                       <Plus className="w-3.5 h-3.5" />
                       <span>Add to My Store</span>
@@ -404,7 +404,7 @@ export default function CatalogBrowsePage() {
                   step="0.01"
                   {...registerAdd('custom_price')}
                   placeholder={`Default: $${productToAdd.base_price}`}
-                  className="w-full px-3 py-2 text-xs bg-white rounded-xl border border-stone-200 focus:outline-none focus:ring-1 focus:ring-stone-900"
+                  className="w-full px-3 py-2 text-xs bg-white rounded-xl border border-stone-200 focus:outline-none focus:ring-1 focus:ring-blue-500"
                 />
                 <span className="text-[10px] text-stone-500 mt-1 block">
                   Leave blank to use catalog base (${Number(productToAdd.base_price).toFixed(2)})
@@ -418,7 +418,7 @@ export default function CatalogBrowsePage() {
                 <input
                   type="number"
                   {...registerAdd('stock')}
-                  className="w-full px-3 py-2 text-xs bg-white rounded-xl border border-stone-200 focus:outline-none focus:ring-1 focus:ring-stone-900"
+                  className="w-full px-3 py-2 text-xs bg-white rounded-xl border border-stone-200 focus:outline-none focus:ring-1 focus:ring-blue-500"
                 />
                 {errorsAdd.stock && (
                   <span className="text-[10px] text-rose-500 mt-1 block">{errorsAdd.stock.message}</span>
@@ -434,7 +434,7 @@ export default function CatalogBrowsePage() {
                 type="text"
                 {...registerAdd('custom_title')}
                 placeholder={`Leave blank to keep "${productToAdd.name}"`}
-                className="w-full px-3 py-2 text-xs bg-white rounded-xl border border-stone-200 focus:outline-none focus:ring-1 focus:ring-stone-900"
+                className="w-full px-3 py-2 text-xs bg-white rounded-xl border border-stone-200 focus:outline-none focus:ring-1 focus:ring-blue-500"
               />
             </div>
 
@@ -446,7 +446,7 @@ export default function CatalogBrowsePage() {
                 rows={3}
                 {...registerAdd('custom_description')}
                 placeholder="Shop-specific promotional copy or warranty notes..."
-                className="w-full px-3 py-2 text-xs bg-white rounded-xl border border-stone-200 focus:outline-none focus:ring-1 focus:ring-stone-900"
+                className="w-full px-3 py-2 text-xs bg-white rounded-xl border border-stone-200 focus:outline-none focus:ring-1 focus:ring-blue-500"
               />
             </div>
 
@@ -458,7 +458,7 @@ export default function CatalogBrowsePage() {
                 type="url"
                 {...registerAdd('custom_thumbnail')}
                 placeholder="https://example.com/custom-photo.jpg"
-                className="w-full px-3 py-2 text-xs bg-white rounded-xl border border-stone-200 focus:outline-none focus:ring-1 focus:ring-stone-900"
+                className="w-full px-3 py-2 text-xs bg-white rounded-xl border border-stone-200 focus:outline-none focus:ring-1 focus:ring-blue-500"
               />
             </div>
 
@@ -473,7 +473,7 @@ export default function CatalogBrowsePage() {
               <button
                 type="submit"
                 disabled={isSubmittingAdd || addToShopMutation.isPending}
-                className="px-4 py-2 rounded-xl bg-stone-900 hover:bg-stone-800 text-stone-50 text-xs font-semibold shadow-xs disabled:opacity-50"
+                className="px-4 py-2 rounded-xl bg-blue-600 hover:bg-blue-700 text-stone-50 text-xs font-semibold shadow-xs disabled:opacity-50"
               >
                 {isSubmittingAdd || addToShopMutation.isPending ? 'Adding to Store...' : 'Confirm & Add to Store'}
               </button>
@@ -492,7 +492,7 @@ export default function CatalogBrowsePage() {
           <div className="bg-amber-50/70 border border-amber-200/80 rounded-xl p-3 text-xs text-amber-900 flex items-start space-x-2">
             <Sparkles className="w-4 h-4 text-amber-700 flex-shrink-0 mt-0.5" />
             <div>
-              <span className="font-semibold">Shared Catalog Architecture:</span> Any product you create is added to the universal catalog so other shop owners can discover and sell it too. It will also be instantly added to your personal shop listings!
+              <span className="font-semibold">One product, more places to sell:</span> New products are added to the catalog for other shop owners to discover and are listed in your shop right away.
             </div>
           </div>
 
@@ -507,7 +507,7 @@ export default function CatalogBrowsePage() {
                 placeholder="e.g. Minimalist Ceramic Cup"
                 className={`w-full px-3 py-2 text-xs bg-white rounded-xl border ${
                   errorsCreate.name ? 'border-rose-400' : 'border-stone-200'
-                } focus:outline-none focus:ring-1 focus:ring-stone-900`}
+                } focus:outline-none focus:ring-1 focus:ring-blue-500`}
               />
               {errorsCreate.name && (
                 <span className="text-[10px] text-rose-500 mt-1 block">{errorsCreate.name.message}</span>
@@ -524,7 +524,7 @@ export default function CatalogBrowsePage() {
                 placeholder="e.g. CERAMIC-001"
                 className={`w-full px-3 py-2 text-xs bg-white rounded-xl border ${
                   errorsCreate.sku ? 'border-rose-400' : 'border-stone-200'
-                } focus:outline-none focus:ring-1 focus:ring-stone-900`}
+                } focus:outline-none focus:ring-1 focus:ring-blue-500`}
               />
               {errorsCreate.sku && (
                 <span className="text-[10px] text-rose-500 mt-1 block">{errorsCreate.sku.message}</span>
@@ -543,7 +543,7 @@ export default function CatalogBrowsePage() {
                 placeholder="e.g. Home & Living"
                 className={`w-full px-3 py-2 text-xs bg-white rounded-xl border ${
                   errorsCreate.category ? 'border-rose-400' : 'border-stone-200'
-                } focus:outline-none focus:ring-1 focus:ring-stone-900`}
+                } focus:outline-none focus:ring-1 focus:ring-blue-500`}
               />
               {errorsCreate.category && (
                 <span className="text-[10px] text-rose-500 mt-1 block">{errorsCreate.category.message}</span>
@@ -561,7 +561,7 @@ export default function CatalogBrowsePage() {
                 placeholder="25.00"
                 className={`w-full px-3 py-2 text-xs bg-white rounded-xl border ${
                   errorsCreate.base_price ? 'border-rose-400' : 'border-stone-200'
-                } focus:outline-none focus:ring-1 focus:ring-stone-900`}
+                } focus:outline-none focus:ring-1 focus:ring-blue-500`}
               />
               {errorsCreate.base_price && (
                 <span className="text-[10px] text-rose-500 mt-1 block">{errorsCreate.base_price.message}</span>
@@ -579,7 +579,7 @@ export default function CatalogBrowsePage() {
                 step="0.01"
                 {...registerCreate('custom_price')}
                 placeholder="Optional (defaults to base price)"
-                className="w-full px-3 py-2 text-xs bg-white rounded-xl border border-stone-200 focus:outline-none focus:ring-1 focus:ring-stone-900"
+                className="w-full px-3 py-2 text-xs bg-white rounded-xl border border-stone-200 focus:outline-none focus:ring-1 focus:ring-blue-500"
               />
             </div>
 
@@ -590,7 +590,7 @@ export default function CatalogBrowsePage() {
               <input
                 type="number"
                 {...registerCreate('stock')}
-                className="w-full px-3 py-2 text-xs bg-white rounded-xl border border-stone-200 focus:outline-none focus:ring-1 focus:ring-stone-900"
+                className="w-full px-3 py-2 text-xs bg-white rounded-xl border border-stone-200 focus:outline-none focus:ring-1 focus:ring-blue-500"
               />
             </div>
           </div>
@@ -603,7 +603,7 @@ export default function CatalogBrowsePage() {
               type="url"
               {...registerCreate('thumbnail')}
               placeholder="https://images.unsplash.com/photo-..."
-              className="w-full px-3 py-2 text-xs bg-white rounded-xl border border-stone-200 focus:outline-none focus:ring-1 focus:ring-stone-900"
+              className="w-full px-3 py-2 text-xs bg-white rounded-xl border border-stone-200 focus:outline-none focus:ring-1 focus:ring-blue-500"
             />
           </div>
 
@@ -615,7 +615,7 @@ export default function CatalogBrowsePage() {
               rows={3}
               {...registerCreate('description')}
               placeholder="Detailed description for the shared catalog..."
-              className="w-full px-3 py-2 text-xs bg-white rounded-xl border border-stone-200 focus:outline-none focus:ring-1 focus:ring-stone-900"
+              className="w-full px-3 py-2 text-xs bg-white rounded-xl border border-stone-200 focus:outline-none focus:ring-1 focus:ring-blue-500"
             />
           </div>
 
@@ -630,7 +630,7 @@ export default function CatalogBrowsePage() {
             <button
               type="submit"
               disabled={isSubmittingCreate || createSharedProductMutation.isPending}
-              className="px-4 py-2 rounded-xl bg-stone-900 hover:bg-stone-800 text-stone-50 text-xs font-semibold shadow-xs disabled:opacity-50"
+              className="px-4 py-2 rounded-xl bg-blue-600 hover:bg-blue-700 text-stone-50 text-xs font-semibold shadow-xs disabled:opacity-50"
             >
               {isSubmittingCreate || createSharedProductMutation.isPending
                 ? 'Creating Product...'

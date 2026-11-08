@@ -9,14 +9,14 @@ import CartDrawer from '../components/common/CartDrawer';
 import { Toaster } from 'sonner';
 
 export const metadata = {
-  title: 'OmniShop | Shared Catalog Multi-Vendor Platform',
-  description: 'Shared product catalog multi-vendor e-commerce platform with isolated storefronts and custom pricing.',
+  title: 'OmniShop | Discover independent shops',
+  description: 'Find thoughtful collections and shop directly from independent stores.',
 };
 
 export default function RootLayout({ children }) {
   return (
     <html lang="en" className="h-full scroll-smooth">
-      <body className="min-h-screen flex flex-col bg-[#faf9f5] text-stone-800 antialiased font-sans selection:bg-emerald-100 selection:text-emerald-950">
+      <body className="min-h-screen flex flex-col bg-slate-50 text-slate-800 antialiased font-sans selection:bg-blue-100 selection:text-blue-950">
         <QueryProvider>
           <AuthProvider>
             <CartProvider>

@@ -51,28 +51,28 @@ export default function ShopOwnerDashboardPage() {
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-10">
-      {/* Light-Mode Editorial Merchant Profile Banner */}
+      {/* Shop overview */}
       {shop && (
-        <div className="bg-white rounded-2xl p-6 sm:p-8 mb-8 border border-stone-200 shadow-sm relative overflow-hidden">
+        <div className="bg-white rounded-2xl p-6 sm:p-8 mb-8 border border-neutral-200/90 shadow-2xs relative overflow-hidden">
           <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-6 relative z-10">
             <div className="flex items-center space-x-5">
               <img
                 src={shop.logo_url || 'https://images.unsplash.com/photo-1550745165-9bc0b252726f?w=150'}
                 alt={shop.name}
-                className="w-16 h-16 sm:w-20 sm:h-20 rounded-2xl object-cover border border-stone-200 bg-stone-50 shadow-xs flex-shrink-0"
+                className="w-16 h-16 sm:w-20 sm:h-20 rounded-full object-cover border-2 border-white bg-neutral-50 shadow-md flex-shrink-0"
                 onError={(e) => {
                   e.target.src = 'https://images.unsplash.com/photo-1550745165-9bc0b252726f?w=150';
                 }}
               />
               <div>
-                <div className="inline-flex items-center space-x-1.5 px-2.5 py-0.5 rounded-full bg-stone-100 text-stone-700 text-[11px] font-semibold border border-stone-200 mb-2">
-                  <Store className="w-3 h-3 text-stone-600" />
+                <div className="inline-flex items-center space-x-1.5 px-3 py-1 rounded-full bg-blue-50 text-blue-700 text-[11px] font-bold border border-blue-100 mb-2 shadow-2xs">
+                  <Store className="w-3.5 h-3.5 text-blue-700" />
                   <span className="font-mono uppercase tracking-wider">Merchant Portal</span>
                 </div>
-                <h1 className="text-2xl sm:text-3xl font-bold text-stone-900 tracking-tight">
+                <h1 className="text-3xl sm:text-4xl font-extrabold text-black tracking-tight font-sans">
                   {shop.name}
                 </h1>
-                <p className="text-xs text-stone-500 mt-1 max-w-xl line-clamp-1">
+                <p className="text-xs text-neutral-500 mt-1 max-w-xl line-clamp-1">
                   {shop.description || 'Manage your custom prices, listing thumbnails, and browse the shared catalog.'}
                 </p>
               </div>
@@ -82,15 +82,16 @@ export default function ShopOwnerDashboardPage() {
               <Link
                 href={`/shop/${shop.slug}`}
                 target="_blank"
-                className="px-4 py-2 rounded-xl bg-stone-900 hover:bg-stone-800 text-stone-50 text-xs font-semibold transition-colors shadow-xs flex items-center space-x-2"
+                className="px-5 py-2.5 rounded-full bg-blue-600 hover:bg-blue-700 text-white text-xs font-semibold transition-all shadow-2xs active:scale-95 flex items-center space-x-2"
               >
                 <span>View Public Storefront</span>
                 <ExternalLink className="w-3.5 h-3.5" />
               </Link>
               <Link
                 href="/shop-owner/settings"
-                className="p-2.5 rounded-xl bg-white hover:bg-stone-50 text-stone-700 transition-colors border border-stone-200 shadow-xs"
+                className="p-2.5 rounded-full bg-white hover:bg-neutral-50 text-neutral-700 transition-colors border border-neutral-300 shadow-2xs"
                 title="Store Settings"
+                aria-label="Store Settings"
               >
                 <Settings className="w-4 h-4" />
               </Link>
@@ -102,74 +103,74 @@ export default function ShopOwnerDashboardPage() {
       {/* Metrics Grid */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5 mb-8">
         {/* Active Listings in This Shop */}
-        <div className="bg-white p-5 rounded-2xl border border-stone-200 shadow-xs flex items-center justify-between">
+        <div className="bg-white p-5 rounded-2xl border border-neutral-200/90 shadow-2xs hover:shadow-md hover:border-neutral-300 transition-all flex items-center justify-between">
           <div>
-            <span className="text-[11px] font-mono uppercase tracking-wider text-stone-500">
+            <span className="text-[10px] font-mono uppercase tracking-wider text-neutral-500 font-bold">
               Active Listings
             </span>
-            <div className="text-2xl font-bold text-stone-900 mt-1.5">
+            <div className="text-3xl font-extrabold text-black mt-1 font-mono tracking-tight">
               {stats.active_listings || 0}
             </div>
-            <div className="text-[11px] text-stone-500 mt-1">
-              In your storefront
+            <div className="text-[11px] text-neutral-500 mt-1">
+              Live in your storefront
             </div>
           </div>
-          <div className="w-11 h-11 rounded-xl bg-stone-100 text-stone-800 border border-stone-200 flex items-center justify-center">
-            <Package className="w-5 h-5 text-stone-700" />
+          <div className="w-12 h-12 rounded-full bg-neutral-100 text-black border border-neutral-200 flex items-center justify-center shadow-2xs">
+            <Package className="w-5 h-5 text-black" />
           </div>
         </div>
 
         {/* Global Catalog Items Available */}
-        <div className="bg-white p-5 rounded-2xl border border-stone-200 shadow-xs flex items-center justify-between">
+        <div className="bg-white p-5 rounded-2xl border border-neutral-200/90 shadow-2xs hover:shadow-md hover:border-neutral-300 transition-all flex items-center justify-between">
           <div>
-            <span className="text-[11px] font-mono uppercase tracking-wider text-stone-500">
+            <span className="text-[10px] font-mono uppercase tracking-wider text-neutral-500 font-bold">
               Shared Catalog
             </span>
-            <div className="text-2xl font-bold text-stone-900 mt-1.5">
+            <div className="text-3xl font-extrabold text-black mt-1 font-mono tracking-tight">
               {stats.total_catalog_products || 0}
             </div>
-            <div className="text-[11px] text-stone-500 mt-1">
+            <div className="text-[11px] text-neutral-500 mt-1">
               Available to add
             </div>
           </div>
-          <div className="w-11 h-11 rounded-xl bg-stone-100 text-stone-800 border border-stone-200 flex items-center justify-center">
-            <Layers className="w-5 h-5 text-stone-700" />
+          <div className="w-12 h-12 rounded-full bg-neutral-100 text-black border border-neutral-200 flex items-center justify-center shadow-2xs">
+            <Layers className="w-5 h-5 text-black" />
           </div>
         </div>
 
         {/* Customer Orders */}
-        <div className="bg-white p-5 rounded-2xl border border-stone-200 shadow-xs flex items-center justify-between">
+        <div className="bg-white p-5 rounded-2xl border border-neutral-200/90 shadow-2xs hover:shadow-md hover:border-neutral-300 transition-all flex items-center justify-between">
           <div>
-            <span className="text-[11px] font-mono uppercase tracking-wider text-stone-500">
+            <span className="text-[10px] font-mono uppercase tracking-wider text-neutral-500 font-bold">
               Total Orders
             </span>
-            <div className="text-2xl font-bold text-stone-900 mt-1.5">
+            <div className="text-3xl font-extrabold text-black mt-1 font-mono tracking-tight">
               {stats.total_orders || 0}
             </div>
-            <div className="text-[11px] text-stone-500 mt-1">
+            <div className="text-[11px] text-neutral-500 mt-1">
               Store orders placed
             </div>
           </div>
-          <div className="w-11 h-11 rounded-xl bg-amber-50 text-amber-800 border border-amber-200 flex items-center justify-center">
-            <ShoppingBag className="w-5 h-5 text-amber-700" />
+          <div className="w-12 h-12 rounded-full bg-blue-50 text-blue-700 border border-blue-100 flex items-center justify-center shadow-2xs">
+            <ShoppingBag className="w-5 h-5 text-blue-700" />
           </div>
         </div>
 
         {/* Total Revenue */}
-        <div className="bg-white p-5 rounded-2xl border border-stone-200 shadow-xs flex items-center justify-between">
+        <div className="bg-white p-5 rounded-2xl border border-neutral-200/90 shadow-2xs hover:shadow-md hover:border-neutral-300 transition-all flex items-center justify-between">
           <div>
-            <span className="text-[11px] font-mono uppercase tracking-wider text-stone-500">
+            <span className="text-[10px] font-mono uppercase tracking-wider text-neutral-500 font-bold">
               Total Revenue
             </span>
-            <div className="text-2xl font-bold text-stone-900 mt-1.5">
+            <div className="text-3xl font-extrabold text-black mt-1 font-mono tracking-tight">
               ${Number(stats.total_revenue || 0).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
             </div>
-            <div className="text-[11px] text-stone-500 mt-1">
-              Gross sales
+            <div className="text-[11px] text-neutral-500 mt-1">
+              Gross storefront sales
             </div>
           </div>
-          <div className="w-11 h-11 rounded-xl bg-stone-100 text-stone-800 border border-stone-200 flex items-center justify-center">
-            <DollarSign className="w-5 h-5 text-stone-700" />
+          <div className="w-12 h-12 rounded-full bg-neutral-100 text-black border border-neutral-200 flex items-center justify-center shadow-2xs">
+            <DollarSign className="w-5 h-5 text-black" />
           </div>
         </div>
       </div>
@@ -178,47 +179,53 @@ export default function ShopOwnerDashboardPage() {
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         {/* Left Column: Shared Catalog Onboarding & Actions */}
         <div className="space-y-6">
-          <div className="bg-white p-6 rounded-2xl border border-stone-200 shadow-xs">
-            <div className="flex items-center space-x-2 text-stone-900 font-bold text-sm mb-3">
-              <Sparkles className="w-4 h-4 text-amber-600" />
-              <span>Catalog Architecture Guide</span>
+          <div className="bg-white p-6 rounded-2xl border border-neutral-200/90 shadow-2xs">
+            <div className="flex items-center space-x-2 text-black font-bold text-sm mb-3">
+              <Sparkles className="w-4 h-4 text-blue-700" />
+              <span>How products get to your shop</span>
             </div>
-            <p className="text-xs text-stone-600 leading-relaxed">
-              In OmniShop, products originate in a universal shared catalog. You can curate any shared product into your shop, customize retail pricing, and upload shop-specific photos.
+            <p className="text-xs text-neutral-600 leading-relaxed">
+              Choose products from the catalog, then set your own prices, names and photos before they appear in your shop.
             </p>
 
             <div className="mt-5 space-y-2.5">
               <Link
                 href="/shop-owner/catalog"
-                className="w-full flex items-center justify-between p-3 rounded-xl bg-stone-50 hover:bg-stone-100 border border-stone-200 text-xs font-semibold text-stone-800 transition-colors"
+                className="w-full flex items-center justify-between p-3.5 rounded-2xl bg-neutral-50/70 hover:bg-neutral-100/90 border border-neutral-200 text-xs font-semibold text-neutral-800 transition-all group"
               >
                 <div className="flex items-center space-x-2.5">
-                  <Layers className="w-4 h-4 text-stone-700" />
+                  <div className="w-7 h-7 rounded-full bg-white border border-neutral-200 flex items-center justify-center text-black shadow-2xs group-hover:bg-blue-600 group-hover:text-white transition-colors">
+                    <Layers className="w-3.5 h-3.5" />
+                  </div>
                   <span>Browse Shared Catalog</span>
                 </div>
-                <ArrowRight className="w-3.5 h-3.5 text-stone-400" />
+                <ArrowRight className="w-3.5 h-3.5 text-neutral-400 group-hover:translate-x-0.5 transition-transform" />
               </Link>
 
               <Link
                 href="/shop-owner/products"
-                className="w-full flex items-center justify-between p-3 rounded-xl bg-stone-50 hover:bg-stone-100 border border-stone-200 text-xs font-semibold text-stone-800 transition-colors"
+                className="w-full flex items-center justify-between p-3.5 rounded-2xl bg-neutral-50/70 hover:bg-neutral-100/90 border border-neutral-200 text-xs font-semibold text-neutral-800 transition-all group"
               >
                 <div className="flex items-center space-x-2.5">
-                  <Tag className="w-4 h-4 text-stone-700" />
+                  <div className="w-7 h-7 rounded-full bg-white border border-neutral-200 flex items-center justify-center text-black shadow-2xs group-hover:bg-blue-600 group-hover:text-white transition-colors">
+                    <Tag className="w-3.5 h-3.5" />
+                  </div>
                   <span>Adjust Custom Prices & Details</span>
                 </div>
-                <ArrowRight className="w-3.5 h-3.5 text-stone-400" />
+                <ArrowRight className="w-3.5 h-3.5 text-neutral-400 group-hover:translate-x-0.5 transition-transform" />
               </Link>
 
               <Link
                 href="/shop-owner/orders"
-                className="w-full flex items-center justify-between p-3 rounded-xl bg-stone-50 hover:bg-stone-100 border border-stone-200 text-xs font-semibold text-stone-800 transition-colors"
+                className="w-full flex items-center justify-between p-3.5 rounded-2xl bg-neutral-50/70 hover:bg-neutral-100/90 border border-neutral-200 text-xs font-semibold text-neutral-800 transition-all group"
               >
                 <div className="flex items-center space-x-2.5">
-                  <ShoppingBag className="w-4 h-4 text-stone-700" />
+                  <div className="w-7 h-7 rounded-full bg-white border border-neutral-200 flex items-center justify-center text-black shadow-2xs group-hover:bg-blue-600 group-hover:text-white transition-colors">
+                    <ShoppingBag className="w-3.5 h-3.5" />
+                  </div>
                   <span>Manage Customer Orders</span>
                 </div>
-                <ArrowRight className="w-3.5 h-3.5 text-stone-400" />
+                <ArrowRight className="w-3.5 h-3.5 text-neutral-400 group-hover:translate-x-0.5 transition-transform" />
               </Link>
             </div>
           </div>
@@ -226,15 +233,15 @@ export default function ShopOwnerDashboardPage() {
 
         {/* Right Column: Recent Store Orders */}
         <div className="lg:col-span-2">
-          <div className="bg-white rounded-2xl border border-stone-200 shadow-xs overflow-hidden">
-            <div className="p-5 border-b border-stone-100 flex items-center justify-between">
+          <div className="bg-white rounded-2xl border border-neutral-200/90 shadow-2xs overflow-hidden">
+            <div className="p-5 border-b border-neutral-100 flex items-center justify-between">
               <div>
-                <h3 className="text-sm font-bold text-stone-900">Recent Customer Orders</h3>
-                <p className="text-xs text-stone-500">Orders placed directly through your storefront</p>
+                <h3 className="text-base font-bold text-black">Recent Customer Orders</h3>
+                <p className="text-xs text-neutral-500">Orders placed directly through your storefront</p>
               </div>
               <Link
                 href="/shop-owner/orders"
-                className="text-xs font-semibold text-stone-900 hover:text-stone-700 flex items-center space-x-1"
+                className="px-4 py-1.5 rounded-full bg-neutral-100 hover:bg-neutral-200/80 text-black text-xs font-semibold transition-colors flex items-center space-x-1"
               >
                 <span>View All Orders</span>
                 <ArrowRight className="w-3 h-3" />
@@ -260,7 +267,7 @@ export default function ShopOwnerDashboardPage() {
                         </span>
                         <span className={`text-[10px] font-mono uppercase px-2 py-0.5 rounded border ${
                           order.status === 'completed'
-                            ? 'bg-emerald-50 text-emerald-800 border-emerald-200'
+                            ? 'bg-blue-50 text-blue-700 border-blue-100'
                             : order.status === 'processing'
                             ? 'bg-amber-50 text-amber-800 border-amber-200'
                             : 'bg-stone-100 text-stone-700 border-stone-200'

@@ -165,7 +165,7 @@ export default function ShopManagementPage() {
         <div>
           <div className="inline-flex items-center space-x-1.5 px-2.5 py-0.5 rounded-full bg-stone-100 text-stone-700 text-[11px] font-semibold border border-stone-200 mb-2">
             <Store className="w-3.5 h-3.5 text-stone-700" />
-            <span className="font-mono uppercase tracking-wider">Multi-Tenant Store Management</span>
+            <span className="font-mono uppercase tracking-wider">Shop directory</span>
           </div>
           <h1 className="text-2xl sm:text-3xl font-bold text-stone-900 tracking-tight">
             Manage Shops & Storefronts
@@ -177,7 +177,7 @@ export default function ShopManagementPage() {
 
         <button
           onClick={handleOpenCreateModal}
-          className="px-4 py-2.5 rounded-xl bg-stone-900 hover:bg-stone-800 text-stone-50 text-xs font-semibold transition-colors shadow-xs flex items-center space-x-1.5"
+          className="px-4 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-stone-50 text-xs font-semibold transition-colors shadow-xs flex items-center space-x-1.5"
         >
           <Plus className="w-4 h-4" />
           <span>Create New Shop</span>
@@ -193,7 +193,7 @@ export default function ShopManagementPage() {
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             placeholder="Search stores by name, city, or email..."
-            className="w-full pl-10 pr-4 py-2 text-xs bg-stone-50 border border-stone-200 rounded-xl text-stone-900 placeholder:text-stone-400 focus:outline-none focus:ring-1 focus:ring-stone-900 focus:bg-white"
+            className="w-full pl-10 pr-4 py-2 text-xs bg-stone-50 border border-stone-200 rounded-xl text-stone-900 placeholder:text-stone-400 focus:outline-none focus:ring-1 focus:ring-blue-500 focus:bg-white"
           />
         </div>
 
@@ -274,7 +274,7 @@ export default function ShopManagementPage() {
                     <td className="px-5 py-4">
                       <span className={`inline-flex items-center px-2 py-0.5 rounded-md text-[10px] font-mono uppercase border ${
                         shop.status === 'active'
-                          ? 'bg-emerald-50 text-emerald-800 border-emerald-200'
+                          ? 'bg-blue-50 text-blue-700 border-blue-100'
                           : shop.status === 'inactive'
                           ? 'bg-stone-100 text-stone-600 border-stone-200'
                           : 'bg-rose-50 text-rose-800 border-rose-200'
@@ -336,7 +336,7 @@ export default function ShopManagementPage() {
                 placeholder="e.g. Skyline Craft Studio"
                 className={`w-full px-3 py-2 text-xs bg-white rounded-xl border ${
                   errors.name ? 'border-rose-400' : 'border-stone-200'
-                } focus:outline-none focus:ring-1 focus:ring-stone-900`}
+                } focus:outline-none focus:ring-1 focus:ring-blue-500`}
               />
               {errors.name && (
                 <span className="text-[10px] text-rose-500 mt-1 block">{errors.name.message}</span>
@@ -349,7 +349,7 @@ export default function ShopManagementPage() {
               </label>
               <select
                 {...register('user_id')}
-                className="w-full px-3 py-2 text-xs bg-white rounded-xl border border-stone-200 focus:outline-none focus:ring-1 focus:ring-stone-900"
+                className="w-full px-3 py-2 text-xs bg-white rounded-xl border border-stone-200 focus:outline-none focus:ring-1 focus:ring-blue-500"
               >
                 <option value="">Select an owner (optional)</option>
                 {owners.map((owner) => (
@@ -369,7 +369,7 @@ export default function ShopManagementPage() {
               rows={3}
               {...register('description')}
               placeholder="Store background, mission, and specialty..."
-              className="w-full px-3 py-2 text-xs bg-white rounded-xl border border-stone-200 focus:outline-none focus:ring-1 focus:ring-stone-900"
+              className="w-full px-3 py-2 text-xs bg-white rounded-xl border border-stone-200 focus:outline-none focus:ring-1 focus:ring-blue-500"
             />
           </div>
 
@@ -382,7 +382,7 @@ export default function ShopManagementPage() {
                 type="text"
                 {...register('phone')}
                 placeholder="+1 (555) 000-0000"
-                className="w-full px-3 py-2 text-xs bg-white rounded-xl border border-stone-200 focus:outline-none focus:ring-1 focus:ring-stone-900"
+                className="w-full px-3 py-2 text-xs bg-white rounded-xl border border-stone-200 focus:outline-none focus:ring-1 focus:ring-blue-500"
               />
             </div>
 
@@ -396,7 +396,7 @@ export default function ShopManagementPage() {
                 placeholder="store@domain.com"
                 className={`w-full px-3 py-2 text-xs bg-white rounded-xl border ${
                   errors.email ? 'border-rose-400' : 'border-stone-200'
-                } focus:outline-none focus:ring-1 focus:ring-stone-900`}
+                } focus:outline-none focus:ring-1 focus:ring-blue-500`}
               />
               {errors.email && (
                 <span className="text-[10px] text-rose-500 mt-1 block">{errors.email.message}</span>
@@ -409,7 +409,7 @@ export default function ShopManagementPage() {
               </label>
               <select
                 {...register('status')}
-                className="w-full px-3 py-2 text-xs bg-white rounded-xl border border-stone-200 focus:outline-none focus:ring-1 focus:ring-stone-900"
+                className="w-full px-3 py-2 text-xs bg-white rounded-xl border border-stone-200 focus:outline-none focus:ring-1 focus:ring-blue-500"
               >
                 <option value="active">Active (Visible)</option>
                 <option value="inactive">Inactive</option>
@@ -426,7 +426,7 @@ export default function ShopManagementPage() {
               type="text"
               {...register('address')}
               placeholder="e.g. Austin, Texas"
-              className="w-full px-3 py-2 text-xs bg-white rounded-xl border border-stone-200 focus:outline-none focus:ring-1 focus:ring-stone-900"
+              className="w-full px-3 py-2 text-xs bg-white rounded-xl border border-stone-200 focus:outline-none focus:ring-1 focus:ring-blue-500"
             />
           </div>
 
@@ -439,7 +439,7 @@ export default function ShopManagementPage() {
                 type="url"
                 {...register('logo')}
                 placeholder="https://images.unsplash.com/..."
-                className="w-full px-3 py-2 text-xs bg-white rounded-xl border border-stone-200 focus:outline-none focus:ring-1 focus:ring-stone-900"
+                className="w-full px-3 py-2 text-xs bg-white rounded-xl border border-stone-200 focus:outline-none focus:ring-1 focus:ring-blue-500"
               />
             </div>
 
@@ -451,7 +451,7 @@ export default function ShopManagementPage() {
                 type="url"
                 {...register('banner')}
                 placeholder="https://images.unsplash.com/..."
-                className="w-full px-3 py-2 text-xs bg-white rounded-xl border border-stone-200 focus:outline-none focus:ring-1 focus:ring-stone-900"
+                className="w-full px-3 py-2 text-xs bg-white rounded-xl border border-stone-200 focus:outline-none focus:ring-1 focus:ring-blue-500"
               />
             </div>
           </div>
@@ -467,7 +467,7 @@ export default function ShopManagementPage() {
             <button
               type="submit"
               disabled={isSubmitting || saveMutation.isPending}
-              className="px-4 py-2 rounded-xl bg-stone-900 hover:bg-stone-800 text-stone-50 text-xs font-semibold shadow-xs disabled:opacity-50"
+              className="px-4 py-2 rounded-xl bg-blue-600 hover:bg-blue-700 text-stone-50 text-xs font-semibold shadow-xs disabled:opacity-50"
             >
               {isSubmitting || saveMutation.isPending
                 ? 'Saving...'

@@ -123,9 +123,9 @@ export default function ShopOrdersPage() {
                         value={order.status}
                         onChange={(e) => handleStatusChange(order.id, e.target.value)}
                         disabled={updateStatusMutation.isPending}
-                        className={`text-xs font-mono uppercase px-3 py-1.5 rounded-xl border focus:outline-none focus:ring-1 focus:ring-stone-900 ${
+                        className={`text-xs font-mono uppercase px-3 py-1.5 rounded-xl border focus:outline-none focus:ring-1 focus:ring-blue-500 ${
                           order.status === 'completed'
-                            ? 'bg-emerald-50 text-emerald-800 border-emerald-200'
+                            ? 'bg-blue-50 text-blue-700 border-blue-100'
                             : order.status === 'processing'
                             ? 'bg-amber-50 text-amber-800 border-amber-200'
                             : order.status === 'cancelled'

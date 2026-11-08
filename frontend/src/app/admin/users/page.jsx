@@ -183,7 +183,7 @@ export default function UserManagementPage() {
 
         <button
           onClick={handleOpenCreateModal}
-          className="px-4 py-2.5 rounded-xl bg-stone-900 hover:bg-stone-800 text-stone-50 text-xs font-semibold transition-colors shadow-xs flex items-center space-x-1.5"
+          className="px-4 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-stone-50 text-xs font-semibold transition-colors shadow-xs flex items-center space-x-1.5"
         >
           <Plus className="w-4 h-4" />
           <span>New Shop Owner</span>
@@ -199,7 +199,7 @@ export default function UserManagementPage() {
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             placeholder="Search accounts by name or email..."
-            className="w-full pl-10 pr-4 py-2 text-xs bg-stone-50 border border-stone-200 rounded-xl text-stone-900 placeholder:text-stone-400 focus:outline-none focus:ring-1 focus:ring-stone-900 focus:bg-white"
+            className="w-full pl-10 pr-4 py-2 text-xs bg-stone-50 border border-stone-200 rounded-xl text-stone-900 placeholder:text-stone-400 focus:outline-none focus:ring-1 focus:ring-blue-500 focus:bg-white"
           />
         </div>
 
@@ -252,7 +252,7 @@ export default function UserManagementPage() {
                     <td className="px-5 py-4">
                       <span className={`inline-flex items-center space-x-1 px-2 py-0.5 rounded-md text-[10px] font-mono uppercase border ${
                         u.role === 'admin'
-                          ? 'bg-stone-900 text-stone-50 border-stone-900'
+                          ? 'bg-blue-600 text-stone-50 border-stone-900'
                           : 'bg-stone-100 text-stone-700 border-stone-200'
                       }`}>
                         {u.role === 'admin' ? (
@@ -283,7 +283,7 @@ export default function UserManagementPage() {
                     <td className="px-5 py-4">
                       <span className={`px-2 py-0.5 rounded-md text-[10px] font-mono uppercase border ${
                         u.is_active
-                          ? 'bg-emerald-50 text-emerald-800 border-emerald-200'
+                          ? 'bg-blue-50 text-blue-700 border-blue-100'
                           : 'bg-rose-50 text-rose-800 border-rose-200'
                       }`}>
                         {u.is_active ? 'Active' : 'Disabled'}
@@ -339,7 +339,7 @@ export default function UserManagementPage() {
                 placeholder="e.g. Eleanor Vance"
                 className={`w-full px-3 py-2 text-xs bg-white rounded-xl border ${
                   errors.name ? 'border-rose-400' : 'border-stone-200'
-                } focus:outline-none focus:ring-1 focus:ring-stone-900`}
+                } focus:outline-none focus:ring-1 focus:ring-blue-500`}
               />
               {errors.name && (
                 <span className="text-[10px] text-rose-500 mt-1 block">{errors.name.message}</span>
@@ -356,7 +356,7 @@ export default function UserManagementPage() {
                 placeholder="eleanor@domain.com"
                 className={`w-full px-3 py-2 text-xs bg-white rounded-xl border ${
                   errors.email ? 'border-rose-400' : 'border-stone-200'
-                } focus:outline-none focus:ring-1 focus:ring-stone-900`}
+                } focus:outline-none focus:ring-1 focus:ring-blue-500`}
               />
               {errors.email && (
                 <span className="text-[10px] text-rose-500 mt-1 block">{errors.email.message}</span>
@@ -373,7 +373,7 @@ export default function UserManagementPage() {
                 type="password"
                 {...register('password')}
                 placeholder="••••••••"
-                className="w-full px-3 py-2 text-xs bg-white rounded-xl border border-stone-200 focus:outline-none focus:ring-1 focus:ring-stone-900"
+                className="w-full px-3 py-2 text-xs bg-white rounded-xl border border-stone-200 focus:outline-none focus:ring-1 focus:ring-blue-500"
               />
             </div>
 
@@ -385,7 +385,7 @@ export default function UserManagementPage() {
                 type="text"
                 {...register('phone')}
                 placeholder="+1 (555) 000-0000"
-                className="w-full px-3 py-2 text-xs bg-white rounded-xl border border-stone-200 focus:outline-none focus:ring-1 focus:ring-stone-900"
+                className="w-full px-3 py-2 text-xs bg-white rounded-xl border border-stone-200 focus:outline-none focus:ring-1 focus:ring-blue-500"
               />
             </div>
           </div>
@@ -397,7 +397,7 @@ export default function UserManagementPage() {
               </label>
               <select
                 {...register('role')}
-                className="w-full px-3 py-2 text-xs bg-white rounded-xl border border-stone-200 focus:outline-none focus:ring-1 focus:ring-stone-900"
+                className="w-full px-3 py-2 text-xs bg-white rounded-xl border border-stone-200 focus:outline-none focus:ring-1 focus:ring-blue-500"
               >
                 <option value="shop_owner">Shop Owner</option>
                 <option value="admin">Platform Administrator</option>
@@ -410,7 +410,7 @@ export default function UserManagementPage() {
               </label>
               <select
                 {...register('shop_id')}
-                className="w-full px-3 py-2 text-xs bg-white rounded-xl border border-stone-200 focus:outline-none focus:ring-1 focus:ring-stone-900"
+                className="w-full px-3 py-2 text-xs bg-white rounded-xl border border-stone-200 focus:outline-none focus:ring-1 focus:ring-blue-500"
               >
                 <option value="">No existing shop (or create new below)</option>
                 {shops.map((s) => (
@@ -431,7 +431,7 @@ export default function UserManagementPage() {
                 type="text"
                 {...register('shop_name')}
                 placeholder="e.g. Eleanor's Curated Living"
-                className="w-full px-3 py-2 text-xs bg-white rounded-xl border border-stone-200 focus:outline-none focus:ring-1 focus:ring-stone-900"
+                className="w-full px-3 py-2 text-xs bg-white rounded-xl border border-stone-200 focus:outline-none focus:ring-1 focus:ring-blue-500"
               />
               <span className="text-[10px] text-stone-500 mt-1 block">
                 If specified, a brand new storefront will be automatically created and assigned.
@@ -444,7 +444,7 @@ export default function UserManagementPage() {
               type="checkbox"
               id="is_active_user"
               {...register('is_active')}
-              className="rounded border-stone-300 text-stone-900 focus:ring-stone-900"
+              className="rounded border-stone-300 text-stone-900 focus:ring-blue-500"
             />
             <label htmlFor="is_active_user" className="text-xs font-medium text-stone-700">
               Account Active & Permitted to Sign In
@@ -462,7 +462,7 @@ export default function UserManagementPage() {
             <button
               type="submit"
               disabled={isSubmitting || saveMutation.isPending}
-              className="px-4 py-2 rounded-xl bg-stone-900 hover:bg-stone-800 text-stone-50 text-xs font-semibold shadow-xs disabled:opacity-50"
+              className="px-4 py-2 rounded-xl bg-blue-600 hover:bg-blue-700 text-stone-50 text-xs font-semibold shadow-xs disabled:opacity-50"
             >
               {isSubmitting || saveMutation.isPending
                 ? 'Saving...'

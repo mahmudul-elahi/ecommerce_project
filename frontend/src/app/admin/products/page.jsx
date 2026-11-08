@@ -145,12 +145,12 @@ export default function ProductManagementPage() {
   const categories = Array.from(new Set(products.map((p) => p.category).filter(Boolean)));
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 bg-paper">
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 bg-slate-50">
       {/* Title & Actions */}
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 pb-6 border-b border-stone-200 mb-6">
         <div>
           <div className="inline-flex items-center space-x-1 px-2 py-0.5 rounded-md bg-stone-100 border border-stone-200 text-stone-700 text-[10px] font-mono uppercase tracking-wide mb-1.5">
-            <Layers className="w-3 h-3 text-emerald-800" />
+            <Layers className="w-3 h-3 text-blue-700" />
             <span>Platform Inventory Management</span>
           </div>
           <h1 className="text-xl font-bold text-stone-900 tracking-tight">Global Catalog Registry</h1>
@@ -161,7 +161,7 @@ export default function ProductManagementPage() {
 
         <button
           onClick={handleOpenCreateModal}
-          className="px-3.5 py-1.5 rounded-xl bg-stone-900 hover:bg-stone-800 text-white text-xs font-semibold shadow-subtle flex items-center space-x-1.5 transition-all active:scale-[0.99] self-start sm:self-auto"
+          className="px-3.5 py-1.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-xs font-semibold shadow-subtle flex items-center space-x-1.5 transition-all active:scale-[0.99] self-start sm:self-auto"
         >
           <Plus className="w-3.5 h-3.5" />
           <span>Add Catalog Product</span>
@@ -178,7 +178,7 @@ export default function ProductManagementPage() {
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               placeholder="Search catalog by title, SKU, or category..."
-              className="w-full pl-9 pr-3 py-1.5 text-xs bg-stone-50 border border-stone-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-stone-900 focus:bg-white text-stone-900"
+              className="w-full pl-9 pr-3 py-1.5 text-xs bg-stone-50 border border-stone-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-blue-500 focus:bg-white text-stone-900"
             />
           </div>
 
@@ -186,7 +186,7 @@ export default function ProductManagementPage() {
             <select
               value={category}
               onChange={(e) => setCategory(e.target.value)}
-              className="px-2.5 py-1.5 text-xs bg-stone-50 border border-stone-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-stone-900 text-stone-700"
+              className="px-2.5 py-1.5 text-xs bg-stone-50 border border-stone-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-blue-500 text-stone-700"
             >
               <option value="">All Categories</option>
               {categories.map((c) => (
@@ -283,7 +283,7 @@ export default function ProductManagementPage() {
                     <td className="px-5 py-3.5">
                       <span
                         className={`px-2 py-0.5 rounded text-[10px] font-mono ${prod.is_active
-                          ? 'bg-emerald-50 text-emerald-800 border border-emerald-200'
+                          ? 'bg-blue-50 text-blue-700 border border-blue-100'
                           : 'bg-stone-100 text-stone-500 border border-stone-200'
                           }`}
                       >
@@ -337,7 +337,7 @@ export default function ProductManagementPage() {
               type="text"
               {...register('name')}
               className={`w-full px-3 py-2 text-xs bg-stone-50 border ${errors.name ? 'border-rose-400' : 'border-stone-200'
-                } rounded-xl focus:outline-none focus:ring-1 focus:ring-stone-900 focus:bg-white text-stone-900`}
+                } rounded-xl focus:outline-none focus:ring-1 focus:ring-blue-500 focus:bg-white text-stone-900`}
               placeholder="e.g. Ergonomic Office Desk"
             />
             {errors.name && (
@@ -356,7 +356,7 @@ export default function ProductManagementPage() {
                 min="0"
                 {...register('base_price')}
                 className={`w-full px-3 py-2 text-xs bg-stone-50 border ${errors.base_price ? 'border-rose-400' : 'border-stone-200'
-                  } rounded-xl focus:outline-none focus:ring-1 focus:ring-stone-900 focus:bg-white text-stone-900 font-mono`}
+                  } rounded-xl focus:outline-none focus:ring-1 focus:ring-blue-500 focus:bg-white text-stone-900 font-mono`}
                 placeholder="199.99"
               />
               {errors.base_price && (
@@ -369,7 +369,7 @@ export default function ProductManagementPage() {
               <input
                 type="text"
                 {...register('sku')}
-                className="w-full px-3 py-2 text-xs bg-stone-50 border border-stone-200 rounded-xl focus:outline-none focus:ring-1 focus:ring-stone-900 focus:bg-white text-stone-900 font-mono"
+                className="w-full px-3 py-2 text-xs bg-stone-50 border border-stone-200 rounded-xl focus:outline-none focus:ring-1 focus:ring-blue-500 focus:bg-white text-stone-900 font-mono"
                 placeholder="FURN-102"
               />
             </div>
@@ -381,7 +381,7 @@ export default function ProductManagementPage() {
               <input
                 type="text"
                 {...register('category')}
-                className="w-full px-3 py-2 text-xs bg-stone-50 border border-stone-200 rounded-xl focus:outline-none focus:ring-1 focus:ring-stone-900 focus:bg-white text-stone-900"
+                className="w-full px-3 py-2 text-xs bg-stone-50 border border-stone-200 rounded-xl focus:outline-none focus:ring-1 focus:ring-blue-500 focus:bg-white text-stone-900"
                 placeholder="Furniture, Gadgets, etc."
               />
             </div>
@@ -391,7 +391,7 @@ export default function ProductManagementPage() {
               <input
                 type="text"
                 {...register('thumbnail')}
-                className="w-full px-3 py-2 text-xs bg-stone-50 border border-stone-200 rounded-xl focus:outline-none focus:ring-1 focus:ring-stone-900 focus:bg-white text-stone-900"
+                className="w-full px-3 py-2 text-xs bg-stone-50 border border-stone-200 rounded-xl focus:outline-none focus:ring-1 focus:ring-blue-500 focus:bg-white text-stone-900"
                 placeholder="https://images.unsplash.com/..."
               />
             </div>
@@ -402,7 +402,7 @@ export default function ProductManagementPage() {
             <textarea
               rows={3}
               {...register('description')}
-              className="w-full px-3 py-2 text-xs bg-stone-50 border border-stone-200 rounded-xl focus:outline-none focus:ring-1 focus:ring-stone-900 focus:bg-white text-stone-900"
+              className="w-full px-3 py-2 text-xs bg-stone-50 border border-stone-200 rounded-xl focus:outline-none focus:ring-1 focus:ring-blue-500 focus:bg-white text-stone-900"
               placeholder="Standard specifications and description inherited by all shop owners by default..."
             />
           </div>
@@ -412,7 +412,7 @@ export default function ProductManagementPage() {
               type="checkbox"
               id="admin_prod_active"
               {...register('is_active')}
-              className="rounded text-stone-900 focus:ring-stone-900"
+              className="rounded text-stone-900 focus:ring-blue-500"
             />
             <label htmlFor="admin_prod_active" className="text-xs font-semibold text-stone-800 cursor-pointer">
               Active in Shared Catalog
@@ -430,7 +430,7 @@ export default function ProductManagementPage() {
             <button
               type="submit"
               disabled={saveMutation.isPending}
-              className="px-4 py-2 rounded-xl bg-stone-900 hover:bg-stone-800 disabled:opacity-60 text-white text-xs font-semibold transition-all shadow-subtle active:scale-[0.99]"
+              className="px-4 py-2 rounded-xl bg-blue-600 hover:bg-blue-700 disabled:opacity-60 text-white text-xs font-semibold transition-all shadow-subtle active:scale-[0.99]"
             >
               {saveMutation.isPending ? 'Saving...' : editingProduct ? 'Save Changes' : 'Create Master Product'}
             </button>

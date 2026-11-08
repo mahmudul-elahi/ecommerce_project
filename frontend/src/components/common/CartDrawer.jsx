@@ -113,7 +113,7 @@ export default function CartDrawer() {
     <div className="fixed inset-0 z-50 overflow-hidden">
       {/* Backdrop */}
       <div
-        className="absolute inset-0 bg-stone-900/40 backdrop-blur-[2px] transition-opacity"
+        className="absolute inset-0 bg-blue-600/40 backdrop-blur-[2px] transition-opacity"
         onClick={handleClose}
       />
 
@@ -123,13 +123,13 @@ export default function CartDrawer() {
           <div className="p-4 sm:p-5 border-b border-stone-200 bg-stone-50/70 flex items-center justify-between">
             <div className="flex items-center space-x-2.5">
               <div className="w-9 h-9 rounded-xl bg-white border border-stone-200 text-stone-800 flex items-center justify-center shadow-subtle">
-                <ShoppingBag className="w-4 h-4 text-emerald-800" />
+                <ShoppingBag className="w-4 h-4 text-blue-700" />
               </div>
               <div>
                 <h2 className="text-sm font-bold text-stone-900">Your Shopping Cart</h2>
                 {cartShop ? (
                   <p className="text-[11px] text-stone-500">
-                    Store: <span className="font-semibold text-emerald-800">{cartShop.name}</span>
+                    Store: <span className="font-semibold text-blue-700">{cartShop.name}</span>
                   </p>
                 ) : (
                   <p className="text-[11px] text-stone-400">Empty cart</p>
@@ -148,7 +148,7 @@ export default function CartDrawer() {
           <div className="flex-1 overflow-y-auto p-4 sm:p-5">
             {orderComplete ? (
               <div className="text-center py-10">
-                <div className="w-14 h-14 bg-emerald-50 border border-emerald-200 text-emerald-700 rounded-2xl flex items-center justify-center mx-auto mb-4">
+                <div className="w-14 h-14 bg-blue-50 border border-blue-100 text-blue-700 rounded-2xl flex items-center justify-center mx-auto mb-4">
                   <CheckCircle2 className="w-7 h-7" />
                 </div>
                 <h3 className="text-lg font-bold text-stone-900">Order Confirmed!</h3>
@@ -163,7 +163,7 @@ export default function CartDrawer() {
                   </div>
                   <div className="flex justify-between text-xs">
                     <span className="text-stone-500">Total Amount:</span>
-                    <span className="font-mono font-bold text-emerald-800">
+                    <span className="font-mono font-bold text-blue-700">
                       ${Number(orderComplete.total_amount).toFixed(2)}
                     </span>
                   </div>
@@ -179,7 +179,7 @@ export default function CartDrawer() {
 
                 <button
                   onClick={handleClose}
-                  className="mt-6 w-full py-2.5 rounded-xl bg-stone-900 text-white text-xs font-semibold hover:bg-stone-800 transition-colors shadow-subtle"
+                  className="mt-6 w-full py-2.5 rounded-lg bg-blue-600 text-white text-sm font-semibold hover:bg-blue-700 transition-colors shadow-sm"
                 >
                   Continue Shopping
                 </button>
@@ -220,7 +220,7 @@ export default function CartDrawer() {
                     {...register('customer_name')}
                     className={`w-full px-3 py-2 text-xs bg-stone-50 rounded-xl border ${
                       errors.customer_name ? 'border-rose-400' : 'border-stone-200'
-                    } focus:outline-none focus:ring-1 focus:ring-stone-900 focus:bg-white text-stone-900`}
+                    } focus:outline-none focus:ring-1 focus:ring-blue-500 focus:bg-white text-stone-900`}
                     placeholder="e.g. John Doe"
                   />
                   {errors.customer_name && (
@@ -240,7 +240,7 @@ export default function CartDrawer() {
                     {...register('customer_phone')}
                     className={`w-full px-3 py-2 text-xs bg-stone-50 rounded-xl border ${
                       errors.customer_phone ? 'border-rose-400' : 'border-stone-200'
-                    } focus:outline-none focus:ring-1 focus:ring-stone-900 focus:bg-white text-stone-900`}
+                    } focus:outline-none focus:ring-1 focus:ring-blue-500 focus:bg-white text-stone-900`}
                     placeholder="+1 (555) 000-0000"
                   />
                   {errors.customer_phone && (
@@ -260,7 +260,7 @@ export default function CartDrawer() {
                     {...register('customer_email')}
                     className={`w-full px-3 py-2 text-xs bg-stone-50 rounded-xl border ${
                       errors.customer_email ? 'border-rose-400' : 'border-stone-200'
-                    } focus:outline-none focus:ring-1 focus:ring-stone-900 focus:bg-white text-stone-900`}
+                    } focus:outline-none focus:ring-1 focus:ring-blue-500 focus:bg-white text-stone-900`}
                     placeholder="john@example.com"
                   />
                   {errors.customer_email && (
@@ -280,7 +280,7 @@ export default function CartDrawer() {
                     {...register('shipping_address')}
                     className={`w-full px-3 py-2 text-xs bg-stone-50 rounded-xl border ${
                       errors.shipping_address ? 'border-rose-400' : 'border-stone-200'
-                    } focus:outline-none focus:ring-1 focus:ring-stone-900 focus:bg-white text-stone-900`}
+                    } focus:outline-none focus:ring-1 focus:ring-blue-500 focus:bg-white text-stone-900`}
                     placeholder="Street, suite, city, state, zip"
                   />
                   {errors.shipping_address && (
@@ -298,7 +298,7 @@ export default function CartDrawer() {
                   <input
                     type="text"
                     {...register('notes')}
-                    className="w-full px-3 py-2 text-xs bg-stone-50 rounded-xl border border-stone-200 focus:outline-none focus:ring-1 focus:ring-stone-900 focus:bg-white text-stone-900"
+                    className="w-full px-3 py-2 text-xs bg-stone-50 rounded-xl border border-stone-200 focus:outline-none focus:ring-1 focus:ring-blue-500 focus:bg-white text-stone-900"
                     placeholder="Special delivery instructions..."
                   />
                 </div>
@@ -307,7 +307,7 @@ export default function CartDrawer() {
                   <button
                     type="submit"
                     disabled={checkoutMutation.isPending || isSubmitting}
-                    className="w-full py-2.5 rounded-xl bg-stone-900 hover:bg-stone-800 disabled:opacity-60 text-white font-medium text-xs transition-all flex items-center justify-center space-x-2 shadow-subtle active:scale-[0.99]"
+                    className="w-full py-2.5 rounded-lg bg-blue-600 hover:bg-blue-700 disabled:opacity-60 text-white font-semibold text-sm transition-colors flex items-center justify-center space-x-2 shadow-sm"
                   >
                     {checkoutMutation.isPending || isSubmitting ? (
                       <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
@@ -336,7 +336,7 @@ export default function CartDrawer() {
 
                     <div className="flex-1 min-w-0">
                       <h4 className="text-xs font-bold text-stone-900 truncate">{item.name}</h4>
-                      <div className="text-xs font-mono font-semibold text-emerald-800 mt-0.5">
+                      <div className="text-xs font-mono font-semibold text-blue-700 mt-0.5">
                         ${item.price.toFixed(2)}
                       </div>
 
@@ -396,7 +396,7 @@ export default function CartDrawer() {
 
               <button
                 onClick={() => setIsCheckingOut(true)}
-                className="w-full py-2.5 rounded-xl bg-stone-900 hover:bg-stone-800 text-white font-medium text-xs transition-all flex items-center justify-center space-x-2 shadow-subtle active:scale-[0.99]"
+                className="w-full py-2.5 rounded-lg bg-blue-600 hover:bg-blue-700 text-white font-semibold text-sm transition-colors flex items-center justify-center space-x-2 shadow-sm"
               >
                 <span>Proceed to Checkout</span>
                 <ArrowRight className="w-3.5 h-3.5" />

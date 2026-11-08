@@ -89,19 +89,19 @@ export default function ShopSettingsPage() {
 
   if (isLoading) {
     return (
-      <div className="max-w-4xl mx-auto px-4 py-20 flex items-center justify-center bg-paper">
+      <div className="max-w-4xl mx-auto px-4 py-20 flex items-center justify-center bg-slate-50">
         <div className="w-8 h-8 border-2 border-stone-800 border-t-transparent rounded-full animate-spin" />
       </div>
     );
   }
 
   return (
-    <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8 bg-paper">
+    <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8 bg-slate-50">
       {/* Title */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between pb-6 border-b border-stone-200 mb-6 gap-3">
         <div>
           <h1 className="text-xl font-bold text-stone-900 tracking-tight flex items-center space-x-2">
-            <Store className="w-5 h-5 text-emerald-800" />
+            <Store className="w-5 h-5 text-blue-700" />
             <span>Storefront Settings & Identity</span>
           </h1>
           <p className="text-xs text-stone-500 mt-1">
@@ -131,7 +131,7 @@ export default function ShopSettingsPage() {
               Banner Image Preview
             </div>
           )}
-          <div className="absolute inset-0 bg-stone-900/10" />
+          <div className="absolute inset-0 bg-blue-600/10" />
           <div className="absolute -bottom-4 left-6">
             <div className="w-16 h-16 rounded-xl border-2 border-white shadow-craft bg-white overflow-hidden flex items-center justify-center">
               {currentLogo ? (
@@ -163,7 +163,7 @@ export default function ShopSettingsPage() {
               type="text"
               {...register('name')}
               className={`w-full px-3.5 py-2.5 text-xs bg-stone-50 rounded-xl border ${
-                errors.name ? 'border-rose-400 focus:ring-rose-500' : 'border-stone-200 focus:ring-stone-900'
+                errors.name ? 'border-rose-400 focus:ring-rose-500' : 'border-stone-200 focus:ring-blue-500'
               } focus:outline-none focus:ring-1 focus:bg-white text-stone-900`}
               placeholder="e.g. Apex Tech Essentials"
             />
@@ -180,7 +180,7 @@ export default function ShopSettingsPage() {
             <textarea
               rows={3}
               {...register('description')}
-              className="w-full px-3.5 py-2.5 text-xs bg-stone-50 rounded-xl border border-stone-200 focus:outline-none focus:ring-1 focus:ring-stone-900 focus:bg-white text-stone-900"
+              className="w-full px-3.5 py-2.5 text-xs bg-stone-50 rounded-xl border border-stone-200 focus:outline-none focus:ring-1 focus:ring-blue-500 focus:bg-white text-stone-900"
               placeholder="Tell customers what your store is about..."
             />
           </div>
@@ -193,7 +193,7 @@ export default function ShopSettingsPage() {
                 <input
                   type="text"
                   {...register('phone')}
-                  className="w-full pl-9 pr-3.5 py-2.5 text-xs bg-stone-50 rounded-xl border border-stone-200 focus:outline-none focus:ring-1 focus:ring-stone-900 focus:bg-white text-stone-900"
+                  className="w-full pl-9 pr-3.5 py-2.5 text-xs bg-stone-50 rounded-xl border border-stone-200 focus:outline-none focus:ring-1 focus:ring-blue-500 focus:bg-white text-stone-900"
                   placeholder="+1 (555) 019-2834"
                 />
               </div>
@@ -208,7 +208,7 @@ export default function ShopSettingsPage() {
                   {...register('email')}
                   className={`w-full pl-9 pr-3.5 py-2.5 text-xs bg-stone-50 rounded-xl border ${
                     errors.email ? 'border-rose-400' : 'border-stone-200'
-                  } focus:outline-none focus:ring-1 focus:ring-stone-900 focus:bg-white text-stone-900`}
+                  } focus:outline-none focus:ring-1 focus:ring-blue-500 focus:bg-white text-stone-900`}
                   placeholder="support@mystore.com"
                 />
               </div>
@@ -228,7 +228,7 @@ export default function ShopSettingsPage() {
               <input
                 type="text"
                 {...register('address')}
-                className="w-full pl-9 pr-3.5 py-2.5 text-xs bg-stone-50 rounded-xl border border-stone-200 focus:outline-none focus:ring-1 focus:ring-stone-900 focus:bg-white text-stone-900"
+                className="w-full pl-9 pr-3.5 py-2.5 text-xs bg-stone-50 rounded-xl border border-stone-200 focus:outline-none focus:ring-1 focus:ring-blue-500 focus:bg-white text-stone-900"
                 placeholder="123 Innovation Way, Suite 400, Austin, TX"
               />
             </div>
@@ -242,7 +242,7 @@ export default function ShopSettingsPage() {
                 <input
                   type="text"
                   {...register('logo')}
-                  className="w-full pl-9 pr-3.5 py-2.5 text-xs bg-stone-50 rounded-xl border border-stone-200 focus:outline-none focus:ring-1 focus:ring-stone-900 focus:bg-white text-stone-900"
+                  className="w-full pl-9 pr-3.5 py-2.5 text-xs bg-stone-50 rounded-xl border border-stone-200 focus:outline-none focus:ring-1 focus:ring-blue-500 focus:bg-white text-stone-900"
                   placeholder="https://images.unsplash.com/..."
                 />
               </div>
@@ -255,7 +255,7 @@ export default function ShopSettingsPage() {
                 <input
                   type="text"
                   {...register('banner')}
-                  className="w-full pl-9 pr-3.5 py-2.5 text-xs bg-stone-50 rounded-xl border border-stone-200 focus:outline-none focus:ring-1 focus:ring-stone-900 focus:bg-white text-stone-900"
+                  className="w-full pl-9 pr-3.5 py-2.5 text-xs bg-stone-50 rounded-xl border border-stone-200 focus:outline-none focus:ring-1 focus:ring-blue-500 focus:bg-white text-stone-900"
                   placeholder="https://images.unsplash.com/..."
                 />
               </div>
@@ -266,7 +266,7 @@ export default function ShopSettingsPage() {
             <button
               type="submit"
               disabled={mutation.isPending}
-              className="px-5 py-2.5 rounded-xl bg-stone-900 hover:bg-stone-800 disabled:opacity-60 text-white text-xs font-semibold transition-all shadow-subtle flex items-center space-x-2 active:scale-[0.99]"
+              className="px-5 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-700 disabled:opacity-60 text-white text-xs font-semibold transition-all shadow-subtle flex items-center space-x-2 active:scale-[0.99]"
             >
               {mutation.isPending ? (
                 <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />

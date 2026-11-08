@@ -14,11 +14,6 @@ import {
   Phone,
   Mail,
   MapPin,
-  Sparkles,
-  Layers,
-  SlidersHorizontal,
-  ChevronRight,
-  ShieldCheck,
   Plus,
   Minus,
 } from 'lucide-react';
@@ -80,7 +75,7 @@ export default function ShopStorefrontPage() {
 
   if (loadingShop) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-paper">
+      <div className="min-h-screen flex items-center justify-center bg-slate-50">
         <div className="w-8 h-8 border-2 border-stone-800 border-t-transparent rounded-full animate-spin" />
       </div>
     );
@@ -88,7 +83,7 @@ export default function ShopStorefrontPage() {
 
   if (shopError || !shop) {
     return (
-      <div className="max-w-7xl mx-auto px-4 py-20 text-center bg-paper">
+      <div className="max-w-7xl mx-auto px-4 py-20 text-center bg-slate-50">
         <Store className="w-12 h-12 text-stone-300 mx-auto mb-3" />
         <h2 className="text-lg font-bold text-stone-900">Storefront Not Found</h2>
         <p className="text-xs text-stone-500 mt-1 max-w-sm mx-auto">
@@ -96,7 +91,7 @@ export default function ShopStorefrontPage() {
         </p>
         <Link
           href="/"
-          className="inline-flex items-center space-x-2 mt-5 px-4 py-2 rounded-xl bg-stone-900 text-white text-xs font-semibold hover:bg-stone-800 transition-colors shadow-subtle"
+                  className="inline-flex items-center space-x-2 mt-5 px-4 py-2 rounded-lg bg-blue-600 text-white text-sm font-semibold hover:bg-blue-700 transition-colors"
         >
           <ArrowLeft className="w-3.5 h-3.5" />
           <span>Browse All Stores</span>
@@ -106,10 +101,9 @@ export default function ShopStorefrontPage() {
   }
 
   return (
-    <div className="min-h-screen pb-20 bg-paper">
-      {/* Light Merchant Header Banner */}
-      <section className="bg-white border-b border-stone-200">
-        <div className="relative h-48 sm:h-56 w-full overflow-hidden bg-stone-100">
+    <div className="min-h-screen pb-16 bg-slate-50">
+      <section className="bg-white border-b border-slate-200">
+        <div className="relative h-52 sm:h-64 w-full overflow-hidden bg-slate-100">
           <img
             src={shop.banner_url || 'https://images.unsplash.com/photo-1518770660439-4636190af475?w=1400'}
             alt={shop.name}
@@ -118,93 +112,82 @@ export default function ShopStorefrontPage() {
               e.target.src = 'https://images.unsplash.com/photo-1518770660439-4636190af475?w=1400';
             }}
           />
-          <div className="absolute inset-0 bg-stone-900/20" />
+          <div className="absolute inset-0 bg-black/10" />
         </div>
 
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative -mt-12 pb-6">
-          <div className="flex flex-col md:flex-row items-start md:items-end justify-between gap-5">
-            <div className="flex flex-col sm:flex-row items-start sm:items-end gap-4">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+          <div className="flex flex-col md:flex-row md:items-center justify-between gap-5">
+            <div className="flex items-center gap-4">
               <img
                 src={shop.logo_url || 'https://images.unsplash.com/photo-1550745165-9bc0b252726f?w=200'}
                 alt={shop.name}
-                className="w-20 h-20 sm:w-24 sm:h-24 rounded-2xl object-cover border-4 border-white shadow-craft bg-white flex-shrink-0"
+                className="w-16 h-16 rounded-lg object-cover border border-slate-200 bg-white flex-shrink-0"
                 onError={(e) => {
                   e.target.src = 'https://images.unsplash.com/photo-1550745165-9bc0b252726f?w=200';
                 }}
               />
               <div>
-                <div className="inline-flex items-center space-x-1 px-2 py-0.5 rounded-md bg-stone-100 border border-stone-200 text-stone-700 text-[10px] font-mono uppercase tracking-wide mb-1.5">
-                  <ShieldCheck className="w-3 h-3 text-emerald-700" />
-                  <span>Independent Merchant Storefront</span>
-                </div>
-                <h1 className="text-2xl sm:text-3xl font-extrabold text-stone-900 tracking-tight">{shop.name}</h1>
-                <p className="text-xs text-stone-500 mt-1 max-w-xl line-clamp-2">
-                  {shop.description || 'Welcome to our shop! Browse our assigned product listings below.'}
+                <p className="text-xs font-semibold text-blue-700 mb-1">Independent store</p>
+                <h1 className="text-2xl sm:text-3xl font-bold text-slate-900 tracking-tight">{shop.name}</h1>
+                <p className="text-sm text-slate-600 mt-1 max-w-2xl line-clamp-2">
+                  {shop.description || 'Welcome to our shop! Browse our curated collection of verified products.'}
                 </p>
               </div>
             </div>
 
-            {/* Merchant Contact Tags */}
-            <div className="flex flex-wrap items-center gap-2 text-xs text-stone-600">
+            <div className="flex flex-wrap gap-x-5 gap-y-2 text-sm text-slate-600">
               {shop.phone && (
-                <div className="flex items-center space-x-1.5 bg-stone-50 px-2.5 py-1 rounded-lg border border-stone-200">
-                  <Phone className="w-3.5 h-3.5 text-stone-500" />
-                  <span className="font-mono text-[11px]">{shop.phone}</span>
+                <div className="flex items-center gap-2">
+                  <Phone className="w-4 h-4 text-slate-400" />
+                  <span>{shop.phone}</span>
                 </div>
               )}
               {shop.email && (
-                <div className="flex items-center space-x-1.5 bg-stone-50 px-2.5 py-1 rounded-lg border border-stone-200">
-                  <Mail className="w-3.5 h-3.5 text-stone-500" />
-                  <span className="text-[11px]">{shop.email}</span>
+                <div className="flex items-center gap-2">
+                  <Mail className="w-4 h-4 text-slate-400" />
+                  <span>{shop.email}</span>
                 </div>
               )}
-              {shop.address && (
-                <div className="flex items-center space-x-1.5 bg-stone-50 px-2.5 py-1 rounded-lg border border-stone-200">
-                  <MapPin className="w-3.5 h-3.5 text-stone-500" />
-                  <span className="text-[11px] truncate max-w-[200px]">{shop.address}</span>
-                </div>
-              )}
+              {shop.address && <div className="flex items-center gap-2"><MapPin className="w-4 h-4 text-slate-400" /><span>{shop.address}</span></div>}
             </div>
           </div>
         </div>
       </section>
 
-      {/* Main Catalog View */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-6">
-        {/* Navigation & Breadcrumb */}
         <div className="flex items-center justify-between mb-5">
           <Link
             href="/"
-            className="inline-flex items-center space-x-1.5 text-xs font-semibold text-stone-500 hover:text-stone-900 transition-colors"
+            className="inline-flex items-center gap-2 px-3 py-2 rounded-lg bg-white border border-slate-200 text-sm font-medium text-slate-700 hover:text-blue-700 hover:bg-slate-50 transition-colors"
           >
             <ArrowLeft className="w-3.5 h-3.5" />
             <span>All Stores</span>
           </Link>
 
-          <div className="text-xs font-mono text-stone-500">
-            <span className="font-bold text-stone-900">{products.length}</span> curated items available
+          <div className="text-sm font-medium text-slate-600">
+            <span className="font-semibold text-slate-900">{products.length}</span> products
           </div>
         </div>
 
-        {/* Filter and Search Bar */}
-        <div className="bg-white p-3.5 rounded-xl border border-stone-200 shadow-subtle flex flex-col md:flex-row gap-2.5 items-center justify-between mb-6">
+        {/* Product filters */}
+        <div className="bg-white p-4 rounded-xl border border-slate-200 shadow-sm flex flex-col md:flex-row gap-3 items-center justify-between mb-8">
           <div className="relative w-full md:w-80">
-            <Search className="w-3.5 h-3.5 text-stone-400 absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none" />
+            <Search className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none" />
             <input
               type="text"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              placeholder="Search store inventory..."
-              className="w-full pl-9 pr-3 py-1.5 text-xs bg-stone-50 border border-stone-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-stone-900 focus:bg-white text-stone-900"
+              placeholder={`Search ${shop.name}...`}
+              className="w-full pl-10 pr-3 py-2.5 text-sm bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:bg-white text-slate-900"
             />
           </div>
 
-          <div className="flex items-center space-x-2 w-full md:w-auto">
+          <div className="flex items-center gap-2 w-full md:w-auto">
             {categories.length > 0 && (
               <select
                 value={selectedCategory}
                 onChange={(e) => setSelectedCategory(e.target.value)}
-                className="px-2.5 py-1.5 text-xs bg-stone-50 border border-stone-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-stone-900 text-stone-700"
+                className="px-3 py-2.5 text-sm bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-slate-800"
               >
                 <option value="">All Categories</option>
                 {categories.map((cat) => (
@@ -218,7 +201,7 @@ export default function ShopStorefrontPage() {
             <select
               value={sort}
               onChange={(e) => setSort(e.target.value)}
-              className="px-2.5 py-1.5 text-xs bg-stone-50 border border-stone-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-stone-900 text-stone-700"
+              className="px-3 py-2.5 text-sm bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-slate-800"
             >
               <option value="">Sort: Featured</option>
               <option value="price_asc">Price: Low to High</option>
@@ -232,18 +215,18 @@ export default function ShopStorefrontPage() {
         {loadingProducts ? (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
             {[1, 2, 3, 4].map((n) => (
-              <div key={n} className="bg-white rounded-xl border border-stone-200 p-4 space-y-3 animate-pulse">
-                <div className="h-44 bg-stone-100 rounded-lg" />
-                <div className="h-4 bg-stone-200 rounded w-3/4" />
-                <div className="h-3 bg-stone-100 rounded w-1/2" />
+              <div key={n} className="bg-white rounded-xl border border-slate-200 p-4 space-y-3 animate-pulse shadow-sm">
+                <div className="aspect-[4/3] bg-slate-100 rounded-lg" />
+                <div className="h-4 bg-slate-200 rounded w-3/4" />
+                <div className="h-3 bg-slate-100 rounded w-1/2" />
               </div>
             ))}
           </div>
         ) : products.length === 0 ? (
-          <div className="text-center py-20 bg-white rounded-xl border border-stone-200">
-            <ShoppingBag className="w-10 h-10 text-stone-300 mx-auto mb-2" />
-            <h3 className="text-sm font-semibold text-stone-800">No items currently displayed</h3>
-            <p className="text-xs text-stone-400 mt-1 max-w-sm mx-auto">
+          <div className="text-center py-20 bg-white rounded-xl border border-slate-200 shadow-sm">
+            <ShoppingBag className="w-10 h-10 text-slate-300 mx-auto mb-2" />
+            <h3 className="text-base font-semibold text-slate-900">No products found</h3>
+            <p className="text-sm text-slate-500 mt-1 max-w-sm mx-auto">
               This store hasn't assigned matching catalog products or they are temporarily out of stock.
             </p>
           </div>
@@ -256,43 +239,33 @@ export default function ShopStorefrontPage() {
                   setSelectedProduct(item);
                   setModalQuantity(1);
                 }}
-                className="group bg-white rounded-xl border border-stone-200 hover:border-stone-400 transition-all duration-200 shadow-subtle hover:shadow-craft flex flex-col cursor-pointer overflow-hidden"
+                className="group bg-white rounded-xl border border-slate-200 hover:border-blue-300 hover:shadow-md transition-all flex flex-col cursor-pointer overflow-hidden focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
+                tabIndex={0}
+                role="button"
+                aria-label={`View details for ${item.name}`}
               >
-                {/* Product Thumbnail */}
-                <div className="relative h-48 bg-stone-50 overflow-hidden border-b border-stone-100">
+                {/* Product Thumbnail with fixed aspect ratio */}
+                <div className="relative aspect-[4/3] bg-slate-100 overflow-hidden">
                   <img
                     src={item.thumbnail || 'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=500'}
                     alt={item.name}
-                    className="w-full h-full object-cover group-hover:scale-[1.03] transition-transform duration-300"
+                    className="w-full h-full object-cover group-hover:scale-[1.04] transition-transform duration-300"
                     onError={(e) => {
                       e.target.src = 'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=500';
                     }}
                   />
 
-                  {/* Badges */}
-                  <div className="absolute top-2 left-2 flex flex-col gap-1">
-                    {item.has_custom_price && (
-                      <span className="px-2 py-0.5 rounded bg-emerald-800 text-white text-[10px] font-mono font-medium shadow-subtle flex items-center space-x-1">
-                        <Sparkles className="w-2.5 h-2.5" />
-                        <span>Store Price</span>
-                      </span>
-                    )}
-                    {item.is_customized && !item.has_custom_price && (
-                      <span className="px-2 py-0.5 rounded bg-stone-900 text-white text-[10px] font-mono font-medium shadow-subtle">
-                        Store Custom
-                      </span>
-                    )}
-                  </div>
-
-                  <div className="absolute top-2 right-2">
+                  <div className="absolute top-2.5 right-2.5">
                     <span
-                      className={`px-2 py-0.5 rounded text-[10px] font-mono font-semibold ${
-                        item.in_stock
-                          ? 'bg-emerald-50 text-emerald-800 border border-emerald-200'
-                          : 'bg-rose-50 text-rose-800 border border-rose-200'
+                      className={`px-2.5 py-1 rounded-md text-xs font-medium ${
+                        !item.in_stock
+                          ? 'bg-rose-50 text-rose-700 border border-rose-200'
+                          : item.stock <= 5
+                          ? 'bg-amber-50 text-amber-800 border border-amber-200'
+                          : 'bg-emerald-50 text-emerald-700 border border-emerald-200'
                       }`}
                     >
-                      {item.in_stock ? `${item.stock} left` : 'Out of Stock'}
+                      {!item.in_stock ? 'Out of Stock' : item.stock <= 5 ? `Only ${item.stock} left` : 'In Stock'}
                     </span>
                   </div>
                 </div>
@@ -301,46 +274,47 @@ export default function ShopStorefrontPage() {
                 <div className="p-4 flex-1 flex flex-col justify-between">
                   <div>
                     {item.category && (
-                      <span className="text-[10px] font-mono uppercase tracking-wider text-stone-400">
+                      <span className="text-xs font-medium text-blue-700">
                         {item.category}
                       </span>
                     )}
-                    <h3 className="text-xs font-bold text-stone-900 mt-1 line-clamp-2 group-hover:text-emerald-800 transition-colors">
+                    <h3 className="text-base font-semibold text-slate-900 mt-1 line-clamp-2 group-hover:text-blue-700 transition-colors">
                       {item.name}
                     </h3>
-                    <p className="text-[11px] text-stone-500 mt-1 line-clamp-2 leading-relaxed">
+                    <p className="text-sm text-slate-500 mt-1 line-clamp-2 leading-relaxed">
                       {item.description || 'Quality product available exclusively at this shop.'}
                     </p>
                   </div>
 
-                  <div className="mt-4 pt-3 border-t border-stone-100 flex items-center justify-between">
+                  <div className="mt-4 pt-3.5 border-t border-slate-100 flex items-center justify-between">
                     <div>
-                      <div className="text-sm font-bold font-mono text-stone-900">
+                      <div className="text-lg font-bold text-slate-900">
                         ${Number(item.price).toFixed(2)}
                       </div>
-                      {item.has_custom_price && item.original_base_price !== Number(item.price) && (
-                        <div className="text-[10px] font-mono text-stone-400 line-through">
-                          Wholesale: ${item.original_base_price.toFixed(2)}
-                        </div>
-                      )}
                     </div>
 
                     <button
                       onClick={(e) => handleAddToCart(e, item, 1)}
                       disabled={!item.in_stock}
-                      className={`p-2 rounded-lg text-xs font-semibold flex items-center justify-center transition-all ${
+                      className={`px-3.5 py-2 rounded-lg text-sm font-semibold flex items-center space-x-1.5 transition-colors ${
                         addedItemEffect === item.shop_product_id
-                          ? 'bg-emerald-800 text-white scale-105'
+                          ? 'bg-emerald-600 text-white scale-105'
                           : item.in_stock
-                          ? 'bg-stone-900 hover:bg-stone-800 text-white shadow-subtle active:scale-95'
-                          : 'bg-stone-100 text-stone-400 cursor-not-allowed'
+                          ? 'bg-blue-600 hover:bg-blue-700 text-white active:scale-95 focus-visible:ring-2 focus-visible:ring-blue-500'
+                          : 'bg-slate-100 text-slate-400 cursor-not-allowed'
                       }`}
-                      title={item.in_stock ? 'Add to cart' : 'Out of stock'}
+                      aria-label={item.in_stock ? `Add ${item.name} to cart` : 'Out of stock'}
                     >
                       {addedItemEffect === item.shop_product_id ? (
-                        <Check className="w-3.5 h-3.5" />
+                        <>
+                          <Check className="w-3.5 h-3.5" />
+                          <span>Added</span>
+                        </>
                       ) : (
-                        <ShoppingBag className="w-3.5 h-3.5" />
+                        <>
+                          <ShoppingBag className="w-3.5 h-3.5" />
+                          <span>Add</span>
+                        </>
                       )}
                     </button>
                   </div>
@@ -385,14 +359,9 @@ export default function ShopStorefrontPage() {
                 <h2 className="text-base font-bold text-stone-900 mb-1.5">{selectedProduct.name}</h2>
 
                 <div className="flex items-baseline space-x-2.5 mb-3">
-                  <span className="text-xl font-bold font-mono text-emerald-800">
+                  <span className="text-xl font-bold text-blue-700">
                     ${Number(selectedProduct.price).toFixed(2)}
                   </span>
-                  {selectedProduct.has_custom_price && (
-                    <span className="text-xs font-mono text-stone-400 line-through">
-                      Wholesale: ${selectedProduct.original_base_price.toFixed(2)}
-                    </span>
-                  )}
                 </div>
 
                 <div className="text-xs text-stone-600 space-y-1 mb-4">
@@ -407,7 +376,7 @@ export default function ShopStorefrontPage() {
                   <span className="font-bold text-stone-900">{shop.name}</span>
                   <span>•</span>
                   <span>Stock:</span>
-                  <span className={selectedProduct.in_stock ? 'text-emerald-700 font-bold font-mono' : 'text-rose-600 font-bold font-mono'}>
+                  <span className={selectedProduct.in_stock ? 'text-emerald-700 font-semibold' : 'text-rose-600 font-semibold'}>
                     {selectedProduct.stock} left
                   </span>
                 </div>
@@ -437,7 +406,7 @@ export default function ShopStorefrontPage() {
                 <button
                   onClick={(e) => handleAddToCart(e, selectedProduct, modalQuantity)}
                   disabled={!selectedProduct.in_stock}
-                  className="w-full py-2.5 px-4 rounded-xl bg-stone-900 hover:bg-stone-800 disabled:opacity-50 text-white font-medium text-xs transition-colors flex items-center justify-center space-x-2 shadow-subtle active:scale-[0.99]"
+                  className="w-full py-2.5 px-4 rounded-lg bg-blue-600 hover:bg-blue-700 disabled:opacity-50 text-white font-semibold text-sm transition-colors flex items-center justify-center space-x-2"
                 >
                   <ShoppingBag className="w-3.5 h-3.5" />
                   <span>

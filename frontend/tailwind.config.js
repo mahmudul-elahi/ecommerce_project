@@ -18,6 +18,21 @@ export default {
           700: '#14532d',
           800: '#052e16',
         },
+        aloe: {
+          10: '#c1fbd4',
+          DEFAULT: '#c1fbd4',
+          deep: '#065f46',
+        },
+        pistachio: {
+          10: '#d4f9e0',
+          DEFAULT: '#d4f9e0',
+        },
+        shopify: {
+          cream: '#fbfbf5',
+          mint: '#c1fbd4',
+          dark: '#000000',
+          border: '#e4e4e7',
+        },
         paper: {
           50: '#fbfbfa',
           100: '#f6f5f1',

@@ -3,9 +3,17 @@
 @tailwind utilities;
 
 @layer base {
+  :root {
+    color-scheme: light;
+  }
+
   body {
-    @apply bg-paper text-ink antialiased selection:bg-emerald-100 selection:text-emerald-950;
-    font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+    @apply bg-slate-50 text-slate-800 antialiased;
+    font-family: Arial, Helvetica, sans-serif;
+  }
+
+  h1, h2, h3, h4 {
+    @apply text-slate-900;
   }
 
   input[type="number"]::-webkit-inner-spin-button,
@@ -15,18 +23,20 @@
   }
 }
 
-/* Custom crisp scrollbar */
 ::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
+  width: 8px;
+  height: 8px;
 }
+
 ::-webkit-scrollbar-track {
-  background: transparent;
+  background: #f1f5f9;
 }
+
 ::-webkit-scrollbar-thumb {
-  background: #d6d3d1;
-  border-radius: 9999px;
+  background: #cbd5e1;
+  border-radius: 4px;
 }
+
 ::-webkit-scrollbar-thumb:hover {
-  background: #a8a29e;
+  background: #94a3b8;
 }

@@ -27,7 +27,7 @@ export default function Modal({ isOpen, onClose, title, children, maxWidth = 'ma
       <div className="flex min-h-screen items-center justify-center p-4 text-center sm:p-0">
         {/* Backdrop */}
         <div
-          className="fixed inset-0 bg-stone-900/40 backdrop-blur-xs transition-opacity"
+          className="fixed inset-0 bg-slate-900/40 backdrop-blur-xs transition-opacity"
           onClick={onClose}
         />
 
