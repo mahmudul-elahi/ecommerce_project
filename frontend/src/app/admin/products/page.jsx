@@ -22,6 +22,7 @@ import {
   Upload,
   X,
   Image as ImageIcon,
+  ChevronDown,
 } from 'lucide-react';
 import Modal from '../../../components/common/Modal';
 import { useDebounce } from '../../../hooks/useDebounce';
@@ -217,18 +218,21 @@ export default function ProductManagementPage() {
 
           <div className="flex items-center gap-2">
             <span className="text-xs text-[#718EBF]">Category:</span>
-            <select
-              value={selectedCategory}
-              onChange={(e) => setSelectedCategory(e.target.value)}
-              className="h-10 px-4 text-xs bg-[#F5F7FA] text-[#343C6A] rounded-xl border-0 outline-none font-medium cursor-pointer"
-            >
-              <option value="">All Categories</option>
-              {dbCategories.map((cat) => (
-                <option key={cat.id} value={cat.name}>
-                  {cat.name}
-                </option>
-              ))}
-            </select>
+            <div className="relative">
+              <select
+                value={selectedCategory}
+                onChange={(e) => setSelectedCategory(e.target.value)}
+                className="h-10 pl-4 pr-9 text-xs bg-[#F5F7FA] text-[#343C6A] rounded-xl border-0 outline-none font-medium cursor-pointer appearance-none focus:bg-white focus:ring-2 focus:ring-[#B88E2F]/30 transition-all"
+              >
+                <option value="">All Categories</option>
+                {dbCategories.map((cat) => (
+                  <option key={cat.id} value={cat.name}>
+                    {cat.name}
+                  </option>
+                ))}
+              </select>
+              <ChevronDown className="w-3.5 h-3.5 text-[#718EBF] absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none" />
+            </div>
           </div>
         </div>
 
@@ -419,17 +423,20 @@ export default function ProductManagementPage() {
             <label className="block text-xs font-semibold text-[#343C6A] mb-1.5">
               Category (from Dynamic Categories Table)
             </label>
-            <select
-              {...register('category_id')}
-              className="w-full h-11 px-4 text-sm bg-[#F5F7FA] text-[#343C6A] rounded-xl border-0 outline-none font-medium cursor-pointer focus:bg-white focus:ring-2 focus:ring-[#B88E2F]/30 transition-all"
-            >
-              <option value="">-- Select Category --</option>
-              {dbCategories.map((c) => (
-                <option key={c.id} value={c.id}>
-                  {c.name}
-                </option>
-              ))}
-            </select>
+            <div className="relative">
+              <select
+                {...register('category_id')}
+                className="w-full h-11 px-4 pr-10 text-sm bg-[#F5F7FA] text-[#343C6A] rounded-xl border-0 outline-none font-medium cursor-pointer focus:bg-white focus:ring-2 focus:ring-[#B88E2F]/30 transition-all appearance-none"
+              >
+                <option value="">-- Select Category --</option>
+                {dbCategories.map((c) => (
+                  <option key={c.id} value={c.id}>
+                    {c.name}
+                  </option>
+                ))}
+              </select>
+              <ChevronDown className="w-4 h-4 text-[#718EBF] absolute right-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
+            </div>
           </div>
 
           {/* Multiple Images Upload & Gallery Management */}

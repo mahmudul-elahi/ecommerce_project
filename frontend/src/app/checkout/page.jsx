@@ -10,6 +10,7 @@ import PageBanner from '../../components/common/PageBanner';
 import FeaturesBar from '../../components/common/FeaturesBar';
 import { useCart } from '../../context/CartContext';
 import { useCheckoutMutation } from '../../hooks/useShops';
+import { ChevronDown } from 'lucide-react';
 import { toast } from 'sonner';
 
 const checkoutSchema = z.object({
@@ -156,16 +157,19 @@ export default function CheckoutPage() {
 
               <div className="form-field">
                 <label htmlFor="country">Country / Region</label>
-                <select
-                  id="country"
-                  {...register('country')}
-                  className="furniro-select"
-                >
-                  <option value="Indonesia">Indonesia</option>
-                  <option value="Sri Lanka">Sri Lanka</option>
-                  <option value="United States">United States</option>
-                  <option value="Singapore">Singapore</option>
-                </select>
+                <div className="furniro-select-wrapper">
+                  <select
+                    id="country"
+                    {...register('country')}
+                    className="furniro-select"
+                  >
+                    <option value="Indonesia">Indonesia</option>
+                    <option value="Sri Lanka">Sri Lanka</option>
+                    <option value="United States">United States</option>
+                    <option value="Singapore">Singapore</option>
+                  </select>
+                  <ChevronDown className="furniro-select-arrow" />
+                </div>
                 {errors.country && (
                   <span className="text-xs text-rose-600 mt-1 block">
                     {errors.country.message}
@@ -206,16 +210,19 @@ export default function CheckoutPage() {
 
               <div className="form-field">
                 <label htmlFor="province">Province</label>
-                <select
-                  id="province"
-                  {...register('province')}
-                  className="furniro-select"
-                >
-                  <option value="Western Province">Western Province</option>
-                  <option value="DKI Jakarta">DKI Jakarta</option>
-                  <option value="Bali">Bali</option>
-                  <option value="California">California</option>
-                </select>
+                <div className="furniro-select-wrapper">
+                  <select
+                    id="province"
+                    {...register('province')}
+                    className="furniro-select"
+                  >
+                    <option value="Western Province">Western Province</option>
+                    <option value="DKI Jakarta">DKI Jakarta</option>
+                    <option value="Bali">Bali</option>
+                    <option value="California">California</option>
+                  </select>
+                  <ChevronDown className="furniro-select-arrow" />
+                </div>
                 {errors.province && (
                   <span className="text-xs text-rose-600 mt-1 block">
                     {errors.province.message}

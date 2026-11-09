@@ -14,6 +14,7 @@ import {
   AlertCircle,
   Truck,
   RotateCcw,
+  ChevronDown,
 } from 'lucide-react';
 import { useShopOrdersQuery, useUpdateOrderStatusMutation } from '../../../hooks/useShopOwner';
 
@@ -104,12 +105,12 @@ export default function ShopOrdersPage() {
                     </div>
 
                     {/* Status Select Control */}
-                    <div>
+                    <div className="relative">
                       <select
                         value={order.status}
                         onChange={(e) => handleStatusChange(order.id, e.target.value)}
                         disabled={updateStatusMutation.isPending}
-                        className={`text-xs font-mono uppercase px-3 py-1.5 rounded-xl border-0 outline-none cursor-pointer transition-all ${
+                        className={`text-xs font-mono uppercase pl-3 pr-7 py-1.5 rounded-xl border-0 outline-none cursor-pointer transition-all appearance-none ${
                           order.status === 'completed'
                             ? 'bg-[#FAF3EA] text-[#B88E2F]'
                             : order.status === 'processing'
@@ -124,6 +125,7 @@ export default function ShopOrdersPage() {
                         <option value="completed">Completed</option>
                         <option value="cancelled">Cancelled</option>
                       </select>
+                      <ChevronDown className="w-3.5 h-3.5 opacity-60 absolute right-2 top-1/2 -translate-y-1/2 pointer-events-none" />
                     </div>
                   </div>
                 </div>

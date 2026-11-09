@@ -18,6 +18,7 @@ import {
   AlertCircle,
   KeyRound,
   UserCheck,
+  ChevronDown,
 } from 'lucide-react';
 import Modal from '../../../components/common/Modal';
 import { useDebounce } from '../../../hooks/useDebounce';
@@ -381,30 +382,36 @@ export default function UserManagementPage() {
               <label className="block text-xs font-semibold text-[#343C6A] mb-1.5">
                 System Role
               </label>
-              <select
-                {...register('role')}
-                className="w-full h-11 px-4 text-sm bg-[#F5F7FA] text-[#343C6A] rounded-xl border-0 outline-none font-medium cursor-pointer focus:bg-white focus:ring-2 focus:ring-[#B88E2F]/30 transition-all"
-              >
-                <option value="shop_owner">Shop Owner</option>
-                <option value="admin">Platform Administrator</option>
-              </select>
+              <div className="relative">
+                <select
+                  {...register('role')}
+                  className="w-full h-11 px-4 pr-10 text-sm bg-[#F5F7FA] text-[#343C6A] rounded-xl border-0 outline-none font-medium cursor-pointer focus:bg-white focus:ring-2 focus:ring-[#B88E2F]/30 transition-all appearance-none"
+                >
+                  <option value="shop_owner">Shop Owner</option>
+                  <option value="admin">Platform Administrator</option>
+                </select>
+                <ChevronDown className="w-4 h-4 text-[#718EBF] absolute right-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
+              </div>
             </div>
 
             <div>
               <label className="block text-xs font-semibold text-[#343C6A] mb-1.5">
                 Assign Existing Shop
               </label>
-              <select
-                {...register('shop_id')}
-                className="w-full h-11 px-4 text-sm bg-[#F5F7FA] text-[#343C6A] rounded-xl border-0 outline-none font-medium cursor-pointer focus:bg-white focus:ring-2 focus:ring-[#B88E2F]/30 transition-all"
-              >
-                <option value="">No existing shop (or create new below)</option>
-                {shops.map((s) => (
-                  <option key={s.id} value={s.id}>
-                    {s.name}
-                  </option>
-                ))}
-              </select>
+              <div className="relative">
+                <select
+                  {...register('shop_id')}
+                  className="w-full h-11 px-4 pr-10 text-sm bg-[#F5F7FA] text-[#343C6A] rounded-xl border-0 outline-none font-medium cursor-pointer focus:bg-white focus:ring-2 focus:ring-[#B88E2F]/30 transition-all appearance-none"
+                >
+                  <option value="">No existing shop (or create new below)</option>
+                  {shops.map((s) => (
+                    <option key={s.id} value={s.id}>
+                      {s.name}
+                    </option>
+                  ))}
+                </select>
+                <ChevronDown className="w-4 h-4 text-[#718EBF] absolute right-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
+              </div>
             </div>
           </div>
 

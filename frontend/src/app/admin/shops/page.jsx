@@ -20,6 +20,7 @@ import {
   Building2,
   CheckCircle2,
   XCircle,
+  ChevronDown,
 } from 'lucide-react';
 import Modal from '../../../components/common/Modal';
 import DashFileUpload from '../../../components/dashboard/DashFileUpload';
@@ -356,17 +357,20 @@ export default function ShopManagementPage() {
               <label className="block text-xs font-semibold text-[#343C6A] mb-1.5">
                 Assigned Shop Owner
               </label>
-              <select
-                {...register('user_id')}
-                className="w-full h-11 px-4 text-sm bg-[#F5F7FA] text-[#343C6A] rounded-xl border-0 outline-none font-medium cursor-pointer focus:bg-white focus:ring-2 focus:ring-[#B88E2F]/30 transition-all"
-              >
-                <option value="">Select an owner (optional)</option>
-                {owners.map((owner) => (
-                  <option key={owner.id} value={owner.id}>
-                    {owner.name} ({owner.email})
-                  </option>
-                ))}
-              </select>
+              <div className="relative">
+                <select
+                  {...register('user_id')}
+                  className="w-full h-11 px-4 pr-10 text-sm bg-[#F5F7FA] text-[#343C6A] rounded-xl border-0 outline-none font-medium cursor-pointer focus:bg-white focus:ring-2 focus:ring-[#B88E2F]/30 transition-all appearance-none"
+                >
+                  <option value="">Select an owner (optional)</option>
+                  {owners.map((owner) => (
+                    <option key={owner.id} value={owner.id}>
+                      {owner.name} ({owner.email})
+                    </option>
+                  ))}
+                </select>
+                <ChevronDown className="w-4 h-4 text-[#718EBF] absolute right-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
+              </div>
             </div>
           </div>
 
@@ -416,14 +420,17 @@ export default function ShopManagementPage() {
               <label className="block text-xs font-semibold text-[#343C6A] mb-1.5">
                 Store Status
               </label>
-              <select
-                {...register('status')}
-                className="w-full h-11 px-4 text-sm bg-[#F5F7FA] text-[#343C6A] rounded-xl border-0 outline-none font-medium cursor-pointer focus:bg-white focus:ring-2 focus:ring-[#B88E2F]/30 transition-all"
-              >
-                <option value="active">Active (Visible)</option>
-                <option value="inactive">Inactive</option>
-                <option value="suspended">Suspended</option>
-              </select>
+              <div className="relative">
+                <select
+                  {...register('status')}
+                  className="w-full h-11 px-4 pr-10 text-sm bg-[#F5F7FA] text-[#343C6A] rounded-xl border-0 outline-none font-medium cursor-pointer focus:bg-white focus:ring-2 focus:ring-[#B88E2F]/30 transition-all appearance-none"
+                >
+                  <option value="active">Active (Visible)</option>
+                  <option value="inactive">Inactive</option>
+                  <option value="suspended">Suspended</option>
+                </select>
+                <ChevronDown className="w-4 h-4 text-[#718EBF] absolute right-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
+              </div>
             </div>
           </div>
 
