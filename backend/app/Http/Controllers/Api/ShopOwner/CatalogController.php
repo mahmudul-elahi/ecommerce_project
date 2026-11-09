@@ -69,26 +69,46 @@ class CatalogController extends Controller
             ->toArray();
 
         // Optional filter: only show products not yet added, or already added
-        $filter = $request->query('status'); // 'added', 'available'
+        // Default to 'available' so products already in the shop do not show as duplicate copies in the catalog
+        $filter = $request->query('status', 'available');
         if ($filter === 'added') {
             $query->whereIn('id', array_keys($myShopProductIds));
         } elseif ($filter === 'available') {
             $query->whereNotIn('id', array_keys($myShopProductIds));
         }
+        // If filter is 'all', show all items
 
-        $products = $query->latest()->paginate($request->query('per_page', 12));
+        $totalActiveCount = Product::where('is_active', true)->count();
+        $addedCount = count($myShopProductIds);
+        $availableCount = max(0, $totalActiveCount - $addedCount);
+
+        $products = $query->latest()->paginate($request->query('per_page', 24));
 
         // Append shop-specific membership info
-        $products->getCollection()->transform(function ($product) use ($myShopProductIds, $user) {
+        $products->getCollection()->transform(function ($product) use ($myShopProductIds, $user, $shop) {
             $isInShop = array_key_exists($product->id, $myShopProductIds);
             $product->is_in_my_shop = $isInShop;
+            $product->in_shop = $isInShop;
             $product->my_shop_product_id = $isInShop ? $myShopProductIds[$product->id] : null;
             $product->is_created_by_me = ($product->created_by === $user->id);
+
+            if ($isInShop) {
+                $product->shop_listing = ShopProduct::where('shop_id', $shop->id)
+                    ->where('product_id', $product->id)
+                    ->first();
+            }
 
             return $product;
         });
 
-        return response()->json($products);
+        $responseData = $products->toArray();
+        $responseData['counts'] = [
+            'available' => $availableCount,
+            'added' => $addedCount,
+            'total' => $totalActiveCount,
+        ];
+
+        return response()->json($responseData);
     }
 
     /**
@@ -239,7 +259,7 @@ class CatalogController extends Controller
             return response()->json([
                 'message' => 'This product is already listed in your shop.',
                 'shop_product' => $existing->load('product'),
-            ], 200);
+            ], 422);
         }
 
         $customImages = [];

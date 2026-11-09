@@ -61,7 +61,7 @@ const createSharedProductSchema = z.object({
 export default function CatalogBrowsePage() {
   const [search, setSearch] = useState('');
   const [category, setCategory] = useState('');
-  const [statusFilter, setStatusFilter] = useState('');
+  const [statusFilter, setStatusFilter] = useState('available');
   const debouncedSearch = useDebounce(search, 250);
 
   // Dynamic Categories from database
@@ -80,10 +80,13 @@ export default function CatalogBrowsePage() {
 
   // Clean custom query hook
   const {
-    data: catalogProducts = [],
+    data: catalogResult,
     isLoading,
     isError,
   } = useCatalogQuery({ search: debouncedSearch, category, status: statusFilter });
+
+  const catalogProducts = catalogResult?.products || (Array.isArray(catalogResult) ? catalogResult : []);
+  const counts = catalogResult?.counts || { available: 0, added: 0, total: 0 };
 
   // React Hook Form: Add To Shop
   const {
@@ -281,7 +284,7 @@ export default function CatalogBrowsePage() {
             className="px-4 py-2.5 rounded-xl bg-[#F5F7FA] hover:bg-[#FAF3EA] text-[#343C6A] text-sm font-semibold transition-colors flex items-center gap-2"
           >
             <Package className="w-4 h-4 text-[#718EBF]" />
-            <span>My Listings</span>
+            <span>My Listings ({counts.added})</span>
           </Link>
 
           <button
@@ -292,6 +295,66 @@ export default function CatalogBrowsePage() {
             <span>Create Shared Product</span>
           </button>
         </div>
+      </div>
+
+      {/* View Tabs: Available to Add / Already in Store / All Catalog */}
+      <div className="flex flex-wrap items-center gap-2">
+        <button
+          type="button"
+          onClick={() => setStatusFilter('available')}
+          className={`px-4 py-2 rounded-xl text-xs font-semibold transition-all flex items-center gap-2 cursor-pointer border-0 ${
+            statusFilter === 'available'
+              ? 'bg-[#B88E2F] text-white shadow-xs'
+              : 'bg-white text-[#718EBF] hover:text-[#343C6A] hover:bg-slate-50 border border-slate-200/60'
+          }`}
+        >
+          <span>Available to Add</span>
+          <span
+            className={`px-1.5 py-0.5 rounded-full text-[10px] font-bold ${
+              statusFilter === 'available' ? 'bg-white/20 text-white' : 'bg-[#F5F7FA] text-[#718EBF]'
+            }`}
+          >
+            {counts.available}
+          </span>
+        </button>
+
+        <button
+          type="button"
+          onClick={() => setStatusFilter('added')}
+          className={`px-4 py-2 rounded-xl text-xs font-semibold transition-all flex items-center gap-2 cursor-pointer border-0 ${
+            statusFilter === 'added'
+              ? 'bg-[#B88E2F] text-white shadow-xs'
+              : 'bg-white text-[#718EBF] hover:text-[#343C6A] hover:bg-slate-50 border border-slate-200/60'
+          }`}
+        >
+          <span>Already in Store</span>
+          <span
+            className={`px-1.5 py-0.5 rounded-full text-[10px] font-bold ${
+              statusFilter === 'added' ? 'bg-white/20 text-white' : 'bg-[#F5F7FA] text-[#718EBF]'
+            }`}
+          >
+            {counts.added}
+          </span>
+        </button>
+
+        <button
+          type="button"
+          onClick={() => setStatusFilter('all')}
+          className={`px-4 py-2 rounded-xl text-xs font-semibold transition-all flex items-center gap-2 cursor-pointer border-0 ${
+            statusFilter === 'all'
+              ? 'bg-[#B88E2F] text-white shadow-xs'
+              : 'bg-white text-[#718EBF] hover:text-[#343C6A] hover:bg-slate-50 border border-slate-200/60'
+          }`}
+        >
+          <span>All Catalog</span>
+          <span
+            className={`px-1.5 py-0.5 rounded-full text-[10px] font-bold ${
+              statusFilter === 'all' ? 'bg-white/20 text-white' : 'bg-[#F5F7FA] text-[#718EBF]'
+            }`}
+          >
+            {counts.total}
+          </span>
+        </button>
       </div>
 
       {/* Catalog Grid */}
@@ -315,17 +378,64 @@ export default function CatalogBrowsePage() {
           <p className="text-xs text-slate-400 mt-1">Please refresh the page or try again.</p>
         </div>
       ) : catalogProducts.length === 0 ? (
-        <div className="bg-white p-16 text-center rounded-2xl border border-slate-200">
-          <Layers className="w-10 h-10 text-slate-300 mx-auto mb-3" />
-          <h3 className="text-sm font-semibold text-slate-800">No catalog products found</h3>
-          <p className="text-xs text-slate-400 mt-1 max-w-sm mx-auto">
-            Try adjusting your search criteria or create a new product to add to the shared catalog.
-          </p>
-        </div>
+        statusFilter === 'available' ? (
+          <div className="bg-white p-12 text-center rounded-[25px] border border-slate-100 shadow-sm max-w-xl mx-auto">
+            <div className="w-16 h-16 rounded-full bg-[#FAF3EA] text-[#B88E2F] flex items-center justify-center mx-auto mb-4">
+              <CheckCircle2 className="w-8 h-8" />
+            </div>
+            <h3 className="text-base font-bold text-[#343C6A]">All Catalog Products Are in Your Store</h3>
+            <p className="text-xs text-[#718EBF] mt-1.5 max-w-md mx-auto leading-relaxed">
+              You have already added all available items from the shared catalog to your store inventory. No duplicate copies are listed here.
+            </p>
+            <div className="mt-6 flex flex-wrap items-center justify-center gap-3">
+              <Link
+                href="/shop-owner/products"
+                className="px-5 py-2.5 rounded-xl bg-[#B88E2F] hover:bg-[#967125] text-white text-xs font-semibold transition-all shadow-xs flex items-center gap-2"
+              >
+                <Package className="w-4 h-4" />
+                <span>Manage My Listings ({counts.added})</span>
+              </Link>
+              <button
+                type="button"
+                onClick={() => setStatusFilter('added')}
+                className="px-4 py-2.5 rounded-xl bg-[#F5F7FA] hover:bg-slate-100 text-[#343C6A] text-xs font-semibold transition-all border-0 cursor-pointer"
+              >
+                View Added Products
+              </button>
+            </div>
+          </div>
+        ) : statusFilter === 'added' ? (
+          <div className="bg-white p-12 text-center rounded-[25px] border border-slate-100 shadow-sm max-w-xl mx-auto">
+            <div className="w-16 h-16 rounded-full bg-slate-50 text-slate-400 flex items-center justify-center mx-auto mb-4">
+              <Package className="w-8 h-8" />
+            </div>
+            <h3 className="text-base font-bold text-[#343C6A]">No Products in Your Store Yet</h3>
+            <p className="text-xs text-[#718EBF] mt-1.5 max-w-md mx-auto leading-relaxed">
+              You haven't added any shared catalog products to your store yet. Browse the available catalog to start retailing.
+            </p>
+            <div className="mt-6">
+              <button
+                type="button"
+                onClick={() => setStatusFilter('available')}
+                className="px-5 py-2.5 rounded-xl bg-[#B88E2F] hover:bg-[#967125] text-white text-xs font-semibold transition-all shadow-xs"
+              >
+                Browse Available Products
+              </button>
+            </div>
+          </div>
+        ) : (
+          <div className="bg-white p-16 text-center rounded-2xl border border-slate-200">
+            <Layers className="w-10 h-10 text-slate-300 mx-auto mb-3" />
+            <h3 className="text-sm font-semibold text-slate-800">No catalog products found</h3>
+            <p className="text-xs text-slate-400 mt-1 max-w-sm mx-auto">
+              Try adjusting your search criteria or create a new product to add to the shared catalog.
+            </p>
+          </div>
+        )
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
           {catalogProducts.map((product) => {
-            const alreadyInShop = !!product.in_shop;
+            const alreadyInShop = !!(product.in_shop ?? product.is_in_my_shop);
             return (
               <div
                 key={product.id}
@@ -350,7 +460,7 @@ export default function CatalogBrowsePage() {
 
                     {/* Status badge */}
                     {alreadyInShop && (
-                      <span className="absolute top-3 right-3 px-2 py-0.5 rounded-md bg-[#B88E2F] text-white text-[10px] font-mono uppercase shadow-xs flex items-center space-x-1">
+                      <span className="absolute top-3 right-3 px-2 py-0.5 rounded-md bg-[#B88E2F] text-white text-[10px] font-semibold tracking-wide uppercase shadow-xs flex items-center space-x-1">
                         <Check className="w-3 h-3" />
                         <span>In Store</span>
                       </span>
@@ -403,10 +513,10 @@ export default function CatalogBrowsePage() {
                   {alreadyInShop ? (
                     <Link
                       href="/shop-owner/products"
-                      className="w-full py-2.5 px-3 rounded-xl bg-[#F5F7FA] hover:bg-[#FAF3EA] text-[#343C6A] hover:text-[#B88E2F] text-xs font-semibold flex items-center justify-center space-x-1.5 transition-colors border-0"
+                      className="w-full py-2.5 px-3 rounded-xl bg-[#FAF3EA] hover:bg-[#F3E5D0] text-[#B88E2F] text-xs font-semibold flex items-center justify-center space-x-1.5 transition-colors border-0"
                     >
-                      <CheckCircle2 className="w-3.5 h-3.5 text-[#B88E2F]" />
-                      <span>Customized in Store</span>
+                      <CheckCircle2 className="w-3.5 h-3.5" />
+                      <span>Already in Store • Manage</span>
                     </Link>
                   ) : (
                     <button

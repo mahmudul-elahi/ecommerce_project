@@ -101,7 +101,9 @@ class ShopController extends Controller
         $shop = $this->getAuthenticatedShop($request);
 
         $myProductsCount = $shop->shopProducts()->count();
+        $myShopProductIds = $shop->shopProducts()->pluck('product_id')->toArray();
         $totalCatalogCount = Product::where('is_active', true)->count();
+        $availableCatalogCount = Product::where('is_active', true)->whereNotIn('id', $myShopProductIds)->count();
         $totalOrders = Order::where('shop_id', $shop->id)->count();
         $totalRevenue = Order::where('shop_id', $shop->id)
             ->where('status', '!=', 'cancelled')
@@ -116,6 +118,7 @@ class ShopController extends Controller
             'stats' => [
                 'my_products_count' => $myProductsCount,
                 'total_catalog_count' => $totalCatalogCount,
+                'available_catalog_count' => $availableCatalogCount,
                 'total_orders' => $totalOrders,
                 'total_revenue' => (float) $totalRevenue,
             ],

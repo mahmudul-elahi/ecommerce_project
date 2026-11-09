@@ -183,6 +183,34 @@ class EcommerceApiTest extends TestCase
         $this->assertEquals(2400000.00, $customerProduct['price']);
     }
 
+    public function test_shared_catalog_excludes_already_added_products_by_default_and_blocks_duplicates(): void
+    {
+        $owner = User::where('email', 'partner@ecommerce.com')->first();
+        $shop = $owner->shop;
+
+        // Syltherine (id 1) is already in partner's shop
+        $addedProduct = Product::where('sku', 'FUR-SYL-001')->first();
+        $this->assertNotNull($addedProduct);
+
+        // 1. By default, shared catalog does NOT show already added products
+        $catalogResponse = $this->actingAs($owner)->getJson('/api/shop-owner/catalog');
+        $catalogResponse->assertStatus(200);
+
+        $catalogIds = collect($catalogResponse->json('data'))->pluck('id')->toArray();
+        $this->assertNotContains($addedProduct->id, $catalogIds, 'Already added product must not appear in default catalog');
+
+        // 2. Counts metadata is provided
+        $this->assertArrayHasKey('counts', $catalogResponse->json());
+        $this->assertGreaterThan(0, $catalogResponse->json('counts.added'));
+
+        // 3. Attempting to add an already added product returns 422
+        $duplicateAddResponse = $this->actingAs($owner)->postJson('/api/shop-owner/catalog/add-to-shop', [
+            'product_id' => $addedProduct->id,
+        ]);
+        $duplicateAddResponse->assertStatus(422)
+            ->assertJsonPath('message', 'This product is already listed in your shop.');
+    }
+
     public function test_customer_view_never_shows_unassigned_catalog_products(): void
     {
         // Unassigned product SKU CAT-UNASSIGNED-999 is in shared catalog

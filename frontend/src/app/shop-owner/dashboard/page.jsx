@@ -101,13 +101,13 @@ export default function ShopOwnerDashboardPage() {
           </div>
           <div>
             <span className="text-xs font-semibold uppercase tracking-wider text-[#718EBF]">
-              Catalog Items
+              Ready to Add
             </span>
             <div className="text-2xl font-bold text-[#343C6A] mt-0.5">
-              {formatCompactNumber(stats.total_catalog_count ?? 0)}
+              {formatCompactNumber(stats.available_catalog_count ?? stats.total_catalog_count ?? 0)}
             </div>
             <div className="text-[11px] text-[#718EBF] mt-0.5">
-              Available to list
+              {stats.available_catalog_count === 0 ? 'All catalog items added' : 'Available from catalog'}
             </div>
           </div>
         </div>

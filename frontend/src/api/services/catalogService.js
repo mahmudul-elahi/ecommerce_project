@@ -6,7 +6,20 @@ export const catalogService = {
    */
   async getCatalog(params = {}) {
     const res = await api.get('/shop-owner/catalog', { params });
-    return res.data?.data || [];
+    const items = res.data?.data || [];
+    return {
+      products: items,
+      counts: res.data?.counts || {
+        available: 0,
+        added: 0,
+        total: 0,
+      },
+      pagination: {
+        total: res.data?.total || items.length,
+        current_page: res.data?.current_page || 1,
+        last_page: res.data?.last_page || 1,
+      },
+    };
   },
 
   /**
