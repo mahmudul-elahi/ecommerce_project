@@ -18,7 +18,6 @@ function ShopContent() {
   const [activeShop, setActiveShop] = useState(initialShop);
   const [search, setSearch] = useState('');
   const [sortBy, setSortBy] = useState('default');
-  const [viewMode, setViewMode] = useState('grid');
   const [showCount, setShowCount] = useState(16);
   const [page, setPage] = useState(1);
 
@@ -59,8 +58,6 @@ function ShopContent() {
         onShowCountChange={setShowCount}
         sortBy={sortBy}
         onSortByChange={setSortBy}
-        viewMode={viewMode}
-        onViewModeChange={setViewMode}
         activeCategory={activeCategory}
         onCategoryChange={(cat) => {
           setActiveCategory(cat);
@@ -83,7 +80,6 @@ function ShopContent() {
           products={displayedProducts}
           isLoading={isLoading}
           isError={isError}
-          viewMode={viewMode}
           onRetry={refetch}
         />
 

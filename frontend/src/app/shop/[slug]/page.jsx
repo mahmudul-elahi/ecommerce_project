@@ -7,7 +7,7 @@ import MerchantHeader from '../../../components/merchant/MerchantHeader';
 import ProductFilterBar from '../../../components/product/ProductFilterBar';
 import ProductGrid from '../../../components/product/ProductGrid';
 import FeaturesBar from '../../../components/common/FeaturesBar';
-import { useShopDetailQuery, useShopProductsQuery } from '../../../hooks/useShops';
+import { useShopDetailQuery, useShopProductsQuery, useCategoriesQuery } from '../../../hooks/useShops';
 import { useDebounce } from '../../../hooks/useDebounce';
 import { Store } from 'lucide-react';
 
@@ -18,12 +18,13 @@ export default function ShopStorefrontPage() {
   const [search, setSearch] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('All');
   const [sortBy, setSortBy] = useState('default');
-  const [viewMode, setViewMode] = useState('grid');
   const [showCount, setShowCount] = useState(16);
 
   const debouncedSearch = useDebounce(search, 250);
 
-  // Fetch shop profile
+  // Dynamic Categories from database
+  const { data: dbCategories = [] } = useCategoriesQuery();
+  const categories = ['All', ...dbCategories.map((c) => c.name)];
   const {
     data: shop,
     isLoading: loadingShop,
@@ -42,8 +43,6 @@ export default function ShopStorefrontPage() {
     category: selectedCategory === 'All' ? undefined : selectedCategory,
     sort: sortBy === 'price-low' ? 'price_asc' : sortBy === 'price-high' ? 'price_desc' : undefined,
   });
-
-  const categories = ['All', 'Furniture', 'Living', 'Dining', 'Bedroom', 'Electronics', 'Apparel'];
 
   if (loadingShop) {
     return (
@@ -85,8 +84,6 @@ export default function ShopStorefrontPage() {
         onShowCountChange={setShowCount}
         sortBy={sortBy}
         onSortByChange={setSortBy}
-        viewMode={viewMode}
-        onViewModeChange={setViewMode}
         activeCategory={selectedCategory}
         onCategoryChange={setSelectedCategory}
         categories={categories}
@@ -105,7 +102,6 @@ export default function ShopStorefrontPage() {
           }))}
           isLoading={loadingProducts}
           isError={productsError}
-          viewMode={viewMode}
           onRetry={refetchProducts}
         />
       </main>

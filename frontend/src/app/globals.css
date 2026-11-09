@@ -421,24 +421,221 @@
 .filter-bar-container { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 20px; }
 .filter-left { display: flex; align-items: center; gap: 24px; flex-wrap: wrap; }
 .filter-toggle-btn { display: flex; align-items: center; gap: 10px; background: transparent; border: none; cursor: pointer; font-size: 18px; }
-.view-mode-buttons { display: flex; align-items: center; gap: 16px; }
-.view-mode-btn { background: transparent; border: none; cursor: pointer; opacity: 0.6; transition: opacity 0.2s; }
-.view-mode-btn.active, .view-mode-btn:hover { opacity: 1; }
 .filter-divider { width: 2px; height: 32px; background: #9f9f9f; }
 .results-count-text { font-size: 16px; color: #000; }
 .filter-right { display: flex; align-items: center; gap: 28px; }
 .filter-field { display: flex; align-items: center; gap: 14px; font-size: 18px; color: #000; }
 .control-number-input { width: 55px; height: 45px; background: white; border: none; text-align: center; font-size: 16px; color: #9f9f9f; outline: none; }
-.control-select-input { height: 45px; background: white; border: none; padding: 0 16px; font-size: 16px; color: #9f9f9f; outline: none; }
-.filter-category-tray { border-top: 1px solid #ebd9c5; margin-top: 16px; padding-top: 16px; }
-.tray-inner { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 16px; }
-.tray-label { font-size: 15px; font-weight: 600; color: #333; }
-.tray-buttons { display: flex; gap: 10px; flex-wrap: wrap; }
-.cat-pill { padding: 6px 16px; border-radius: 20px; font-size: 14px; background: white; border: 1px solid #d9d9d9; cursor: pointer; transition: all 0.2s; }
-.cat-pill.active, .cat-pill:hover { background: var(--store-gold); color: white; border-color: var(--store-gold); }
-.tray-search { display: flex; align-items: center; gap: 8px; }
-.tray-search-input { padding: 6px 14px; border: 1px solid #d9d9d9; border-radius: 6px; font-size: 14px; outline: none; }
-.tray-clear-btn { font-size: 12px; color: var(--store-gold); font-weight: 600; }
+
+/* Custom Luxury Sort Dropdown */
+.custom-sort-trigger {
+  min-width: 170px;
+  height: 45px;
+  background: white;
+  padding: 0 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  font-size: 16px;
+  color: #9f9f9f;
+  cursor: pointer;
+  border: none;
+  outline: none !important;
+  box-shadow: none !important;
+  transition: all 0.2s;
+  user-select: none;
+}
+.custom-sort-trigger:hover {
+  background: #fdfaf6;
+  color: #333;
+}
+.custom-sort-menu {
+  position: absolute;
+  right: 0;
+  top: calc(100% + 6px);
+  width: 220px;
+  background: white;
+  border-radius: 10px;
+  box-shadow: 0 14px 34px rgba(0, 0, 0, 0.1);
+  border: 1px solid #f0ede6;
+  padding: 6px;
+  z-index: 50;
+}
+.custom-sort-item {
+  width: 100%;
+  text-align: left;
+  padding: 10px 14px;
+  font-size: 14px;
+  color: #4b5563;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  transition: all 0.15s;
+  outline: none !important;
+}
+.custom-sort-item:hover {
+  background: #faf3ea;
+  color: var(--store-gold);
+}
+.custom-sort-item.active {
+  background: #faf3ea;
+  color: var(--store-gold);
+  font-weight: 600;
+}
+
+/* Matching Furniro UI Filter Deck */
+.filter-deck-panel {
+  margin-top: 20px;
+  background: white;
+  border: 1px solid #eadfcb;
+  border-radius: 12px;
+  padding: 24px 28px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.04);
+}
+.filter-deck-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+.filter-deck-block {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.filter-block-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.filter-block-title {
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  color: #4a4a4a;
+}
+.filter-block-badge {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--store-gold);
+  background: #faf3ea;
+  padding: 2px 10px;
+  border-radius: 6px;
+  border: 1px solid #ebd9c5;
+}
+.filter-chips-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  align-items: center;
+}
+.filter-chip {
+  padding: 8px 18px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  background: #faf7f2;
+  border: 1px solid #ebd9c5;
+  color: #333;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  outline: none !important;
+}
+.filter-chip:hover {
+  border-color: var(--store-gold);
+  background: #fbf5eb;
+  color: var(--store-gold);
+}
+.filter-chip.active {
+  background: var(--store-gold);
+  color: white;
+  border-color: var(--store-gold);
+  font-weight: 600;
+  box-shadow: 0 2px 8px rgba(184, 142, 47, 0.25);
+}
+.chip-count {
+  font-size: 12px;
+  opacity: 0.85;
+}
+.filter-deck-bottom {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+  padding-top: 16px;
+  border-top: 1px solid #f2ece0;
+  margin-top: 4px;
+}
+.filter-search-box {
+  position: relative;
+  flex: 1;
+  min-width: 260px;
+  max-width: 500px;
+}
+.filter-search-input {
+  width: 100%;
+  height: 42px;
+  background: #faf7f2;
+  border: 1px solid #ebd9c5;
+  border-radius: 8px;
+  padding-left: 36px;
+  padding-right: 36px;
+  font-size: 14px;
+  color: #333;
+  outline: none !important;
+  transition: border-color 0.2s, background 0.2s;
+}
+.filter-search-input:focus {
+  background: white;
+  border-color: var(--store-gold);
+}
+.filter-search-clear {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: transparent;
+  border: none;
+  color: #9f9f9f;
+  cursor: pointer;
+  padding: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: color 0.15s;
+}
+.filter-search-clear:hover {
+  color: #333;
+}
+.filter-reset-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--store-gold);
+  background: #faf3ea;
+  border: 1px solid #ebd9c5;
+  padding: 8px 18px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s;
+  outline: none !important;
+}
+.filter-reset-btn:hover {
+  background: var(--store-gold);
+  color: white;
+  border-color: var(--store-gold);
+}
 .shop-grid-section { padding-block: 50px 70px; }
 .furniro-pagination { display: flex; align-items: center; justify-content: center; gap: 36px; margin-top: 60px; }
 .pagination-btn { width: 60px; height: 60px; border-radius: 10px; background: #f9f1e7; color: black; font-size: 20px; font-weight: 400; border: none; cursor: pointer; transition: all 0.2s; display: flex; align-items: center; justify-content: center; }
