@@ -83,8 +83,24 @@
 .furniro-home, .storefront-header, .storefront-footer { font-family: var(--font-storefront), sans-serif; color: var(--store-ink); background: white; }
 .furniro-home h1, .furniro-home h2, .furniro-home h3 { color: inherit; }
 .furniro-home a, .furniro-home button, .storefront-header a, .storefront-header button { -webkit-tap-highlight-color: transparent; }
-.furniro-home section[id], #shop-search { scroll-margin-top: 24px; }
-.storefront-header { min-height: 100px; padding: 24px clamp(24px, 3.75vw, 70px); display: flex; align-items: center; justify-content: space-between; gap: 30px; position: relative; z-index: 40; }
+.furniro-home section[id], #shop-search { scroll-margin-top: 110px; }
+.storefront-header {
+  position: sticky;
+  top: 0;
+  z-index: 40;
+  min-height: 100px;
+  padding: 24px clamp(24px, 3.75vw, 70px);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 30px;
+  background: rgba(255, 255, 255, 0.98);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.04);
+  transition: all 0.25s ease;
+}
 .storefront-logo { display: flex; align-items: center; gap: 5px; font-size: 32px; font-weight: 700; letter-spacing: -1.2px; color: #000; }
 .storefront-logo-mark { width: 50px; height: 32px; position: relative; overflow: hidden; flex-shrink: 0; }
 .storefront-logo-mark img { position: absolute; width: 77px; max-width: none; height: 77px; left: -13px; top: -22px; }
