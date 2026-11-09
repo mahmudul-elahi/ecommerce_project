@@ -28,8 +28,6 @@ export default function ProductDetailView({ product, relatedProducts = [] }) {
   const [selectedImg, setSelectedImg] = useState(
     imagesList[0] || product.thumbnail || null
   );
-  const [selectedSize, setSelectedSize] = useState('L');
-  const [selectedColor, setSelectedColor] = useState('gold');
   const [quantity, setQuantity] = useState(1);
 
   useEffect(() => {
@@ -60,7 +58,7 @@ export default function ProductDetailView({ product, relatedProducts = [] }) {
 
     addToCart(shop, cartProduct, quantity);
     toast.success(`Added ${quantity} × ${product.name} to cart!`, {
-      description: `Store: ${shop.name} · Size: ${selectedSize}`,
+      description: `Store: ${shop.name}`,
     });
   };
 
@@ -146,44 +144,6 @@ export default function ProductDetailView({ product, relatedProducts = [] }) {
             {product.description && (
               <p className="product-short-desc">{product.description}</p>
             )}
-
-            {/* Size Selector */}
-            <div className="option-group">
-              <span className="option-label">Size</span>
-              <div className="size-buttons-row">
-                {['L', 'XL', 'XS'].map((size) => (
-                  <button
-                    key={size}
-                    type="button"
-                    onClick={() => setSelectedSize(size)}
-                    className={`size-btn ${selectedSize === size ? 'active' : ''}`}
-                  >
-                    {size}
-                  </button>
-                ))}
-              </div>
-            </div>
-
-            {/* Color Selector */}
-            <div className="option-group">
-              <span className="option-label">Color</span>
-              <div className="color-swatches-row">
-                {[
-                  { id: 'purple', bg: '#816DFA' },
-                  { id: 'black', bg: '#000000' },
-                  { id: 'gold', bg: '#B88E2F' },
-                ].map((c) => (
-                  <button
-                    key={c.id}
-                    type="button"
-                    onClick={() => setSelectedColor(c.id)}
-                    className={`color-swatch ${selectedColor === c.id ? 'active' : ''}`}
-                    style={{ backgroundColor: c.bg }}
-                    aria-label={`Color option ${c.id}`}
-                  />
-                ))}
-              </div>
-            </div>
 
             {/* Quantity and Actions */}
             <div className="product-purchase-row">
