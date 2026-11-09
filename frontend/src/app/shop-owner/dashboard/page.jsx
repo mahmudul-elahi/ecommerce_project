@@ -4,28 +4,22 @@ import React from 'react';
 import Link from 'next/link';
 import {
   Store,
-  Package,
   Layers,
   ShoppingBag,
+  ShoppingCart,
   DollarSign,
-  ArrowRight,
   ExternalLink,
-  Settings,
-  CreditCard,
-  TrendingUp,
-  Tag,
-  CheckCircle2,
-  Clock,
-  Sparkles,
   ChevronRight,
+  TrendingUp,
+  Package,
+  MapPin,
+  Phone,
+  Mail,
+  ArrowRight,
 } from 'lucide-react';
 import { useShopOwnerDashboardQuery, useMyShopQuery } from '../../../hooks/useShopOwner';
 import { useAuth } from '../../../context/AuthContext';
-import {
-  formatCompactCurrency,
-  formatCompactNumber,
-  formatExactCurrency,
-} from '../../../utils/formatters';
+import { formatPrice, formatCompactNumber } from '../../../utils/formatters';
 
 export default function ShopOwnerDashboardPage() {
   const { user } = useAuth();
@@ -55,347 +49,280 @@ export default function ShopOwnerDashboardPage() {
   const recentOrders = dashboardData?.recent_orders || [];
 
   return (
-    <div className="space-y-7 pb-10">
-      {/* 1. BankDash Metric Cards Row */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-        {/* Card 1: My Products Listed */}
-        <div className="bg-white rounded-[25px] p-6 flex items-center gap-5 border-0 shadow-sm transition-all hover:shadow-md">
-          <div className="w-16 h-16 rounded-full bg-[#FFF5D9] flex items-center justify-center flex-shrink-0 text-[#FFBB38]">
-            <ShoppingBag className="w-7 h-7" />
+    <div className="space-y-6 pb-10">
+      {/* 1. Header Banner */}
+      <div className="bg-white rounded-[20px] p-6 border border-[#E6EFF5]/60 shadow-xs flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div>
+          <h1 className="text-xl font-bold text-[#343C6A]">
+            {shop?.name || 'My Store Dashboard'}
+          </h1>
+          <p className="text-xs text-[#718EBF] mt-1">
+            Welcome back, {user?.name || 'Merchant'}! Here is your current store summary.
+          </p>
+        </div>
+
+        {shop?.slug && (
+          <Link
+            href={`/shop/${shop.slug}`}
+            target="_blank"
+            className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-[#FAF3EA] hover:bg-[#F4E8D3] text-[#B88E2F] text-xs font-semibold transition-colors"
+          >
+            <span>View Public Storefront</span>
+            <ExternalLink className="w-3.5 h-3.5" />
+          </Link>
+        )}
+      </div>
+
+      {/* 2. Key Metrics Row */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+        {/* Card 1: Active Listings */}
+        <div className="bg-white rounded-[20px] p-5 border border-[#E6EFF5]/60 shadow-xs flex items-center gap-4">
+          <div className="w-14 h-14 rounded-2xl bg-[#FFF5D9] flex items-center justify-center flex-shrink-0 text-[#FFBB38]">
+            <ShoppingBag className="w-6 h-6" />
           </div>
           <div>
             <span className="text-xs font-semibold uppercase tracking-wider text-[#718EBF]">
-              My Active Listings
+              Active Listings
             </span>
-            <div
-              className="text-2xl lg:text-[28px] font-bold text-[#343C6A] mt-1 font-inter"
-              title={`${stats.my_products_count ?? 0} active listings`}
-            >
+            <div className="text-2xl font-bold text-[#343C6A] mt-0.5">
               {formatCompactNumber(stats.my_products_count ?? 0)}
             </div>
-            <div className="text-xs text-[#16DBAA] font-semibold mt-0.5 flex items-center gap-1">
-              <TrendingUp className="w-3.5 h-3.5" />
-              <span>Visible in storefront</span>
+            <div className="text-[11px] text-[#16DBAA] font-medium flex items-center gap-1 mt-0.5">
+              <TrendingUp className="w-3 h-3" />
+              <span>Visible to customers</span>
             </div>
           </div>
         </div>
 
         {/* Card 2: Shared Catalog Items */}
-        <div className="bg-white rounded-[25px] p-6 flex items-center gap-5 border-0 shadow-sm transition-all hover:shadow-md">
-          <div className="w-16 h-16 rounded-full bg-[#E7EDFF] flex items-center justify-center flex-shrink-0 text-[#396AFF]">
-            <Layers className="w-7 h-7" />
+        <div className="bg-white rounded-[20px] p-5 border border-[#E6EFF5]/60 shadow-xs flex items-center gap-4">
+          <div className="w-14 h-14 rounded-2xl bg-[#E7EDFF] flex items-center justify-center flex-shrink-0 text-[#396AFF]">
+            <Layers className="w-6 h-6" />
           </div>
           <div>
             <span className="text-xs font-semibold uppercase tracking-wider text-[#718EBF]">
-              Shared Catalog
+              Catalog Items
             </span>
-            <div
-              className="text-2xl lg:text-[28px] font-bold text-[#343C6A] mt-1 font-inter"
-              title={`${stats.total_catalog_count ?? 0} shared products`}
-            >
+            <div className="text-2xl font-bold text-[#343C6A] mt-0.5">
               {formatCompactNumber(stats.total_catalog_count ?? 0)}
             </div>
-            <div className="text-xs text-[#718EBF] mt-0.5">
-              Ready to add to store
+            <div className="text-[11px] text-[#718EBF] mt-0.5">
+              Available to list
             </div>
           </div>
         </div>
 
-        {/* Card 3: Orders Count */}
-        <div className="bg-white rounded-[25px] p-6 flex items-center gap-5 border-0 shadow-sm transition-all hover:shadow-md">
-          <div className="w-16 h-16 rounded-full bg-[#FFE0EB] flex items-center justify-center flex-shrink-0 text-[#FF82AC]">
-            <CreditCard className="w-7 h-7" />
+        {/* Card 3: Total Orders */}
+        <div className="bg-white rounded-[20px] p-5 border border-[#E6EFF5]/60 shadow-xs flex items-center gap-4">
+          <div className="w-14 h-14 rounded-2xl bg-[#FFE0EB] flex items-center justify-center flex-shrink-0 text-[#FF82AC]">
+            <ShoppingCart className="w-6 h-6" />
           </div>
           <div>
             <span className="text-xs font-semibold uppercase tracking-wider text-[#718EBF]">
               Customer Orders
             </span>
-            <div
-              className="text-2xl lg:text-[28px] font-bold text-[#343C6A] mt-1 font-inter"
-              title={`${stats.total_orders ?? 0} orders`}
-            >
+            <div className="text-2xl font-bold text-[#343C6A] mt-0.5">
               {formatCompactNumber(stats.total_orders ?? 0)}
             </div>
-            <div className="text-xs text-[#16DBAA] font-semibold mt-0.5 flex items-center gap-1">
-              <TrendingUp className="w-3.5 h-3.5" />
-              <span>Paid & processed</span>
+            <div className="text-[11px] text-[#718EBF] mt-0.5">
+              All-time orders
             </div>
           </div>
         </div>
 
-        {/* Card 4: Store Revenue */}
-        <div className="bg-white rounded-[25px] p-6 flex items-center gap-5 border-0 shadow-sm transition-all hover:shadow-md">
-          <div className="w-16 h-16 rounded-full bg-[#DCFAF8] flex items-center justify-center flex-shrink-0 text-[#16DBCC]">
-            <DollarSign className="w-7 h-7" />
+        {/* Card 4: Total Revenue */}
+        <div className="bg-white rounded-[20px] p-5 border border-[#E6EFF5]/60 shadow-xs flex items-center gap-4">
+          <div className="w-14 h-14 rounded-2xl bg-[#DCFAF8] flex items-center justify-center flex-shrink-0 text-[#16DBCC]">
+            <DollarSign className="w-6 h-6" />
           </div>
           <div>
             <span className="text-xs font-semibold uppercase tracking-wider text-[#718EBF]">
               Total Revenue
             </span>
-            <div
-              className="text-2xl lg:text-[28px] font-bold text-[#343C6A] mt-1 font-inter"
-              title={formatExactCurrency(stats.total_revenue || 0)}
-            >
-              {formatCompactCurrency(stats.total_revenue || 0)}
+            <div className="text-2xl font-bold text-[#343C6A] mt-0.5">
+              {formatPrice(stats.total_revenue || 0)}
             </div>
-            <div className="text-xs text-[#718EBF] mt-0.5">
-              Settled gross earnings
+            <div className="text-[11px] text-[#16DBAA] font-medium mt-0.5">
+              Settled store sales
             </div>
           </div>
         </div>
       </div>
 
-      {/* 2. Middle Row: BankDash My Cards & Recent Orders */}
+      {/* 3. Main Content: Recent Orders & Quick Actions */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {/* Left 2 Cols: BankDash Credit Cards */}
+        {/* Left Column (2 cols): Recent Orders Table */}
         <div className="lg:col-span-2 space-y-4">
           <div className="flex items-center justify-between">
-            <h2 className="text-[22px] font-bold text-[#343C6A] font-inter">
-              Merchant Balance & Payout
-            </h2>
-            <Link
-              href="/shop-owner/settings"
-              className="text-sm font-semibold text-[#B88E2F] hover:underline"
-            >
-              Payout Settings
-            </Link>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {/* Furniro Luxury Gold Gradient Card */}
-            <div className="rounded-[25px] p-6 text-white bg-gradient-to-tr from-[#694F12] via-[#B88E2F] to-[#D4AF37] shadow-lg shadow-amber-900/15 flex flex-col justify-between min-h-[220px]">
-              <div className="flex items-start justify-between">
-                <div>
-                  <span className="text-xs text-white/75 font-medium">Available Balance</span>
-                  <div
-                    className="text-2xl font-bold font-inter mt-1"
-                    title={formatExactCurrency(stats.total_revenue || 0)}
-                  >
-                    {formatCompactCurrency(stats.total_revenue || 0)}
-                  </div>
-                </div>
-                <div className="w-9 h-7 rounded-md bg-white/20 border border-white/30 flex items-center justify-center">
-                  <div className="w-4 h-3 border border-white/60 rounded-xs" />
-                </div>
-              </div>
-
-              <div className="grid grid-cols-2 gap-4 my-3 text-xs text-white/85">
-                <div>
-                  <span className="block text-[10px] text-white/70 uppercase">Store Name</span>
-                  <span className="font-semibold text-sm truncate block">{shop?.name || 'My Store'}</span>
-                </div>
-                <div>
-                  <span className="block text-[10px] text-white/70 uppercase">Valid Thru</span>
-                  <span className="font-semibold text-sm">11/29</span>
-                </div>
-              </div>
-
-              <div className="pt-3 border-t border-white/20 flex items-center justify-between text-sm tracking-widest font-mono">
-                <span>5412 **** **** 8820</span>
-                <div className="flex -space-x-2">
-                  <div className="w-6 h-6 rounded-full bg-white/40" />
-                  <div className="w-6 h-6 rounded-full bg-white/25" />
-                </div>
-              </div>
-            </div>
-
-            {/* White BankDash Card */}
-            <div className="rounded-[25px] p-6 bg-white border border-[#DFEAF2] flex flex-col justify-between min-h-[220px]">
-              <div className="flex items-start justify-between">
-                <div>
-                  <span className="text-xs text-[#718EBF] font-medium">Next Payout Cycle</span>
-                  <div
-                    className="text-2xl font-bold text-[#343C6A] font-inter mt-1"
-                    title={formatExactCurrency((Number(stats.total_revenue || 0) * 0.95))}
-                  >
-                    {formatCompactCurrency((Number(stats.total_revenue || 0) * 0.95))}
-                  </div>
-                </div>
-                <div className="w-9 h-7 rounded-md bg-slate-100 border border-slate-200 flex items-center justify-center">
-                  <div className="w-4 h-3 border border-slate-400 rounded-xs" />
-                </div>
-              </div>
-
-              <div className="grid grid-cols-2 gap-4 my-3 text-xs">
-                <div>
-                  <span className="block text-[10px] text-[#718EBF] uppercase">Payout Schedule</span>
-                  <span className="font-semibold text-sm text-[#343C6A]">Weekly (Monday)</span>
-                </div>
-                <div>
-                  <span className="block text-[10px] text-[#718EBF] uppercase">Method</span>
-                  <span className="font-semibold text-sm text-[#343C6A]">Bank Wire</span>
-                </div>
-              </div>
-
-              <div className="pt-3 border-t border-[#F2F4F7] flex items-center justify-between text-sm tracking-widest font-mono text-[#343C6A]">
-                <span>Routing: *****492</span>
-                <div className="flex -space-x-2">
-                  <div className="w-6 h-6 rounded-full bg-[#B88E2F]/30" />
-                  <div className="w-6 h-6 rounded-full bg-[#B88E2F]/20" />
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* Right 1 Col: Recent Orders */}
-        <div className="space-y-4">
-          <div className="flex items-center justify-between">
-            <h2 className="text-[22px] font-bold text-[#343C6A] font-inter">
-              Recent Transaction
-            </h2>
+            <h2 className="text-lg font-bold text-[#343C6A]">Recent Customer Orders</h2>
             <Link
               href="/shop-owner/orders"
-              className="text-xs font-semibold text-[#B88E2F] hover:underline"
+              className="text-xs font-semibold text-[#B88E2F] hover:underline flex items-center gap-1"
             >
-              See All
+              <span>View All Orders</span>
+              <ChevronRight className="w-3.5 h-3.5" />
             </Link>
           </div>
 
-          <div className="bg-white rounded-[25px] p-6 space-y-5 border-0 shadow-sm min-h-[220px]">
+          <div className="bg-white rounded-[20px] p-5 border border-[#E6EFF5]/60 shadow-xs overflow-hidden">
             {recentOrders.length === 0 ? (
-              <div className="text-center py-8 text-[#718EBF] text-sm">
-                No orders received yet
+              <div className="py-12 flex flex-col items-center justify-center text-center">
+                <div className="w-12 h-12 rounded-full bg-[#FAF3EA] flex items-center justify-center text-[#B88E2F] mb-3">
+                  <Package className="w-6 h-6" />
+                </div>
+                <h3 className="text-sm font-semibold text-[#343C6A]">No orders received yet</h3>
+                <p className="text-xs text-[#718EBF] max-w-sm mt-1">
+                  When customers purchase your listed items from your storefront, they will be listed here.
+                </p>
+                <Link
+                  href="/shop-owner/catalog"
+                  className="mt-4 px-4 py-2 rounded-xl bg-[#B88E2F] text-white text-xs font-semibold hover:bg-[#967125] transition-colors"
+                >
+                  Browse Shared Catalog to Add Products
+                </Link>
               </div>
             ) : (
-              recentOrders.slice(0, 3).map((ord) => (
-                <div key={ord.id} className="flex items-center justify-between gap-3">
-                  <div className="flex items-center gap-3.5">
-                    <div className="w-12 h-12 rounded-full bg-[#FFF5D9] text-[#FFBB38] flex items-center justify-center flex-shrink-0">
-                      <CreditCard className="w-5 h-5" />
-                    </div>
-                    <div>
-                      <div className="text-sm font-semibold text-[#232323] truncate max-w-[130px]">
-                        Order #{ord.order_number || ord.id}
-                      </div>
-                      <div className="text-xs text-[#718EBF]">
-                        {ord.created_at ? ord.created_at.slice(0, 10) : 'Recent'}
-                      </div>
-                    </div>
-                  </div>
-                  <div className="text-right">
-                    <div className="text-sm font-semibold text-[#41D4A8]">
-                      +${Number(ord.total_amount).toFixed(2)}
-                    </div>
-                    <div className="text-[11px] text-[#718EBF] capitalize">
-                      {ord.status}
-                    </div>
-                  </div>
-                </div>
-              ))
+              <div className="overflow-x-auto">
+                <table className="w-full text-left text-sm text-[#343C6A]">
+                  <thead>
+                    <tr className="border-b border-[#E6EFF5] text-xs font-semibold uppercase tracking-wider text-[#718EBF]">
+                      <th className="pb-3">Order Number</th>
+                      <th className="pb-3">Customer</th>
+                      <th className="pb-3">Date</th>
+                      <th className="pb-3">Total</th>
+                      <th className="pb-3 text-right">Status</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-[#F4F6F8]">
+                    {recentOrders.map((ord) => (
+                      <tr key={ord.id} className="hover:bg-[#F9FAFC] transition-colors">
+                        <td className="py-3.5 font-semibold text-[#343C6A]">
+                          #{ord.order_number || ord.id}
+                        </td>
+                        <td className="py-3.5">
+                          <div className="font-medium text-xs text-[#343C6A]">
+                            {ord.customer_name || 'Customer'}
+                          </div>
+                          {ord.customer_phone && (
+                            <div className="text-[11px] text-[#718EBF]">{ord.customer_phone}</div>
+                          )}
+                        </td>
+                        <td className="py-3.5 text-xs text-[#718EBF]">
+                          {ord.created_at ? new Date(ord.created_at).toLocaleDateString() : 'Recent'}
+                        </td>
+                        <td className="py-3.5 font-semibold text-xs text-[#343C6A]">
+                          {formatPrice(ord.total_amount)}
+                        </td>
+                        <td className="py-3.5 text-right">
+                          <span
+                            className={`inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold ${
+                              ord.status === 'completed'
+                                ? 'bg-emerald-50 text-emerald-700'
+                                : ord.status === 'cancelled'
+                                ? 'bg-rose-50 text-rose-700'
+                                : 'bg-amber-50 text-amber-700'
+                            }`}
+                          >
+                            {ord.status || 'pending'}
+                          </span>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
             )}
           </div>
         </div>
-      </div>
 
-      {/* 3. BankDash Weekly Activity & Quick Catalog Actions */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {/* Weekly Activity Dual Bar Chart */}
-        <div className="lg:col-span-2 space-y-4">
-          <div className="flex items-center justify-between">
-            <h2 className="text-[22px] font-bold text-[#343C6A] font-inter">
-              Weekly Activity
-            </h2>
-            <div className="flex items-center gap-6 text-xs text-[#718EBF]">
-              <div className="flex items-center gap-2">
-                <span className="w-3.5 h-3.5 rounded-full bg-[#B88E2F]" />
-                <span>Orders</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <span className="w-3.5 h-3.5 rounded-full bg-[#E2C889]" />
-                <span>Sales ($)</span>
-              </div>
-            </div>
-          </div>
-
-          <div className="bg-white rounded-[25px] p-7 border-0 shadow-sm">
-            <div className="h-56 flex items-end justify-between gap-3 pt-6 px-4">
-              {[
-                { day: 'Sat', ord: 50, vol: 70 },
-                { day: 'Sun', ord: 40, vol: 55 },
-                { day: 'Mon', ord: 80, vol: 95 },
-                { day: 'Tue', ord: 90, vol: 85 },
-                { day: 'Wed', ord: 60, vol: 75 },
-                { day: 'Thu', ord: 75, vol: 80 },
-                { day: 'Fri', ord: 85, vol: 90 },
-              ].map((item) => (
-                <div key={item.day} className="flex flex-col items-center gap-3 flex-1">
-                  <div className="flex items-end gap-2 h-44">
-                    <div
-                      style={{ height: `${item.ord}%` }}
-                      className="w-3.5 rounded-full bg-[#B88E2F] transition-all hover:opacity-80"
-                      title={`Orders: ${item.ord}%`}
-                    />
-                    <div
-                      style={{ height: `${item.vol}%` }}
-                      className="w-3.5 rounded-full bg-[#E2C889] transition-all hover:opacity-80"
-                      title={`Sales: ${item.vol}%`}
-                    />
-                  </div>
-                  <span className="text-xs text-[#718EBF] font-medium">{item.day}</span>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-
-        {/* Quick Actions Card */}
+        {/* Right Column (1 col): Store Summary & Quick Actions */}
         <div className="space-y-4">
-          <h2 className="text-[22px] font-bold text-[#343C6A] font-inter">
-            Quick Actions
-          </h2>
-          <div className="bg-white rounded-[25px] p-6 border-0 shadow-sm flex flex-col justify-between space-y-4 h-[300px]">
-            <div className="space-y-3">
-              <Link
-                href="/shop-owner/catalog"
-                className="p-4 rounded-2xl bg-[#F5F7FA] hover:bg-[#FAF3EA] transition-colors flex items-center justify-between group"
-              >
-                <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-full bg-[#FAF3EA] group-hover:bg-white text-[#B88E2F] flex items-center justify-center">
-                    <Layers className="w-5 h-5" />
-                  </div>
-                  <div>
-                    <div className="text-sm font-semibold text-[#343C6A]">Browse Shared Catalog</div>
-                    <div className="text-xs text-[#718EBF]">Add products with custom price</div>
-                  </div>
-                </div>
-                <ChevronRight className="w-4 h-4 text-[#718EBF] group-hover:text-[#B88E2F]" />
-              </Link>
+          <h2 className="text-lg font-bold text-[#343C6A]">Store Overview</h2>
 
-              <Link
-                href="/shop-owner/products"
-                className="p-4 rounded-2xl bg-[#F5F7FA] hover:bg-[#FFF5D9] transition-colors flex items-center justify-between group"
-              >
-                <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-full bg-[#FFF5D9] group-hover:bg-white text-[#FFBB38] flex items-center justify-center">
-                    <ShoppingBag className="w-5 h-5" />
-                  </div>
-                  <div>
-                    <div className="text-sm font-semibold text-[#343C6A]">Manage My Listings</div>
-                    <div className="text-xs text-[#718EBF]">Adjust prices, details & thumbnails</div>
-                  </div>
+          <div className="bg-white rounded-[20px] p-5 border border-[#E6EFF5]/60 shadow-xs space-y-4">
+            {/* Store Details */}
+            <div className="space-y-2.5 pb-4 border-b border-[#F2F4F7]">
+              <div>
+                <span className="text-[11px] uppercase tracking-wider text-[#718EBF] font-semibold">
+                  Store Name
+                </span>
+                <div className="text-base font-bold text-[#343C6A] mt-0.5">
+                  {shop?.name || 'My Store'}
                 </div>
-                <ChevronRight className="w-4 h-4 text-[#718EBF] group-hover:text-[#FFBB38]" />
-              </Link>
+              </div>
 
-              {shop?.slug && (
+              <div>
+                <span className="text-[11px] uppercase tracking-wider text-[#718EBF] font-semibold">
+                  Storefront URL
+                </span>
+                <div className="text-xs font-mono text-[#B88E2F] mt-0.5 font-semibold">
+                  /{shop?.slug || 'store'}
+                </div>
+              </div>
+
+              <div className="flex items-center justify-between pt-1">
+                <span className="text-xs text-[#718EBF]">Status</span>
+                <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-emerald-50 text-emerald-700">
+                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
+                  Active Storefront
+                </span>
+              </div>
+            </div>
+
+            {/* Quick Actions */}
+            <div>
+              <span className="text-[11px] uppercase tracking-wider text-[#718EBF] font-semibold block mb-2.5">
+                Quick Actions
+              </span>
+              <div className="space-y-2">
                 <Link
-                  href={`/shop/${shop.slug}`}
-                  target="_blank"
-                  className="p-4 rounded-2xl bg-[#F5F7FA] hover:bg-[#DCFAF8] transition-colors flex items-center justify-between group"
+                  href="/shop-owner/catalog"
+                  className="p-3 rounded-xl bg-[#F5F7FA] hover:bg-[#FAF3EA] transition-colors flex items-center justify-between group"
                 >
                   <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 rounded-full bg-[#DCFAF8] group-hover:bg-white text-[#16DBCC] flex items-center justify-center">
-                      <ExternalLink className="w-5 h-5" />
+                    <div className="w-8 h-8 rounded-lg bg-[#FAF3EA] group-hover:bg-white text-[#B88E2F] flex items-center justify-center">
+                      <Layers className="w-4 h-4" />
                     </div>
                     <div>
-                      <div className="text-sm font-semibold text-[#343C6A]">Open Live Storefront</div>
-                      <div className="text-xs text-[#718EBF]">See customer view of your shop</div>
+                      <div className="text-xs font-semibold text-[#343C6A]">Browse Catalog</div>
+                      <div className="text-[10px] text-[#718EBF]">Add products with custom price</div>
                     </div>
                   </div>
-                  <ChevronRight className="w-4 h-4 text-[#718EBF] group-hover:text-[#16DBCC]" />
+                  <ChevronRight className="w-4 h-4 text-[#718EBF] group-hover:text-[#B88E2F]" />
                 </Link>
-              )}
+
+                <Link
+                  href="/shop-owner/products"
+                  className="p-3 rounded-xl bg-[#F5F7FA] hover:bg-[#FFF5D9] transition-colors flex items-center justify-between group"
+                >
+                  <div className="flex items-center gap-3">
+                    <div className="w-8 h-8 rounded-lg bg-[#FFF5D9] group-hover:bg-white text-[#FFBB38] flex items-center justify-center">
+                      <ShoppingBag className="w-4 h-4" />
+                    </div>
+                    <div>
+                      <div className="text-xs font-semibold text-[#343C6A]">Manage My Listings</div>
+                      <div className="text-[10px] text-[#718EBF]">Edit prices, stock & details</div>
+                    </div>
+                  </div>
+                  <ChevronRight className="w-4 h-4 text-[#718EBF] group-hover:text-[#FFBB38]" />
+                </Link>
+
+                <Link
+                  href="/shop-owner/settings"
+                  className="p-3 rounded-xl bg-[#F5F7FA] hover:bg-[#E7EDFF] transition-colors flex items-center justify-between group"
+                >
+                  <div className="flex items-center gap-3">
+                    <div className="w-8 h-8 rounded-lg bg-[#E7EDFF] group-hover:bg-white text-[#396AFF] flex items-center justify-center">
+                      <Store className="w-4 h-4" />
+                    </div>
+                    <div>
+                      <div className="text-xs font-semibold text-[#343C6A]">Store Branding</div>
+                      <div className="text-[10px] text-[#718EBF]">Configure logo, banner & contacts</div>
+                    </div>
+                  </div>
+                  <ChevronRight className="w-4 h-4 text-[#718EBF] group-hover:text-[#396AFF]" />
+                </Link>
+              </div>
             </div>
           </div>
         </div>
