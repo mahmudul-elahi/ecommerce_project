@@ -7,12 +7,7 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { toast } from 'sonner';
-import {
-  Lock,
-  Mail,
-  ArrowRight,
-  AlertCircle,
-} from 'lucide-react';
+import { AlertCircle, ArrowRight } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 
 const loginSchema = z.object({
@@ -32,6 +27,7 @@ export default function LoginPage() {
   const {
     register,
     handleSubmit,
+    setValue,
     formState: { errors, isSubmitting },
   } = useForm({
     resolver: zodResolver(loginSchema),
@@ -60,44 +56,47 @@ export default function LoginPage() {
     }
   };
 
+  const handleQuickLogin = (email, pass) => {
+    setValue('email', email, { shouldValidate: true });
+    setValue('password', pass, { shouldValidate: true });
+  };
+
   return (
-    <div className="min-h-[85vh] flex items-center justify-center py-16 px-4 bg-[#FAF3EA]/40">
+    <div className="min-h-[85vh] flex items-center justify-center py-16 px-4 bg-[#FAF3EA]/50">
       <div className="w-full max-w-xl bg-white p-8 sm:p-12 shadow-sm border-0 rounded-none">
-        {/* Header */}
+        {/* Brand Header */}
         <div className="text-center mb-8">
           <Link href="/" className="inline-flex items-center gap-2 mb-3">
-            <img
-              src="/images/furniro/imgMeubelHouseLogos05.png"
-              alt="Furniro Logo"
-              className="w-8 h-6 object-contain"
-            />
-            <span className="font-bold text-2xl tracking-tight text-black font-montserrat">
+            <span className="storefront-logo-mark">
+              <img
+                src="/images/furniro/imgMeubelHouseLogos05.png"
+                alt="Furniro Logo"
+              />
+            </span>
+            <span className="font-bold text-3xl tracking-tight text-black font-montserrat">
               Furniro
             </span>
           </Link>
-          <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-[#333333] font-montserrat">
+          <h1 className="text-2xl font-bold tracking-tight text-[#333333] font-montserrat mt-2">
             Log In
           </h1>
-          <p className="text-sm text-[#898989] mt-2">
-            Welcome back! Enter your credentials to access your account.
+          <p className="text-xs text-[#898989] mt-1.5">
+            Welcome back! Please enter your account credentials.
           </p>
         </div>
 
-        {/* Login Form */}
+        {/* Clean Login Form */}
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-6" noValidate>
           <div>
-            <label className="block text-xs font-semibold uppercase tracking-wider text-[#333333] mb-2.5">
+            <label className="block text-xs font-semibold uppercase tracking-wider text-[#333333] mb-2">
               Username or email address <span className="text-[#B88E2F]">*</span>
             </label>
-            <div className="relative">
-              <Mail className="w-4 h-4 text-[#9F9F9F] absolute left-4 top-1/2 -translate-y-1/2 pointer-events-none" />
-              <input
-                type="email"
-                {...register('email')}
-                className="w-full pl-12 pr-4 h-13 text-sm bg-[#FAF7F2] text-[#333333] placeholder-[#9F9F9F] rounded-none border-0 outline-none focus:bg-[#F5EDE1] transition-colors"
-                placeholder="e.g. admin@ecommerce.com"
-              />
-            </div>
+            <input
+              type="email"
+              {...register('email')}
+              className="w-full h-14 px-5 text-base bg-[#FAF7F2] text-[#333333] placeholder-[#9F9F9F] rounded-none border-0 outline-none focus:bg-[#F4EBD8] transition-colors"
+              placeholder="admin@ecommerce.com"
+            />
             {errors.email && (
               <div className="flex items-center space-x-1.5 text-xs text-rose-600 mt-2">
                 <AlertCircle className="w-3.5 h-3.5 flex-shrink-0" />
@@ -107,20 +106,17 @@ export default function LoginPage() {
           </div>
 
           <div>
-            <div className="flex items-center justify-between mb-2.5">
+            <div className="flex items-center justify-between mb-2">
               <label className="block text-xs font-semibold uppercase tracking-wider text-[#333333]">
                 Password <span className="text-[#B88E2F]">*</span>
               </label>
             </div>
-            <div className="relative">
-              <Lock className="w-4 h-4 text-[#9F9F9F] absolute left-4 top-1/2 -translate-y-1/2 pointer-events-none" />
-              <input
-                type="password"
-                {...register('password')}
-                className="w-full pl-12 pr-4 h-13 text-sm bg-[#FAF7F2] text-[#333333] placeholder-[#9F9F9F] rounded-none border-0 outline-none focus:bg-[#F5EDE1] transition-colors"
-                placeholder="••••••••"
-              />
-            </div>
+            <input
+              type="password"
+              {...register('password')}
+              className="w-full h-14 px-5 text-base bg-[#FAF7F2] text-[#333333] placeholder-[#9F9F9F] rounded-none border-0 outline-none focus:bg-[#F4EBD8] transition-colors"
+              placeholder="••••••••"
+            />
             {errors.password && (
               <div className="flex items-center space-x-1.5 text-xs text-rose-600 mt-2">
                 <AlertCircle className="w-3.5 h-3.5 flex-shrink-0" />
@@ -145,21 +141,51 @@ export default function LoginPage() {
           <button
             type="submit"
             disabled={isSubmitting}
-            className="w-full h-13 rounded-none bg-[#B88E2F] hover:bg-[#967125] text-white font-semibold text-sm tracking-widest uppercase transition-all flex items-center justify-center space-x-2 border-0 outline-none shadow-none cursor-pointer mt-2"
+            className="w-full h-14 rounded-none bg-[#B88E2F] hover:bg-[#967125] text-white font-semibold text-sm tracking-widest uppercase transition-all flex items-center justify-center space-x-2 border-0 outline-none shadow-none cursor-pointer mt-3"
           >
             {isSubmitting ? (
               <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
             ) : (
               <>
                 <span>Sign In</span>
-                <ArrowRight className="w-4 h-4" />
+                <ArrowRight className="w-4 h-4 ml-1" />
               </>
             )}
           </button>
+
+          {/* Quick Demo Autofill Pills */}
+          <div className="pt-5 border-t border-[#F2EDE4]">
+            <div className="text-[11px] font-semibold uppercase tracking-wider text-[#9F9F9F] mb-2.5 text-center">
+              Quick 1-Click Demo Logins
+            </div>
+            <div className="grid grid-cols-3 gap-2.5">
+              <button
+                type="button"
+                onClick={() => handleQuickLogin('admin@ecommerce.com', 'password')}
+                className="py-3 px-2 text-xs font-semibold bg-[#FAF7F2] hover:bg-[#B88E2F] hover:text-white text-[#333333] transition-colors rounded-none border-0 outline-none cursor-pointer text-center"
+              >
+                Admin
+              </button>
+              <button
+                type="button"
+                onClick={() => handleQuickLogin('furniro@ecommerce.com', 'password')}
+                className="py-3 px-2 text-xs font-semibold bg-[#FAF7F2] hover:bg-[#B88E2F] hover:text-white text-[#333333] transition-colors rounded-none border-0 outline-none cursor-pointer text-center"
+              >
+                Flagship
+              </button>
+              <button
+                type="button"
+                onClick={() => handleQuickLogin('partner@ecommerce.com', 'password')}
+                className="py-3 px-2 text-xs font-semibold bg-[#FAF7F2] hover:bg-[#B88E2F] hover:text-white text-[#333333] transition-colors rounded-none border-0 outline-none cursor-pointer text-center"
+              >
+                Boutique
+              </button>
+            </div>
+          </div>
         </form>
 
         {/* Footer Link */}
-        <div className="text-center pt-8 mt-6 border-t border-[#F2EDE4]">
+        <div className="text-center pt-6 mt-6 border-t border-[#F2EDE4]">
           <p className="text-xs text-[#898989]">
             Want to open a merchant store?{' '}
             <Link href="/register" className="font-semibold text-[#B88E2F] hover:underline">
