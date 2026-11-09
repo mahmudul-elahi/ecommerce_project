@@ -713,7 +713,7 @@
 .furniro-input, .furniro-textarea { 
   width: 100%; 
   border: 1px solid #d4cdc5 !important; 
-  border-radius: 10px !important; 
+  border-radius: 0 !important; 
   padding: 16px 20px; 
   font-size: 15px; 
   color: #1a1a1a; 
@@ -730,7 +730,7 @@
 .furniro-input:focus, .furniro-textarea:focus { 
   background: #ffffff !important; 
   border-color: var(--store-gold) !important;
-  box-shadow: 0 0 0 3px rgba(184, 142, 47, 0.15) !important; 
+  box-shadow: none !important; 
 }
 .furniro-select-wrapper {
   position: relative;
@@ -740,7 +740,7 @@
   width: 100%;
   height: 56px;
   border: 1px solid #d4cdc5 !important;
-  border-radius: 10px !important;
+  border-radius: 0 !important;
   padding: 0 48px 0 20px !important;
   font-size: 15px;
   color: #1a1a1a;
@@ -761,7 +761,7 @@
 .furniro-select:focus {
   background: #ffffff !important;
   border-color: var(--store-gold) !important;
-  box-shadow: 0 0 0 3px rgba(184, 142, 47, 0.15) !important;
+  box-shadow: none !important;
 }
 .furniro-select-arrow {
   position: absolute;
