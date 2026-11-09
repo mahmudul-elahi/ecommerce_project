@@ -12,14 +12,17 @@ import CartDrawer from '../components/common/CartDrawer';
 import { Toaster } from 'sonner';
 
 export const metadata = {
-  title: 'OmniShop | Discover independent shops',
-  description: 'Find thoughtful collections and shop directly from independent stores.',
+  title: 'Furniro | Interior Furniture & Handcrafted Living',
+  description: 'High-end interior crafted furniture, artisanal collections and multi-vendor storefronts.',
 };
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="en" className={`${poppins.variable} h-full scroll-smooth`}>
-      <body className="min-h-screen flex flex-col bg-slate-50 text-slate-800 antialiased font-sans selection:bg-blue-100 selection:text-blue-950">
+    <html lang="en" className={`${poppins.variable} h-full scroll-smooth`} suppressHydrationWarning>
+      <body
+        suppressHydrationWarning
+        className="min-h-screen flex flex-col bg-slate-50 text-slate-800 antialiased font-sans selection:bg-[#FAF3EA] selection:text-[#B88E2F]"
+      >
         <QueryProvider>
           <AuthProvider>
             <CartProvider>

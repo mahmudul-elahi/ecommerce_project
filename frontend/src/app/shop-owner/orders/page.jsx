@@ -77,7 +77,7 @@ export default function ShopOrdersPage() {
                       <span className="text-slate-300">•</span>
                       <span className="text-xs text-slate-500 flex items-center space-x-1 font-mono">
                         <Clock className="w-3.5 h-3.5 text-slate-400" />
-                        <span>{new Date(order.created_at).toLocaleString()}</span>
+                        <span>{order.created_at ? order.created_at.slice(0, 16).replace('T', ' ') : 'Recent'}</span>
                       </span>
                     </div>
 
@@ -109,14 +109,14 @@ export default function ShopOrdersPage() {
                         value={order.status}
                         onChange={(e) => handleStatusChange(order.id, e.target.value)}
                         disabled={updateStatusMutation.isPending}
-                        className={`text-xs font-mono uppercase px-3 py-1.5 rounded-xl border focus:outline-none focus:ring-1 focus:ring-blue-500 ${
+                        className={`text-xs font-mono uppercase px-3 py-1.5 rounded-none border-0 focus:outline-none focus:ring-1 focus:ring-[#B88E2F] ${
                           order.status === 'completed'
-                            ? 'bg-blue-50 text-blue-700 border-blue-100'
+                            ? 'bg-[#FAF3EA] text-[#B88E2F]'
                             : order.status === 'processing'
-                            ? 'bg-amber-50 text-amber-800 border-amber-200'
+                            ? 'bg-amber-50 text-amber-800'
                             : order.status === 'cancelled'
-                            ? 'bg-rose-50 text-rose-800 border-rose-200'
-                            : 'bg-slate-100 text-slate-800 border-slate-200'
+                            ? 'bg-rose-50 text-rose-800'
+                            : 'bg-slate-100 text-slate-800'
                         }`}
                       >
                         <option value="pending">Pending</option>

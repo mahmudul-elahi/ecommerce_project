@@ -90,7 +90,7 @@ export default function ShopSettingsPage() {
   if (isLoading) {
     return (
       <div className="min-h-[60vh] flex items-center justify-center">
-        <div className="w-10 h-10 border-4 border-[#2D60FF] border-t-transparent rounded-full animate-spin" />
+        <div className="w-10 h-10 border-4 border-[#B88E2F] border-t-transparent rounded-full animate-spin" />
       </div>
     );
   }
@@ -110,7 +110,7 @@ export default function ShopSettingsPage() {
           <Link
             href={`/shop/${previewSlug}`}
             target="_blank"
-            className="px-4 py-2 rounded-xl bg-[#F5F7FA] hover:bg-[#E7EDFF] text-[#2D60FF] text-xs font-semibold flex items-center gap-1.5 transition-colors"
+            className="px-4 py-2 rounded-xl bg-[#FAF3EA] hover:bg-[#F4E8D3] text-[#B88E2F] text-xs font-semibold flex items-center gap-1.5 transition-colors"
           >
             <span>Preview Public Storefront</span>
             <ExternalLink className="w-3.5 h-3.5" />
@@ -144,7 +144,7 @@ export default function ShopSettingsPage() {
             <div className="text-xs font-medium uppercase text-[#718EBF]">Live Header Preview</div>
             <div className="text-sm font-bold text-[#343C6A]">{watch('name') || 'Your Store Name'}</div>
           </div>
-          <span className="text-[10px] font-mono uppercase px-2.5 py-1 rounded-full bg-[#F5F7FA] text-[#2D60FF] font-semibold">
+          <span className="text-[10px] font-mono uppercase px-2.5 py-1 rounded-full bg-[#FAF3EA] text-[#B88E2F] font-semibold">
             /{previewSlug}
           </span>
         </div>
@@ -159,9 +159,9 @@ export default function ShopSettingsPage() {
             <input
               type="text"
               {...register('name')}
-              className={`w-full px-3.5 py-2.5 text-xs bg-slate-50 rounded-xl border ${
-                errors.name ? 'border-rose-400 focus:ring-rose-500' : 'border-slate-200 focus:ring-blue-500'
-              } focus:outline-none focus:ring-1 focus:bg-white text-slate-900`}
+              className={`w-full px-3.5 py-2.5 text-xs bg-slate-50 rounded-none border-0 ${
+                errors.name ? 'ring-1 ring-rose-400' : 'focus:ring-1 focus:ring-[#B88E2F]'
+              } focus:outline-none focus:bg-white text-slate-900`}
               placeholder="e.g. Apex Tech Essentials"
             />
             {errors.name && (
@@ -177,7 +177,7 @@ export default function ShopSettingsPage() {
             <textarea
               rows={3}
               {...register('description')}
-              className="w-full px-3.5 py-2.5 text-xs bg-slate-50 rounded-xl border border-slate-200 focus:outline-none focus:ring-1 focus:ring-blue-500 focus:bg-white text-slate-900"
+              className="w-full px-3.5 py-2.5 text-xs bg-slate-50 rounded-none border-0 focus:outline-none focus:ring-1 focus:ring-[#B88E2F] focus:bg-white text-slate-900"
               placeholder="Tell customers what your store is about..."
             />
           </div>
@@ -190,7 +190,7 @@ export default function ShopSettingsPage() {
                 <input
                   type="text"
                   {...register('phone')}
-                  className="w-full pl-9 pr-3.5 py-2.5 text-xs bg-slate-50 rounded-xl border border-slate-200 focus:outline-none focus:ring-1 focus:ring-blue-500 focus:bg-white text-slate-900"
+                  className="w-full pl-9 pr-3.5 py-2.5 text-xs bg-slate-50 rounded-none border-0 focus:outline-none focus:ring-1 focus:ring-[#B88E2F] focus:bg-white text-slate-900"
                   placeholder="+1 (555) 019-2834"
                 />
               </div>
@@ -203,9 +203,9 @@ export default function ShopSettingsPage() {
                 <input
                   type="email"
                   {...register('email')}
-                  className={`w-full pl-9 pr-3.5 py-2.5 text-xs bg-slate-50 rounded-xl border ${
-                    errors.email ? 'border-rose-400' : 'border-slate-200'
-                  } focus:outline-none focus:ring-1 focus:ring-blue-500 focus:bg-white text-slate-900`}
+                  className={`w-full pl-9 pr-3.5 py-2.5 text-xs bg-slate-50 rounded-none border-0 ${
+                    errors.email ? 'ring-1 ring-rose-400' : 'focus:ring-1 focus:ring-[#B88E2F]'
+                  } focus:outline-none focus:bg-white text-slate-900`}
                   placeholder="support@mystore.com"
                 />
               </div>
@@ -225,7 +225,7 @@ export default function ShopSettingsPage() {
               <input
                 type="text"
                 {...register('address')}
-                className="w-full pl-9 pr-3.5 py-2.5 text-xs bg-slate-50 rounded-xl border border-slate-200 focus:outline-none focus:ring-1 focus:ring-blue-500 focus:bg-white text-slate-900"
+                className="w-full pl-9 pr-3.5 py-2.5 text-xs bg-slate-50 rounded-none border-0 focus:outline-none focus:ring-1 focus:ring-[#B88E2F] focus:bg-white text-slate-900"
                 placeholder="123 Innovation Way, Suite 400, Austin, TX"
               />
             </div>
@@ -239,7 +239,7 @@ export default function ShopSettingsPage() {
                 <input
                   type="text"
                   {...register('logo')}
-                  className="w-full pl-9 pr-3.5 py-2.5 text-xs bg-slate-50 rounded-xl border border-slate-200 focus:outline-none focus:ring-1 focus:ring-blue-500 focus:bg-white text-slate-900"
+                  className="w-full pl-9 pr-3.5 py-2.5 text-xs bg-slate-50 rounded-none border-0 focus:outline-none focus:ring-1 focus:ring-[#B88E2F] focus:bg-white text-slate-900"
                   placeholder="https://images.unsplash.com/..."
                 />
               </div>
@@ -252,7 +252,7 @@ export default function ShopSettingsPage() {
                 <input
                   type="text"
                   {...register('banner')}
-                  className="w-full pl-9 pr-3.5 py-2.5 text-xs bg-slate-50 rounded-xl border border-slate-200 focus:outline-none focus:ring-1 focus:ring-blue-500 focus:bg-white text-slate-900"
+                  className="w-full pl-9 pr-3.5 py-2.5 text-xs bg-slate-50 rounded-none border-0 focus:outline-none focus:ring-1 focus:ring-[#B88E2F] focus:bg-white text-slate-900"
                   placeholder="https://images.unsplash.com/..."
                 />
               </div>
@@ -263,7 +263,7 @@ export default function ShopSettingsPage() {
             <button
               type="submit"
               disabled={mutation.isPending}
-              className="px-5 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-700 disabled:opacity-60 text-white text-xs font-semibold transition-all shadow-subtle flex items-center space-x-2 active:scale-[0.99]"
+              className="px-5 py-2.5 rounded-none bg-[#B88E2F] hover:bg-[#967125] disabled:opacity-60 text-white text-xs font-semibold transition-all shadow-none flex items-center space-x-2 border-0 outline-none cursor-pointer"
             >
               {mutation.isPending ? (
                 <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />

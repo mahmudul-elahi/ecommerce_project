@@ -168,7 +168,7 @@ export default function CategoryManagementPage() {
             placeholder="Search categories..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="w-full pl-11 pr-4 py-2.5 text-sm bg-[#F5F7FA] text-[#343C6A] placeholder-[#8BA3CB] rounded-full border-0 outline-none focus:ring-1 focus:ring-[#2D60FF]/40"
+            className="w-full pl-11 pr-4 py-2.5 text-sm bg-[#F5F7FA] text-[#343C6A] placeholder-[#8BA3CB] rounded-full border-0 outline-none focus:ring-1 focus:ring-[#B88E2F]/40"
           />
         </div>
 
@@ -179,7 +179,7 @@ export default function CategoryManagementPage() {
 
           <button
             onClick={handleOpenCreateModal}
-            className="px-5 py-2.5 rounded-xl bg-[#2D60FF] hover:bg-[#1814F3] text-white text-sm font-semibold transition-all shadow-sm flex items-center gap-2 border-0 outline-none cursor-pointer"
+            className="px-5 py-2.5 rounded-xl bg-[#B88E2F] hover:bg-[#967125] text-white text-sm font-semibold transition-all shadow-sm flex items-center gap-2 border-0 outline-none cursor-pointer"
           >
             <Plus className="w-4 h-4" />
             <span>New Category</span>
@@ -251,7 +251,7 @@ export default function CategoryManagementPage() {
                     <div className="inline-flex items-center space-x-1">
                       <button
                         onClick={() => handleOpenEditModal(cat)}
-                        className="p-1.5 text-slate-500 hover:text-blue-600 hover:bg-slate-100 rounded-md"
+                        className="p-1.5 text-slate-500 hover:text-[#B88E2F] hover:bg-slate-100 rounded-md"
                         title="Edit"
                       >
                         <Edit2 className="w-3.5 h-3.5" />
@@ -288,7 +288,7 @@ export default function CategoryManagementPage() {
             <input
               type="text"
               {...register('name')}
-              className="w-full px-3 py-2 text-xs bg-slate-50 border border-slate-200 rounded-xl text-slate-900"
+              className="w-full px-3 py-2 text-xs bg-slate-50 border-0 rounded-none text-slate-900 focus:outline-none focus:ring-1 focus:ring-[#B88E2F]"
               placeholder="e.g. Dining, Living, Bedroom, Outdoor..."
             />
             {errors.name && (
@@ -301,7 +301,7 @@ export default function CategoryManagementPage() {
             <textarea
               rows={2}
               {...register('description')}
-              className="w-full px-3 py-2 text-xs bg-slate-50 border border-slate-200 rounded-xl text-slate-900"
+              className="w-full px-3 py-2 text-xs bg-slate-50 border-0 rounded-none text-slate-900 focus:outline-none focus:ring-1 focus:ring-[#B88E2F]"
               placeholder="Curated collections for modern homes..."
             />
           </div>
@@ -313,7 +313,7 @@ export default function CategoryManagementPage() {
             </label>
             <div className="flex items-center gap-3">
               {imagePreview && (
-                <div className="w-16 h-16 rounded-lg overflow-hidden border border-slate-200 bg-slate-100 flex-shrink-0">
+                <div className="w-16 h-16 rounded-none overflow-hidden bg-slate-100 flex-shrink-0 shadow-xs">
                   <img src={imagePreview} alt="Preview" className="w-full h-full object-cover" />
                 </div>
               )}
@@ -322,7 +322,7 @@ export default function CategoryManagementPage() {
                   type="file"
                   accept="image/*"
                   onChange={handleFileChange}
-                  className="w-full text-xs text-slate-500 file:mr-2 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100 cursor-pointer"
+                  className="w-full text-xs text-slate-500 file:mr-2 file:py-1.5 file:px-3 file:rounded-none file:border-0 file:text-xs file:font-semibold file:bg-[#FAF3EA] file:text-[#B88E2F] hover:file:bg-[#F4E8D3] cursor-pointer"
                 />
                 <p className="text-[10px] text-slate-400 mt-1">
                   Laravel 13 automatically optimizes and converts uploaded images to WebP.
@@ -336,7 +336,7 @@ export default function CategoryManagementPage() {
               type="checkbox"
               id="cat_active"
               {...register('is_active')}
-              className="rounded text-slate-900"
+              className="rounded-none border-0 text-slate-900 focus:ring-[#B88E2F]"
             />
             <label htmlFor="cat_active" className="text-xs font-semibold text-slate-800 cursor-pointer">
               Active & Visible on Customer Storefront
@@ -347,14 +347,14 @@ export default function CategoryManagementPage() {
             <button
               type="button"
               onClick={() => setIsModalOpen(false)}
-              className="px-3.5 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-xs font-semibold text-slate-700"
+              className="px-3.5 py-2 rounded-none bg-slate-100 hover:bg-slate-200 text-xs font-semibold text-slate-700 border-0"
             >
               Cancel
             </button>
             <button
               type="submit"
               disabled={saveMutation.isPending}
-              className="px-4 py-2 rounded-xl bg-blue-600 hover:bg-blue-700 disabled:opacity-60 text-white text-xs font-semibold shadow-subtle"
+              className="px-4 py-2 rounded-none bg-[#B88E2F] hover:bg-[#967125] disabled:opacity-60 text-white text-xs font-semibold shadow-none border-0 outline-none cursor-pointer"
             >
               {saveMutation.isPending ? 'Saving...' : editingCategory ? 'Save Changes' : 'Create Category'}
             </button>

@@ -26,7 +26,7 @@ export default function AdminDashboardPage() {
   if (isLoading) {
     return (
       <div className="min-h-[60vh] flex items-center justify-center">
-        <div className="w-10 h-10 border-4 border-[#2D60FF] border-t-transparent rounded-full animate-spin" />
+        <div className="w-10 h-10 border-4 border-[#B88E2F] border-t-transparent rounded-full animate-spin" />
       </div>
     );
   }
@@ -125,18 +125,18 @@ export default function AdminDashboardPage() {
             </h2>
             <Link
               href="/admin/shops"
-              className="text-sm font-semibold text-[#343C6A] hover:text-[#2D60FF] transition-colors"
+              className="text-sm font-semibold text-[#343C6A] hover:text-[#B88E2F] transition-colors"
             >
               See All
             </Link>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {/* Blue Gradient BankDash Card */}
-            <div className="rounded-[25px] p-6 text-white bg-gradient-to-tr from-[#0A06F4] via-[#2D60FF] to-[#4C49ED] shadow-lg shadow-blue-500/10 flex flex-col justify-between min-h-[220px]">
+            {/* Furniro Luxury Gold Gradient Card */}
+            <div className="rounded-[25px] p-6 text-white bg-gradient-to-tr from-[#694F12] via-[#B88E2F] to-[#D4AF37] shadow-lg shadow-amber-900/15 flex flex-col justify-between min-h-[220px]">
               <div className="flex items-start justify-between">
                 <div>
-                  <span className="text-xs text-white/70 font-medium">Balance</span>
+                  <span className="text-xs text-white/75 font-medium">Balance</span>
                   <div className="text-2xl font-bold font-inter mt-1">
                     ${Number(stats.total_revenue || 0).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                   </div>
@@ -147,20 +147,20 @@ export default function AdminDashboardPage() {
                 </div>
               </div>
 
-              <div className="grid grid-cols-2 gap-4 my-3 text-xs text-white/80">
+              <div className="grid grid-cols-2 gap-4 my-3 text-xs text-white/85">
                 <div>
-                  <span className="block text-[10px] text-white/60 uppercase">Card Holder</span>
+                  <span className="block text-[10px] text-white/70 uppercase">Card Holder</span>
                   <span className="font-semibold text-sm">Furniro Admin</span>
                 </div>
                 <div>
-                  <span className="block text-[10px] text-white/60 uppercase">Valid Thru</span>
+                  <span className="block text-[10px] text-white/70 uppercase">Valid Thru</span>
                   <span className="font-semibold text-sm">12/28</span>
                 </div>
               </div>
 
-              <div className="pt-3 border-t border-white/15 flex items-center justify-between text-sm tracking-widest font-mono">
+              <div className="pt-3 border-t border-white/20 flex items-center justify-between text-sm tracking-widest font-mono">
                 <span>3778 **** **** 1234</span>
-                {/* Bank Mastercard Circles */}
+                {/* Mastercard Circles */}
                 <div className="flex -space-x-2">
                   <div className="w-6 h-6 rounded-full bg-white/40" />
                   <div className="w-6 h-6 rounded-full bg-white/25" />
@@ -196,8 +196,8 @@ export default function AdminDashboardPage() {
               <div className="pt-3 border-t border-[#F2F4F7] flex items-center justify-between text-sm tracking-widest font-mono text-[#343C6A]">
                 <span>4528 **** **** 9821</span>
                 <div className="flex -space-x-2">
-                  <div className="w-6 h-6 rounded-full bg-[#2D60FF]/30" />
-                  <div className="w-6 h-6 rounded-full bg-[#2D60FF]/20" />
+                  <div className="w-6 h-6 rounded-full bg-[#B88E2F]/30" />
+                  <div className="w-6 h-6 rounded-full bg-[#B88E2F]/20" />
                 </div>
               </div>
             </div>
@@ -259,11 +259,11 @@ export default function AdminDashboardPage() {
             </h2>
             <div className="flex items-center gap-6 text-xs text-[#718EBF]">
               <div className="flex items-center gap-2">
-                <span className="w-3.5 h-3.5 rounded-full bg-[#1814F3]" />
+                <span className="w-3.5 h-3.5 rounded-full bg-[#B88E2F]" />
                 <span>Orders</span>
               </div>
               <div className="flex items-center gap-2">
-                <span className="w-3.5 h-3.5 rounded-full bg-[#16DBCC]" />
+                <span className="w-3.5 h-3.5 rounded-full bg-[#E2C889]" />
                 <span>Volume ($)</span>
               </div>
             </div>
@@ -283,16 +283,16 @@ export default function AdminDashboardPage() {
               ].map((item) => (
                 <div key={item.day} className="flex flex-col items-center gap-3 flex-1">
                   <div className="flex items-end gap-2 h-44">
-                    {/* Orders bar */}
+                    {/* Orders bar - Furniro Gold */}
                     <div
                       style={{ height: `${item.ord}%` }}
-                      className="w-3.5 rounded-full bg-[#1814F3] transition-all hover:opacity-80"
+                      className="w-3.5 rounded-full bg-[#B88E2F] transition-all hover:opacity-80"
                       title={`Orders: ${item.ord}%`}
                     />
-                    {/* Volume bar */}
+                    {/* Volume bar - Champagne Gold */}
                     <div
                       style={{ height: `${item.vol}%` }}
-                      className="w-3.5 rounded-full bg-[#16DBCC] transition-all hover:opacity-80"
+                      className="w-3.5 rounded-full bg-[#E2C889] transition-all hover:opacity-80"
                       title={`Volume: ${item.vol}%`}
                     />
                   </div>
@@ -311,10 +311,10 @@ export default function AdminDashboardPage() {
           <div className="bg-white rounded-[25px] p-7 border-0 shadow-sm flex flex-col justify-between h-[300px]">
             <div className="space-y-3 my-auto">
               {[
-                { name: 'Dining Room', share: 38, color: '#343C6A' },
+                { name: 'Dining Room', share: 38, color: '#B88E2F' },
                 { name: 'Living Room', share: 32, color: '#FC7900' },
-                { name: 'Bedroom Suites', share: 20, color: '#1814F3' },
-                { name: 'Accents & Lighting', share: 10, color: '#FA00FF' },
+                { name: 'Bedroom Suites', share: 20, color: '#8E6913' },
+                { name: 'Accents & Lighting', share: 10, color: '#D4AF37' },
               ].map((c) => (
                 <div key={c.name} className="space-y-1">
                   <div className="flex items-center justify-between text-xs font-semibold text-[#343C6A]">
@@ -348,7 +348,7 @@ export default function AdminDashboardPage() {
           </h2>
           <Link
             href="/admin/shops"
-            className="text-sm font-semibold text-[#2D60FF] hover:underline flex items-center gap-1"
+            className="text-sm font-semibold text-[#B88E2F] hover:underline flex items-center gap-1"
           >
             <span>Manage All Stores</span>
             <ChevronRight className="w-4 h-4" />
@@ -370,7 +370,7 @@ export default function AdminDashboardPage() {
               {recentShops.map((shop) => (
                 <tr key={shop.id} className="hover:bg-[#F9FAFC] transition-colors">
                   <td className="py-4 font-semibold text-[#343C6A] flex items-center gap-3">
-                    <div className="w-10 h-10 rounded-full bg-[#E7EDFF] text-[#2D60FF] flex items-center justify-center font-bold text-sm">
+                    <div className="w-10 h-10 rounded-full bg-[#FAF3EA] text-[#B88E2F] flex items-center justify-center font-bold text-sm">
                       {shop.name ? shop.name.charAt(0).toUpperCase() : 'S'}
                     </div>
                     <div>
@@ -389,7 +389,7 @@ export default function AdminDashboardPage() {
                     <Link
                       href={`/shop/${shop.slug}`}
                       target="_blank"
-                      className="inline-flex items-center gap-1 text-xs font-semibold text-[#2D60FF] hover:underline"
+                      className="inline-flex items-center gap-1 text-xs font-semibold text-[#B88E2F] hover:underline"
                     >
                       <span>Preview</span>
                       <ExternalLink className="w-3.5 h-3.5" />

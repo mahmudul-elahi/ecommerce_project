@@ -237,7 +237,7 @@ export default function CatalogBrowsePage() {
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               placeholder="Search shared catalog by title, SKU..."
-              className="w-full pl-11 pr-4 py-2.5 text-sm bg-[#F5F7FA] text-[#343C6A] placeholder-[#8BA3CB] rounded-full border-0 outline-none focus:ring-1 focus:ring-[#2D60FF]/40"
+              className="w-full pl-11 pr-4 py-2.5 text-sm bg-[#F5F7FA] text-[#343C6A] placeholder-[#8BA3CB] rounded-full border-0 outline-none focus:ring-1 focus:ring-[#B88E2F]/40"
             />
           </div>
 
@@ -261,7 +261,7 @@ export default function CatalogBrowsePage() {
         <div className="flex items-center gap-3 w-full md:w-auto justify-between md:justify-end">
           <Link
             href="/shop-owner/products"
-            className="px-4 py-2.5 rounded-xl bg-[#F5F7FA] hover:bg-[#E7EDFF] text-[#343C6A] text-sm font-semibold transition-colors flex items-center gap-2"
+            className="px-4 py-2.5 rounded-none bg-[#F5F7FA] hover:bg-[#FAF3EA] text-[#343C6A] text-sm font-semibold transition-colors flex items-center gap-2"
           >
             <Package className="w-4 h-4 text-[#718EBF]" />
             <span>My Listings</span>
@@ -269,7 +269,7 @@ export default function CatalogBrowsePage() {
 
           <button
             onClick={handleOpenCreateModal}
-            className="px-5 py-2.5 rounded-xl bg-[#2D60FF] hover:bg-[#1814F3] text-white text-sm font-semibold transition-all shadow-sm flex items-center gap-2 border-0 outline-none cursor-pointer"
+            className="px-5 py-2.5 rounded-none bg-[#B88E2F] hover:bg-[#967125] text-white text-sm font-semibold transition-all shadow-none flex items-center gap-2 border-0 outline-none cursor-pointer"
           >
             <Plus className="w-4 h-4" />
             <span>Create Shared Product</span>
@@ -333,7 +333,7 @@ export default function CatalogBrowsePage() {
 
                     {/* Status badge */}
                     {alreadyInShop && (
-                      <span className="absolute top-3 right-3 px-2 py-0.5 rounded-md bg-blue-600 text-slate-50 text-[10px] font-mono uppercase shadow-xs flex items-center space-x-1">
+                      <span className="absolute top-3 right-3 px-2 py-0.5 rounded-none bg-[#B88E2F] text-white text-[10px] font-mono uppercase shadow-none flex items-center space-x-1">
                         <Check className="w-3 h-3" />
                         <span>In Store</span>
                       </span>
@@ -386,7 +386,7 @@ export default function CatalogBrowsePage() {
                   {alreadyInShop ? (
                     <Link
                       href="/shop-owner/products"
-                      className="w-full py-2.5 px-3 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-800 text-xs font-semibold flex items-center justify-center space-x-1.5 transition-colors border border-slate-200"
+                      className="w-full py-2.5 px-3 rounded-none bg-slate-100 hover:bg-slate-200 text-slate-800 text-xs font-semibold flex items-center justify-center space-x-1.5 transition-colors border-0"
                     >
                       <CheckCircle2 className="w-3.5 h-3.5 text-slate-700" />
                       <span>Customized in Store</span>
@@ -394,7 +394,7 @@ export default function CatalogBrowsePage() {
                   ) : (
                     <button
                       onClick={() => handleOpenAddModal(product)}
-                      className="w-full py-2.5 px-3 rounded-xl bg-blue-600 hover:bg-blue-700 text-slate-50 text-xs font-semibold flex items-center justify-center space-x-1.5 transition-colors shadow-xs"
+                      className="w-full py-2.5 px-3 rounded-none bg-[#B88E2F] hover:bg-[#967125] text-white text-xs font-semibold flex items-center justify-center space-x-1.5 transition-colors shadow-none border-0 outline-none cursor-pointer"
                     >
                       <Plus className="w-3.5 h-3.5" />
                       <span>Add to My Store</span>
@@ -439,7 +439,7 @@ export default function CatalogBrowsePage() {
                   step="0.01"
                   {...registerAdd('custom_price')}
                   placeholder={`Default: $${productToAdd.base_price}`}
-                  className="w-full px-3 py-2 text-xs bg-white rounded-xl border border-slate-200 focus:outline-none focus:ring-1 focus:ring-blue-500"
+                  className="w-full px-3 py-2 text-xs bg-slate-50 rounded-none border-0 focus:outline-none focus:ring-1 focus:ring-[#B88E2F]"
                 />
                 <span className="text-[10px] text-slate-500 mt-1 block">
                   Leave blank to use catalog base (${Number(productToAdd.base_price).toFixed(2)})
@@ -453,7 +453,7 @@ export default function CatalogBrowsePage() {
                 <input
                   type="number"
                   {...registerAdd('stock')}
-                  className="w-full px-3 py-2 text-xs bg-white rounded-xl border border-slate-200 focus:outline-none focus:ring-1 focus:ring-blue-500"
+                  className="w-full px-3 py-2 text-xs bg-slate-50 rounded-none border-0 focus:outline-none focus:ring-1 focus:ring-[#B88E2F]"
                 />
                 {errorsAdd.stock && (
                   <span className="text-[10px] text-rose-500 mt-1 block">{errorsAdd.stock.message}</span>
@@ -469,7 +469,7 @@ export default function CatalogBrowsePage() {
                 type="text"
                 {...registerAdd('custom_title')}
                 placeholder={`Leave blank to keep "${productToAdd.name}"`}
-                className="w-full px-3 py-2 text-xs bg-white rounded-xl border border-slate-200 focus:outline-none focus:ring-1 focus:ring-blue-500"
+                className="w-full px-3 py-2 text-xs bg-slate-50 rounded-none border-0 focus:outline-none focus:ring-1 focus:ring-[#B88E2F]"
               />
             </div>
 
@@ -481,7 +481,7 @@ export default function CatalogBrowsePage() {
                 rows={3}
                 {...registerAdd('custom_description')}
                 placeholder="Shop-specific promotional copy or warranty notes..."
-                className="w-full px-3 py-2 text-xs bg-white rounded-xl border border-slate-200 focus:outline-none focus:ring-1 focus:ring-blue-500"
+                className="w-full px-3 py-2 text-xs bg-slate-50 rounded-none border-0 focus:outline-none focus:ring-1 focus:ring-[#B88E2F]"
               />
             </div>
 
@@ -493,7 +493,7 @@ export default function CatalogBrowsePage() {
                 type="url"
                 {...registerAdd('custom_thumbnail')}
                 placeholder="https://example.com/custom-photo.jpg"
-                className="w-full px-3 py-2 text-xs bg-white rounded-xl border border-slate-200 focus:outline-none focus:ring-1 focus:ring-blue-500"
+                className="w-full px-3 py-2 text-xs bg-slate-50 rounded-none border-0 focus:outline-none focus:ring-1 focus:ring-[#B88E2F]"
               />
             </div>
 
@@ -501,14 +501,14 @@ export default function CatalogBrowsePage() {
               <button
                 type="button"
                 onClick={() => setIsAddModalOpen(false)}
-                className="px-4 py-2 rounded-xl text-xs font-medium text-slate-600 hover:bg-slate-100"
+                className="px-4 py-2 rounded-none text-xs font-medium text-slate-600 hover:bg-slate-100 border-0"
               >
                 Cancel
               </button>
               <button
                 type="submit"
                 disabled={isSubmittingAdd || addToShopMutation.isPending}
-                className="px-4 py-2 rounded-xl bg-blue-600 hover:bg-blue-700 text-slate-50 text-xs font-semibold shadow-xs disabled:opacity-50"
+                className="px-4 py-2 rounded-none bg-[#B88E2F] hover:bg-[#967125] text-white text-xs font-semibold shadow-none disabled:opacity-50 border-0 outline-none cursor-pointer"
               >
                 {isSubmittingAdd || addToShopMutation.isPending ? 'Adding to Store...' : 'Confirm & Add to Store'}
               </button>
@@ -524,8 +524,8 @@ export default function CatalogBrowsePage() {
         title="Create New Shared Product"
       >
         <form onSubmit={handleSubmitCreate(onCreateSubmit)} className="space-y-4">
-          <div className="bg-blue-50 border border-blue-200 rounded-xl p-3 text-sm text-blue-900 flex items-start space-x-2">
-            <Sparkles className="w-4 h-4 text-blue-700 flex-shrink-0 mt-0.5" />
+          <div className="bg-[#FAF3EA] rounded-none p-3 text-sm text-[#343C6A] flex items-start space-x-2 border-0">
+            <Sparkles className="w-4 h-4 text-[#B88E2F] flex-shrink-0 mt-0.5" />
             <div>
               <span className="font-semibold">One product, more places to sell:</span> New products are added to the catalog for other shop owners to discover and are listed in your shop right away.
             </div>
@@ -540,9 +540,9 @@ export default function CatalogBrowsePage() {
                 type="text"
                 {...registerCreate('name')}
                 placeholder="e.g. Minimalist Ceramic Cup"
-                className={`w-full px-3 py-2 text-xs bg-white rounded-xl border ${
-                  errorsCreate.name ? 'border-rose-400' : 'border-slate-200'
-                } focus:outline-none focus:ring-1 focus:ring-blue-500`}
+                className={`w-full px-3 py-2 text-xs bg-slate-50 rounded-none border-0 ${
+                  errorsCreate.name ? 'ring-1 ring-rose-400' : 'focus:ring-1 focus:ring-[#B88E2F]'
+                } focus:outline-none focus:bg-white`}
               />
               {errorsCreate.name && (
                 <span className="text-[10px] text-rose-500 mt-1 block">{errorsCreate.name.message}</span>
@@ -557,9 +557,9 @@ export default function CatalogBrowsePage() {
                 type="text"
                 {...registerCreate('sku')}
                 placeholder="e.g. CERAMIC-001"
-                className={`w-full px-3 py-2 text-xs bg-white rounded-xl border ${
-                  errorsCreate.sku ? 'border-rose-400' : 'border-slate-200'
-                } focus:outline-none focus:ring-1 focus:ring-blue-500`}
+                className={`w-full px-3 py-2 text-xs bg-slate-50 rounded-none border-0 ${
+                  errorsCreate.sku ? 'ring-1 ring-rose-400' : 'focus:ring-1 focus:ring-[#B88E2F]'
+                } focus:outline-none focus:bg-white`}
               />
               {errorsCreate.sku && (
                 <span className="text-[10px] text-rose-500 mt-1 block">{errorsCreate.sku.message}</span>
@@ -574,7 +574,7 @@ export default function CatalogBrowsePage() {
               </label>
               <select
                 {...registerCreate('category_id')}
-                className="w-full px-3 py-2 text-xs bg-white rounded-xl border border-slate-200"
+                className="w-full px-3 py-2 text-xs bg-slate-50 rounded-none border-0 focus:ring-1 focus:ring-[#B88E2F] outline-none"
               >
                 <option value="">-- Select Category --</option>
                 {dbCategories.map((c) => (
@@ -594,9 +594,9 @@ export default function CatalogBrowsePage() {
                 min="0"
                 {...registerCreate('base_price')}
                 placeholder="2500000"
-                className={`w-full px-3 py-2 text-xs bg-white rounded-xl border ${
-                  errorsCreate.base_price ? 'border-rose-400' : 'border-slate-200'
-                }`}
+                className={`w-full px-3 py-2 text-xs bg-slate-50 rounded-none border-0 ${
+                  errorsCreate.base_price ? 'ring-1 ring-rose-400' : 'focus:ring-1 focus:ring-[#B88E2F]'
+                } focus:outline-none focus:bg-white font-mono`}
               />
               {errorsCreate.base_price && (
                 <span className="text-[10px] text-rose-500 mt-1 block">{errorsCreate.base_price.message}</span>
@@ -614,7 +614,7 @@ export default function CatalogBrowsePage() {
                 min="0"
                 {...registerCreate('custom_price')}
                 placeholder="Optional (defaults to base price)"
-                className="w-full px-3 py-2 text-xs bg-white rounded-xl border border-slate-200"
+                className="w-full px-3 py-2 text-xs bg-slate-50 rounded-none border-0 focus:ring-1 focus:ring-[#B88E2F] outline-none font-mono"
               />
             </div>
 
@@ -624,8 +624,9 @@ export default function CatalogBrowsePage() {
               </label>
               <input
                 type="number"
+                min="0"
                 {...registerCreate('stock')}
-                className="w-full px-3 py-2 text-xs bg-white rounded-xl border border-slate-200"
+                className="w-full px-3 py-2 text-xs bg-slate-50 rounded-none border-0 focus:ring-1 focus:ring-[#B88E2F] outline-none font-mono"
               />
             </div>
           </div>
@@ -642,9 +643,9 @@ export default function CatalogBrowsePage() {
             </div>
 
             {createImagePreviews.length > 0 && (
-              <div className="flex flex-wrap gap-2.5 mb-2.5 p-2 bg-slate-50 rounded-xl border border-slate-200">
+              <div className="flex flex-wrap gap-2.5 mb-2.5 p-2 bg-slate-50 rounded-none border-0">
                 {createImagePreviews.map((src, idx) => (
-                  <div key={idx} className="relative w-16 h-16 rounded-lg overflow-hidden border border-slate-200 bg-white">
+                  <div key={idx} className="relative w-16 h-16 rounded-none overflow-hidden bg-white shadow-xs">
                     <img src={src} alt="" className="w-full h-full object-cover" />
                     {idx === 0 && (
                       <span className="absolute bottom-0 left-0 right-0 bg-[#B88E2F] text-white text-[8px] text-center font-bold">
@@ -663,7 +664,7 @@ export default function CatalogBrowsePage() {
               </div>
             )}
 
-            <label className="border-2 border-dashed border-slate-300 hover:border-blue-500 rounded-xl p-4 flex flex-col items-center justify-center cursor-pointer transition-colors bg-slate-50">
+            <label className="border-2 border-dashed border-slate-300 hover:border-[#B88E2F] rounded-none p-4 flex flex-col items-center justify-center cursor-pointer transition-colors bg-slate-50">
               <Upload className="w-5 h-5 text-slate-400 mb-1" />
               <span className="text-xs font-semibold text-slate-700">Click to select product images</span>
               <span className="text-[10px] text-slate-400 mt-0.5">PNG, JPG, WebP. Laravel 13 automatically optimizes each photo.</span>
@@ -685,7 +686,7 @@ export default function CatalogBrowsePage() {
               rows={3}
               {...registerCreate('description')}
               placeholder="Detailed description for the shared catalog..."
-              className="w-full px-3 py-2 text-xs bg-white rounded-xl border border-slate-200"
+              className="w-full px-3 py-2 text-xs bg-slate-50 rounded-none border-0 focus:ring-1 focus:ring-[#B88E2F] outline-none"
             />
           </div>
 
@@ -693,14 +694,14 @@ export default function CatalogBrowsePage() {
             <button
               type="button"
               onClick={() => setIsCreateModalOpen(false)}
-              className="px-4 py-2 rounded-xl text-xs font-medium text-slate-600 hover:bg-slate-100"
+              className="px-4 py-2 rounded-none text-xs font-medium text-slate-600 hover:bg-slate-100 border-0"
             >
               Cancel
             </button>
             <button
               type="submit"
               disabled={isSubmittingCreate || createSharedProductMutation.isPending}
-              className="px-4 py-2 rounded-xl bg-blue-600 hover:bg-blue-700 text-slate-50 text-xs font-semibold shadow-xs disabled:opacity-50"
+              className="px-4 py-2 rounded-none bg-[#B88E2F] hover:bg-[#967125] text-white text-xs font-semibold shadow-none disabled:opacity-50 border-0 outline-none cursor-pointer"
             >
               {isSubmittingCreate || createSharedProductMutation.isPending
                 ? 'Creating Product...'

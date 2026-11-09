@@ -169,7 +169,7 @@ export default function ShopManagementPage() {
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             placeholder="Search stores by name or email..."
-            className="w-full pl-11 pr-4 py-2.5 text-sm bg-[#F5F7FA] text-[#343C6A] placeholder-[#8BA3CB] rounded-full border-0 outline-none focus:ring-1 focus:ring-[#2D60FF]/40"
+            className="w-full pl-11 pr-4 py-2.5 text-sm bg-[#F5F7FA] text-[#343C6A] placeholder-[#8BA3CB] rounded-full border-0 outline-none focus:ring-1 focus:ring-[#B88E2F]/40"
           />
         </div>
 
@@ -180,7 +180,7 @@ export default function ShopManagementPage() {
 
           <button
             onClick={handleOpenCreateModal}
-            className="px-5 py-2.5 rounded-xl bg-[#2D60FF] hover:bg-[#1814F3] text-white text-sm font-semibold transition-all shadow-sm flex items-center gap-2 border-0 outline-none cursor-pointer"
+            className="px-5 py-2.5 rounded-xl bg-[#B88E2F] hover:bg-[#967125] text-white text-sm font-semibold transition-all shadow-sm flex items-center gap-2 border-0 outline-none cursor-pointer"
           >
             <Plus className="w-4 h-4" />
             <span>New Store</span>
@@ -260,7 +260,7 @@ export default function ShopManagementPage() {
                     <td className="px-5 py-4">
                       <span className={`inline-flex items-center px-2 py-0.5 rounded-md text-[10px] font-mono uppercase border ${
                         shop.status === 'active'
-                          ? 'bg-blue-50 text-blue-700 border-blue-100'
+                          ? 'bg-[#FAF3EA] text-[#B88E2F] border-[#ebd9c5]'
                           : shop.status === 'inactive'
                           ? 'bg-slate-100 text-slate-600 border-slate-200'
                           : 'bg-rose-50 text-rose-800 border-rose-200'
@@ -320,9 +320,9 @@ export default function ShopManagementPage() {
                 type="text"
                 {...register('name')}
                 placeholder="e.g. Skyline Craft Studio"
-                className={`w-full px-3 py-2 text-xs bg-white rounded-xl border ${
-                  errors.name ? 'border-rose-400' : 'border-slate-200'
-                } focus:outline-none focus:ring-1 focus:ring-blue-500`}
+                className={`w-full px-3 py-2 text-xs bg-slate-50 rounded-none border-0 ${
+                  errors.name ? 'ring-1 ring-rose-400' : 'focus:ring-1 focus:ring-[#B88E2F]'
+                } focus:outline-none focus:bg-white`}
               />
               {errors.name && (
                 <span className="text-[10px] text-rose-500 mt-1 block">{errors.name.message}</span>
@@ -335,7 +335,7 @@ export default function ShopManagementPage() {
               </label>
               <select
                 {...register('user_id')}
-                className="w-full px-3 py-2 text-xs bg-white rounded-xl border border-slate-200 focus:outline-none focus:ring-1 focus:ring-blue-500"
+                className="w-full px-3 py-2 text-xs bg-slate-50 rounded-none border-0 focus:outline-none focus:ring-1 focus:ring-[#B88E2F]"
               >
                 <option value="">Select an owner (optional)</option>
                 {owners.map((owner) => (
@@ -355,7 +355,7 @@ export default function ShopManagementPage() {
               rows={3}
               {...register('description')}
               placeholder="Store background, mission, and specialty..."
-              className="w-full px-3 py-2 text-xs bg-white rounded-xl border border-slate-200 focus:outline-none focus:ring-1 focus:ring-blue-500"
+              className="w-full px-3 py-2 text-xs bg-slate-50 rounded-none border-0 focus:outline-none focus:ring-1 focus:ring-[#B88E2F]"
             />
           </div>
 
@@ -368,7 +368,7 @@ export default function ShopManagementPage() {
                 type="text"
                 {...register('phone')}
                 placeholder="+1 (555) 000-0000"
-                className="w-full px-3 py-2 text-xs bg-white rounded-xl border border-slate-200 focus:outline-none focus:ring-1 focus:ring-blue-500"
+                className="w-full px-3 py-2 text-xs bg-slate-50 rounded-none border-0 focus:outline-none focus:ring-1 focus:ring-[#B88E2F]"
               />
             </div>
 
@@ -380,9 +380,9 @@ export default function ShopManagementPage() {
                 type="email"
                 {...register('email')}
                 placeholder="store@domain.com"
-                className={`w-full px-3 py-2 text-xs bg-white rounded-xl border ${
-                  errors.email ? 'border-rose-400' : 'border-slate-200'
-                } focus:outline-none focus:ring-1 focus:ring-blue-500`}
+                className={`w-full px-3 py-2 text-xs bg-slate-50 rounded-none border-0 ${
+                  errors.email ? 'ring-1 ring-rose-400' : 'focus:ring-1 focus:ring-[#B88E2F]'
+                } focus:outline-none focus:bg-white`}
               />
               {errors.email && (
                 <span className="text-[10px] text-rose-500 mt-1 block">{errors.email.message}</span>
@@ -395,7 +395,7 @@ export default function ShopManagementPage() {
               </label>
               <select
                 {...register('status')}
-                className="w-full px-3 py-2 text-xs bg-white rounded-xl border border-slate-200 focus:outline-none focus:ring-1 focus:ring-blue-500"
+                className="w-full px-3 py-2 text-xs bg-slate-50 rounded-none border-0 focus:outline-none focus:ring-1 focus:ring-[#B88E2F]"
               >
                 <option value="active">Active (Visible)</option>
                 <option value="inactive">Inactive</option>
@@ -412,7 +412,7 @@ export default function ShopManagementPage() {
               type="text"
               {...register('address')}
               placeholder="e.g. Austin, Texas"
-              className="w-full px-3 py-2 text-xs bg-white rounded-xl border border-slate-200 focus:outline-none focus:ring-1 focus:ring-blue-500"
+              className="w-full px-3 py-2 text-xs bg-slate-50 rounded-none border-0 focus:outline-none focus:ring-1 focus:ring-[#B88E2F]"
             />
           </div>
 
@@ -425,7 +425,7 @@ export default function ShopManagementPage() {
                 type="url"
                 {...register('logo')}
                 placeholder="https://images.unsplash.com/..."
-                className="w-full px-3 py-2 text-xs bg-white rounded-xl border border-slate-200 focus:outline-none focus:ring-1 focus:ring-blue-500"
+                className="w-full px-3 py-2 text-xs bg-slate-50 rounded-none border-0 focus:outline-none focus:ring-1 focus:ring-[#B88E2F]"
               />
             </div>
 
@@ -437,7 +437,7 @@ export default function ShopManagementPage() {
                 type="url"
                 {...register('banner')}
                 placeholder="https://images.unsplash.com/..."
-                className="w-full px-3 py-2 text-xs bg-white rounded-xl border border-slate-200 focus:outline-none focus:ring-1 focus:ring-blue-500"
+                className="w-full px-3 py-2 text-xs bg-slate-50 rounded-none border-0 focus:outline-none focus:ring-1 focus:ring-[#B88E2F]"
               />
             </div>
           </div>
@@ -446,14 +446,14 @@ export default function ShopManagementPage() {
             <button
               type="button"
               onClick={() => setIsModalOpen(false)}
-              className="px-4 py-2 rounded-xl text-xs font-medium text-slate-600 hover:bg-slate-100"
+              className="px-4 py-2 rounded-none text-xs font-medium text-slate-600 hover:bg-slate-100 border-0"
             >
               Cancel
             </button>
             <button
               type="submit"
               disabled={isSubmitting || saveMutation.isPending}
-              className="px-4 py-2 rounded-xl bg-blue-600 hover:bg-blue-700 text-slate-50 text-xs font-semibold shadow-xs disabled:opacity-50"
+              className="px-4 py-2 rounded-xl bg-[#B88E2F] hover:bg-[#967125] text-white text-xs font-semibold shadow-xs disabled:opacity-50"
             >
               {isSubmitting || saveMutation.isPending
                 ? 'Saving...'

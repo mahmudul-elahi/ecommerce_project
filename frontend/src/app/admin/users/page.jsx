@@ -175,7 +175,7 @@ export default function UserManagementPage() {
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             placeholder="Search accounts by name or email..."
-            className="w-full pl-11 pr-4 py-2.5 text-sm bg-[#F5F7FA] text-[#343C6A] placeholder-[#8BA3CB] rounded-full border-0 outline-none focus:ring-1 focus:ring-[#2D60FF]/40"
+            className="w-full pl-11 pr-4 py-2.5 text-sm bg-[#F5F7FA] text-[#343C6A] placeholder-[#8BA3CB] rounded-full border-0 outline-none focus:ring-1 focus:ring-[#B88E2F]/40"
           />
         </div>
 
@@ -186,7 +186,7 @@ export default function UserManagementPage() {
 
           <button
             onClick={handleOpenCreateModal}
-            className="px-5 py-2.5 rounded-xl bg-[#2D60FF] hover:bg-[#1814F3] text-white text-sm font-semibold transition-all shadow-sm flex items-center gap-2 border-0 outline-none cursor-pointer"
+            className="px-5 py-2.5 rounded-xl bg-[#B88E2F] hover:bg-[#967125] text-white text-sm font-semibold transition-all shadow-sm flex items-center gap-2 border-0 outline-none cursor-pointer"
           >
             <Plus className="w-4 h-4" />
             <span>New Merchant Account</span>
@@ -238,7 +238,7 @@ export default function UserManagementPage() {
                     <td className="px-5 py-4">
                       <span className={`inline-flex items-center space-x-1 px-2 py-0.5 rounded-md text-[10px] font-mono uppercase border ${
                         u.role === 'admin'
-                          ? 'bg-blue-600 text-slate-50 border-slate-900'
+                          ? 'bg-[#B88E2F] text-white border-[#B88E2F]'
                           : 'bg-slate-100 text-slate-700 border-slate-200'
                       }`}>
                         {u.role === 'admin' ? (
@@ -269,7 +269,7 @@ export default function UserManagementPage() {
                     <td className="px-5 py-4">
                       <span className={`px-2 py-0.5 rounded-md text-[10px] font-mono uppercase border ${
                         u.is_active
-                          ? 'bg-blue-50 text-blue-700 border-blue-100'
+                          ? 'bg-[#FAF3EA] text-[#B88E2F] border-[#ebd9c5]'
                           : 'bg-rose-50 text-rose-800 border-rose-200'
                       }`}>
                         {u.is_active ? 'Active' : 'Disabled'}
@@ -277,7 +277,7 @@ export default function UserManagementPage() {
                     </td>
 
                     <td className="px-5 py-4 text-slate-500 font-mono text-[11px]">
-                      {new Date(u.created_at).toLocaleDateString()}
+                      {u.created_at ? u.created_at.slice(0, 10) : '—'}
                     </td>
 
                     <td className="px-5 py-4 text-right">
@@ -323,9 +323,9 @@ export default function UserManagementPage() {
                 type="text"
                 {...register('name')}
                 placeholder="e.g. Eleanor Vance"
-                className={`w-full px-3 py-2 text-xs bg-white rounded-xl border ${
-                  errors.name ? 'border-rose-400' : 'border-slate-200'
-                } focus:outline-none focus:ring-1 focus:ring-blue-500`}
+                className={`w-full px-3 py-2 text-xs bg-slate-50 rounded-none border-0 ${
+                  errors.name ? 'ring-1 ring-rose-400' : 'focus:ring-1 focus:ring-[#B88E2F]'
+                } focus:outline-none focus:bg-white`}
               />
               {errors.name && (
                 <span className="text-[10px] text-rose-500 mt-1 block">{errors.name.message}</span>
@@ -340,9 +340,9 @@ export default function UserManagementPage() {
                 type="email"
                 {...register('email')}
                 placeholder="eleanor@domain.com"
-                className={`w-full px-3 py-2 text-xs bg-white rounded-xl border ${
-                  errors.email ? 'border-rose-400' : 'border-slate-200'
-                } focus:outline-none focus:ring-1 focus:ring-blue-500`}
+                className={`w-full px-3 py-2 text-xs bg-slate-50 rounded-none border-0 ${
+                  errors.email ? 'ring-1 ring-rose-400' : 'focus:ring-1 focus:ring-[#B88E2F]'
+                } focus:outline-none focus:bg-white`}
               />
               {errors.email && (
                 <span className="text-[10px] text-rose-500 mt-1 block">{errors.email.message}</span>
@@ -359,7 +359,7 @@ export default function UserManagementPage() {
                 type="password"
                 {...register('password')}
                 placeholder="••••••••"
-                className="w-full px-3 py-2 text-xs bg-white rounded-xl border border-slate-200 focus:outline-none focus:ring-1 focus:ring-blue-500"
+                className="w-full px-3 py-2 text-xs bg-slate-50 rounded-none border-0 focus:outline-none focus:ring-1 focus:ring-[#B88E2F]"
               />
             </div>
 
@@ -371,7 +371,7 @@ export default function UserManagementPage() {
                 type="text"
                 {...register('phone')}
                 placeholder="+1 (555) 000-0000"
-                className="w-full px-3 py-2 text-xs bg-white rounded-xl border border-slate-200 focus:outline-none focus:ring-1 focus:ring-blue-500"
+                className="w-full px-3 py-2 text-xs bg-slate-50 rounded-none border-0 focus:outline-none focus:ring-1 focus:ring-[#B88E2F]"
               />
             </div>
           </div>
@@ -383,7 +383,7 @@ export default function UserManagementPage() {
               </label>
               <select
                 {...register('role')}
-                className="w-full px-3 py-2 text-xs bg-white rounded-xl border border-slate-200 focus:outline-none focus:ring-1 focus:ring-blue-500"
+                className="w-full px-3 py-2 text-xs bg-slate-50 rounded-none border-0 focus:outline-none focus:ring-1 focus:ring-[#B88E2F]"
               >
                 <option value="shop_owner">Shop Owner</option>
                 <option value="admin">Platform Administrator</option>
@@ -396,7 +396,7 @@ export default function UserManagementPage() {
               </label>
               <select
                 {...register('shop_id')}
-                className="w-full px-3 py-2 text-xs bg-white rounded-xl border border-slate-200 focus:outline-none focus:ring-1 focus:ring-blue-500"
+                className="w-full px-3 py-2 text-xs bg-slate-50 rounded-none border-0 focus:outline-none focus:ring-1 focus:ring-[#B88E2F]"
               >
                 <option value="">No existing shop (or create new below)</option>
                 {shops.map((s) => (
@@ -417,7 +417,7 @@ export default function UserManagementPage() {
                 type="text"
                 {...register('shop_name')}
                 placeholder="e.g. Eleanor's Curated Living"
-                className="w-full px-3 py-2 text-xs bg-white rounded-xl border border-slate-200 focus:outline-none focus:ring-1 focus:ring-blue-500"
+                className="w-full px-3 py-2 text-xs bg-slate-50 rounded-none border-0 focus:outline-none focus:ring-1 focus:ring-[#B88E2F]"
               />
               <span className="text-[10px] text-slate-500 mt-1 block">
                 If specified, a brand new storefront will be automatically created and assigned.
@@ -430,7 +430,7 @@ export default function UserManagementPage() {
               type="checkbox"
               id="is_active_user"
               {...register('is_active')}
-              className="rounded border-slate-300 text-slate-900 focus:ring-blue-500"
+              className="rounded-none border-0 text-slate-900 focus:ring-[#B88E2F]"
             />
             <label htmlFor="is_active_user" className="text-xs font-medium text-slate-700">
               Account Active & Permitted to Sign In
@@ -441,14 +441,14 @@ export default function UserManagementPage() {
             <button
               type="button"
               onClick={() => setIsModalOpen(false)}
-              className="px-4 py-2 rounded-xl text-xs font-medium text-slate-600 hover:bg-slate-100"
+              className="px-4 py-2 rounded-none text-xs font-medium text-slate-600 hover:bg-slate-100 border-0"
             >
               Cancel
             </button>
             <button
               type="submit"
               disabled={isSubmitting || saveMutation.isPending}
-              className="px-4 py-2 rounded-xl bg-blue-600 hover:bg-blue-700 text-slate-50 text-xs font-semibold shadow-xs disabled:opacity-50"
+              className="px-4 py-2 rounded-xl bg-[#B88E2F] hover:bg-[#967125] text-white text-xs font-semibold shadow-xs disabled:opacity-50"
             >
               {isSubmitting || saveMutation.isPending
                 ? 'Saving...'

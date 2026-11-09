@@ -207,7 +207,7 @@ export default function MyProductsPage() {
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             placeholder="Filter listed products..."
-            className="w-full pl-11 pr-4 py-2.5 text-sm bg-[#F5F7FA] text-[#343C6A] placeholder-[#8BA3CB] rounded-full border-0 outline-none focus:ring-1 focus:ring-[#2D60FF]/40"
+            className="w-full pl-11 pr-4 py-2.5 text-sm bg-[#F5F7FA] text-[#343C6A] placeholder-[#8BA3CB] rounded-full border-0 outline-none focus:ring-1 focus:ring-[#B88E2F]/40"
           />
         </div>
 
@@ -218,7 +218,7 @@ export default function MyProductsPage() {
 
           <Link
             href="/shop-owner/catalog"
-            className="px-5 py-2.5 rounded-xl bg-[#2D60FF] hover:bg-[#1814F3] text-white text-sm font-semibold transition-all shadow-sm flex items-center gap-2 border-0 outline-none"
+            className="px-5 py-2.5 rounded-none bg-[#B88E2F] hover:bg-[#967125] text-white text-sm font-semibold transition-all shadow-none flex items-center gap-2 border-0 outline-none"
           >
             <Plus className="w-4 h-4" />
             <span>Add from Shared Catalog</span>
@@ -256,7 +256,7 @@ export default function MyProductsPage() {
                     <p className="text-xs text-slate-400 mt-0.5">Browse the shared catalog to assign and retail items.</p>
                     <Link
                       href="/shop-owner/catalog"
-                      className="mt-3 inline-flex items-center space-x-1 text-xs font-semibold text-blue-700 hover:underline"
+                      className="mt-3 inline-flex items-center space-x-1 text-xs font-semibold text-[#B88E2F] hover:underline"
                     >
                       <span>Explore Shared Catalog →</span>
                     </Link>
@@ -308,7 +308,7 @@ export default function MyProductsPage() {
                         ${Number(item.effective_price).toFixed(2)}
                       </div>
                       {item.custom_price !== null && (
-                        <span className="text-[10px] font-bold text-blue-700 bg-blue-50 px-1.5 py-0.2 rounded border border-blue-100 inline-block mt-0.5">
+                        <span className="text-[10px] font-bold text-[#B88E2F] bg-[#FAF3EA] px-1.5 py-0.2 rounded-none inline-block mt-0.5">
                           Custom Markup
                         </span>
                       )}
@@ -324,22 +324,22 @@ export default function MyProductsPage() {
                       {item.is_customized ? (
                         <div className="flex flex-wrap gap-1 font-mono text-[10px]">
                           {item.custom_price !== null && (
-                            <span className="px-1.5 py-0.5 rounded bg-blue-50 text-blue-700 border border-blue-100">
+                            <span className="px-1.5 py-0.5 rounded-none bg-[#FAF3EA] text-[#B88E2F]">
                               Price
                             </span>
                           )}
                           {item.custom_title && (
-                            <span className="px-1.5 py-0.5 rounded bg-slate-100 text-slate-700 border border-slate-200">
+                            <span className="px-1.5 py-0.5 rounded-none bg-slate-100 text-slate-700">
                               Title
                             </span>
                           )}
                           {item.custom_thumbnail && (
-                            <span className="px-1.5 py-0.5 rounded bg-slate-100 text-slate-700 border border-slate-200">
+                            <span className="px-1.5 py-0.5 rounded-none bg-slate-100 text-slate-700">
                               Image
                             </span>
                           )}
                           {item.custom_description && (
-                            <span className="px-1.5 py-0.5 rounded bg-amber-50 text-amber-800 border border-amber-200">
+                            <span className="px-1.5 py-0.5 rounded-none bg-amber-50 text-amber-800">
                               Desc
                             </span>
                           )}
@@ -357,10 +357,10 @@ export default function MyProductsPage() {
                     {/* Status */}
                     <td className="px-5 py-3.5">
                       <span
-                        className={`px-2 py-0.5 rounded text-[10px] font-mono ${
+                        className={`px-2 py-0.5 rounded-none text-[10px] font-mono ${
                           item.is_active
-                            ? 'bg-blue-50 text-blue-700 border border-blue-100'
-                            : 'bg-slate-100 text-slate-500 border border-slate-200'
+                            ? 'bg-[#FAF3EA] text-[#B88E2F]'
+                            : 'bg-slate-100 text-slate-500'
                         }`}
                       >
                         {item.is_active ? 'Live' : 'Draft'}
@@ -437,7 +437,7 @@ export default function MyProductsPage() {
                 step="0.01"
                 min="0"
                 {...register('custom_price')}
-                className="w-full px-3 py-2 text-xs bg-slate-50 rounded-xl border border-slate-200 focus:outline-none focus:ring-1 focus:ring-blue-500 focus:bg-white text-slate-900 font-mono"
+                className="w-full px-3 py-2 text-xs bg-slate-50 rounded-none border-0 focus:outline-none focus:ring-1 focus:ring-[#B88E2F] focus:bg-white text-slate-900 font-mono"
                 placeholder={basePrice ? String(basePrice) : 'Leave blank for default'}
               />
               {marginDiff !== null && (
@@ -457,9 +457,9 @@ export default function MyProductsPage() {
                 type="number"
                 min="0"
                 {...register('stock')}
-                className={`w-full px-3 py-2 text-xs bg-slate-50 rounded-xl border ${
-                  errors.stock ? 'border-rose-400' : 'border-slate-200'
-                } focus:outline-none focus:ring-1 focus:ring-blue-500 focus:bg-white text-slate-900 font-mono`}
+                className={`w-full px-3 py-2 text-xs bg-slate-50 rounded-none border-0 ${
+                  errors.stock ? 'ring-1 ring-rose-400' : 'focus:ring-1 focus:ring-[#B88E2F]'
+                } focus:outline-none focus:bg-white text-slate-900 font-mono`}
               />
               {errors.stock && (
                 <span className="text-[11px] text-rose-600 mt-1">{errors.stock.message}</span>
@@ -474,7 +474,7 @@ export default function MyProductsPage() {
             <input
               type="text"
               {...register('custom_title')}
-              className="w-full px-3 py-2 text-xs bg-slate-50 rounded-xl border border-slate-200 focus:outline-none focus:ring-1 focus:ring-blue-500 focus:bg-white text-slate-900"
+              className="w-full px-3 py-2 text-xs bg-slate-50 rounded-none border-0 focus:outline-none focus:ring-1 focus:ring-[#B88E2F] focus:bg-white text-slate-900"
               placeholder={selectedListing?.product?.name || 'Leave blank for catalog title'}
             />
           </div>
@@ -486,7 +486,7 @@ export default function MyProductsPage() {
             <textarea
               rows={2}
               {...register('custom_description')}
-              className="w-full px-3 py-2 text-xs bg-slate-50 rounded-xl border border-slate-200 focus:outline-none focus:ring-1 focus:ring-blue-500 focus:bg-white text-slate-900"
+              className="w-full px-3 py-2 text-xs bg-slate-50 rounded-none border-0 focus:outline-none focus:ring-1 focus:ring-[#B88E2F] focus:bg-white text-slate-900"
               placeholder="Leave blank to use default shared catalog description"
             />
           </div>
@@ -524,7 +524,7 @@ export default function MyProductsPage() {
               </div>
             )}
 
-            <label className="border-2 border-dashed border-slate-300 hover:border-blue-500 rounded-xl p-3 flex flex-col items-center justify-center cursor-pointer transition-colors bg-white">
+            <label className="border-2 border-dashed border-slate-300 hover:border-[#B88E2F] rounded-xl p-3 flex flex-col items-center justify-center cursor-pointer transition-colors bg-white">
               <Upload className="w-5 h-5 text-slate-400 mb-1" />
               <span className="text-xs font-semibold text-slate-700">Upload shop-specific product images</span>
               <span className="text-[10px] text-slate-400 mt-0.5">Optimized to WebP automatically with Laravel 13 Image facade.</span>
@@ -543,7 +543,7 @@ export default function MyProductsPage() {
               type="checkbox"
               id="is_active"
               {...register('is_active')}
-              className="rounded text-slate-900 focus:ring-blue-500"
+              className="rounded text-slate-900 focus:ring-[#B88E2F]"
             />
             <label htmlFor="is_active" className="text-xs font-semibold text-slate-800 cursor-pointer">
               Visible on Customer Storefront
@@ -554,14 +554,14 @@ export default function MyProductsPage() {
             <button
               type="button"
               onClick={() => setIsModalOpen(false)}
-              className="px-3.5 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-xs font-semibold text-slate-700 transition-colors"
+              className="px-3.5 py-2 rounded-none bg-slate-100 hover:bg-slate-200 text-xs font-semibold text-slate-700 transition-colors border-0"
             >
               Cancel
             </button>
             <button
               type="submit"
               disabled={saveMutation.isPending || isSubmitting}
-              className="px-4 py-2 rounded-xl bg-blue-600 hover:bg-blue-700 disabled:opacity-60 text-white text-xs font-semibold transition-all shadow-subtle active:scale-[0.99]"
+              className="px-4 py-2 rounded-none bg-[#B88E2F] hover:bg-[#967125] disabled:opacity-60 text-white text-xs font-semibold transition-all shadow-none border-0 outline-none cursor-pointer"
             >
               {saveMutation.isPending ? 'Saving...' : 'Save Customizations'}
             </button>

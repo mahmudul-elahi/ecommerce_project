@@ -71,7 +71,7 @@ export default function ComparisonPage() {
         </p>
         <Link
           href="/shop"
-          className="mt-6 px-6 py-2.5 rounded-full bg-[#B88E2F] text-white text-xs font-semibold hover:bg-[#967125] transition-colors"
+          className="mt-6 px-6 py-3 bg-[#B88E2F] text-white text-xs font-semibold hover:bg-[#967125] transition-colors rounded-none"
         >
           Explore Shop
         </Link>

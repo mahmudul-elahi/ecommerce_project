@@ -83,13 +83,20 @@ export default function BankDashLayout({ children, title = 'Overview', role = 'a
         <div>
           {/* Logo Brand Header */}
           <div className="h-[84px] px-8 flex items-center justify-between border-b border-[#F5F7FA]">
-            <Link href="/" className="flex items-center gap-3">
-              <div className="w-9 h-9 rounded-xl bg-gradient-to-tr from-[#2D60FF] to-[#1814F3] flex items-center justify-center text-white shadow-md shadow-blue-500/20">
-                <CreditCard className="w-5 h-5 text-white" />
+            <Link href="/" className="flex items-center gap-3 group">
+              <div className="w-10 h-10 rounded-xl bg-[#FAF3EA] border border-[#ebd9c5] flex items-center justify-center p-1.5 shadow-sm group-hover:scale-105 transition-transform">
+                <img
+                  src="/images/furniro/imgMeubelHouseLogos05.png"
+                  alt="Furniro Logo"
+                  className="w-full h-full object-contain"
+                />
               </div>
               <div className="flex flex-col">
-                <span className="font-extrabold text-[22px] tracking-tight text-[#343C6A] font-inter">
-                  BankDash<span className="text-[#2D60FF]">.</span>
+                <span className="font-bold text-2xl tracking-tight text-[#000000] font-montserrat">
+                  Furniro<span className="text-[#B88E2F]">.</span>
+                </span>
+                <span className="text-[10px] uppercase font-bold tracking-wider text-[#B88E2F] -mt-1 font-inter">
+                  {role === 'admin' ? 'Admin Hub' : 'Merchant Desk'}
                 </span>
               </div>
             </Link>
@@ -113,17 +120,17 @@ export default function BankDashLayout({ children, title = 'Overview', role = 'a
                   onClick={() => setMobileMenuOpen(false)}
                   className={`group relative flex items-center gap-5 px-8 py-3.5 text-base font-medium transition-all ${
                     active
-                      ? 'text-[#2D60FF] font-semibold bg-blue-50/30'
+                      ? 'text-[#B88E2F] font-semibold bg-[#FAF3EA]'
                       : 'text-[#718EBF] hover:text-[#343C6A] hover:bg-[#F5F7FA]'
                   }`}
                 >
-                  {/* BankDash Active Indicator Bar on Left */}
+                  {/* Active Indicator Bar on Left - Furniro Gold */}
                   {active && (
-                    <span className="absolute left-0 top-1/2 -translate-y-1/2 w-1.5 h-10 bg-[#2D60FF] rounded-r-md" />
+                    <span className="absolute left-0 top-1/2 -translate-y-1/2 w-1.5 h-10 bg-[#B88E2F] rounded-r-md" />
                   )}
                   <Icon
                     className={`w-5 h-5 transition-transform group-hover:scale-105 ${
-                      active ? 'text-[#2D60FF]' : 'text-[#718EBF] group-hover:text-[#343C6A]'
+                      active ? 'text-[#B88E2F]' : 'text-[#718EBF] group-hover:text-[#343C6A]'
                     }`}
                   />
                   <span>{item.label}</span>
@@ -180,7 +187,7 @@ export default function BankDashLayout({ children, title = 'Overview', role = 'a
                 placeholder="Search for something"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full h-11 pl-11 pr-4 bg-[#F5F7FA] text-sm text-[#343C6A] placeholder-[#8BA3CB] rounded-full border-0 outline-none focus:ring-1 focus:ring-[#2D60FF]/30 transition-all"
+                className="w-full h-11 pl-11 pr-4 bg-[#F5F7FA] text-sm text-[#343C6A] placeholder-[#8BA3CB] rounded-full border-0 outline-none focus:ring-1 focus:ring-[#B88E2F]/40 transition-all"
               />
             </div>
 
@@ -205,7 +212,7 @@ export default function BankDashLayout({ children, title = 'Overview', role = 'a
 
             {/* User Profile Avatar */}
             <div className="flex items-center gap-3">
-              <div className="w-11 h-11 rounded-full bg-gradient-to-tr from-[#2D60FF] to-[#396AFF] text-white flex items-center justify-center font-bold text-base shadow-sm ring-2 ring-white">
+              <div className="w-11 h-11 rounded-full bg-gradient-to-tr from-[#B88E2F] to-[#D4AF37] text-white flex items-center justify-center font-bold text-base shadow-sm ring-2 ring-white">
                 {user?.name ? user.name.charAt(0).toUpperCase() : 'U'}
               </div>
               <div className="hidden xl:block text-left">

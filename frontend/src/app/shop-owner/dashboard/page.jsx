@@ -40,7 +40,7 @@ export default function ShopOwnerDashboardPage() {
   if (loading) {
     return (
       <div className="min-h-[60vh] flex items-center justify-center">
-        <div className="w-10 h-10 border-4 border-[#2D60FF] border-t-transparent rounded-full animate-spin" />
+        <div className="w-10 h-10 border-4 border-[#B88E2F] border-t-transparent rounded-full animate-spin" />
       </div>
     );
   }
@@ -138,18 +138,18 @@ export default function ShopOwnerDashboardPage() {
             </h2>
             <Link
               href="/shop-owner/settings"
-              className="text-sm font-semibold text-[#2D60FF] hover:underline"
+              className="text-sm font-semibold text-[#B88E2F] hover:underline"
             >
               Payout Settings
             </Link>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {/* Blue Gradient BankDash Card */}
-            <div className="rounded-[25px] p-6 text-white bg-gradient-to-tr from-[#0A06F4] via-[#2D60FF] to-[#4C49ED] shadow-lg shadow-blue-500/10 flex flex-col justify-between min-h-[220px]">
+            {/* Furniro Luxury Gold Gradient Card */}
+            <div className="rounded-[25px] p-6 text-white bg-gradient-to-tr from-[#694F12] via-[#B88E2F] to-[#D4AF37] shadow-lg shadow-amber-900/15 flex flex-col justify-between min-h-[220px]">
               <div className="flex items-start justify-between">
                 <div>
-                  <span className="text-xs text-white/70 font-medium">Available Balance</span>
+                  <span className="text-xs text-white/75 font-medium">Available Balance</span>
                   <div className="text-2xl font-bold font-inter mt-1">
                     ${Number(stats.total_revenue || 0).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                   </div>
@@ -159,18 +159,18 @@ export default function ShopOwnerDashboardPage() {
                 </div>
               </div>
 
-              <div className="grid grid-cols-2 gap-4 my-3 text-xs text-white/80">
+              <div className="grid grid-cols-2 gap-4 my-3 text-xs text-white/85">
                 <div>
-                  <span className="block text-[10px] text-white/60 uppercase">Store Name</span>
+                  <span className="block text-[10px] text-white/70 uppercase">Store Name</span>
                   <span className="font-semibold text-sm truncate block">{shop?.name || 'My Store'}</span>
                 </div>
                 <div>
-                  <span className="block text-[10px] text-white/60 uppercase">Valid Thru</span>
+                  <span className="block text-[10px] text-white/70 uppercase">Valid Thru</span>
                   <span className="font-semibold text-sm">11/29</span>
                 </div>
               </div>
 
-              <div className="pt-3 border-t border-white/15 flex items-center justify-between text-sm tracking-widest font-mono">
+              <div className="pt-3 border-t border-white/20 flex items-center justify-between text-sm tracking-widest font-mono">
                 <span>5412 **** **** 8820</span>
                 <div className="flex -space-x-2">
                   <div className="w-6 h-6 rounded-full bg-white/40" />
@@ -207,8 +207,8 @@ export default function ShopOwnerDashboardPage() {
               <div className="pt-3 border-t border-[#F2F4F7] flex items-center justify-between text-sm tracking-widest font-mono text-[#343C6A]">
                 <span>Routing: *****492</span>
                 <div className="flex -space-x-2">
-                  <div className="w-6 h-6 rounded-full bg-[#2D60FF]/30" />
-                  <div className="w-6 h-6 rounded-full bg-[#2D60FF]/20" />
+                  <div className="w-6 h-6 rounded-full bg-[#B88E2F]/30" />
+                  <div className="w-6 h-6 rounded-full bg-[#B88E2F]/20" />
                 </div>
               </div>
             </div>
@@ -223,7 +223,7 @@ export default function ShopOwnerDashboardPage() {
             </h2>
             <Link
               href="/shop-owner/orders"
-              className="text-xs font-semibold text-[#2D60FF] hover:underline"
+              className="text-xs font-semibold text-[#B88E2F] hover:underline"
             >
               See All
             </Link>
@@ -246,7 +246,7 @@ export default function ShopOwnerDashboardPage() {
                         Order #{ord.order_number || ord.id}
                       </div>
                       <div className="text-xs text-[#718EBF]">
-                        {ord.created_at ? new Date(ord.created_at).toLocaleDateString() : 'Recent'}
+                        {ord.created_at ? ord.created_at.slice(0, 10) : 'Recent'}
                       </div>
                     </div>
                   </div>
@@ -275,11 +275,11 @@ export default function ShopOwnerDashboardPage() {
             </h2>
             <div className="flex items-center gap-6 text-xs text-[#718EBF]">
               <div className="flex items-center gap-2">
-                <span className="w-3.5 h-3.5 rounded-full bg-[#1814F3]" />
+                <span className="w-3.5 h-3.5 rounded-full bg-[#B88E2F]" />
                 <span>Orders</span>
               </div>
               <div className="flex items-center gap-2">
-                <span className="w-3.5 h-3.5 rounded-full bg-[#16DBCC]" />
+                <span className="w-3.5 h-3.5 rounded-full bg-[#E2C889]" />
                 <span>Sales ($)</span>
               </div>
             </div>
@@ -300,12 +300,12 @@ export default function ShopOwnerDashboardPage() {
                   <div className="flex items-end gap-2 h-44">
                     <div
                       style={{ height: `${item.ord}%` }}
-                      className="w-3.5 rounded-full bg-[#1814F3] transition-all hover:opacity-80"
+                      className="w-3.5 rounded-full bg-[#B88E2F] transition-all hover:opacity-80"
                       title={`Orders: ${item.ord}%`}
                     />
                     <div
                       style={{ height: `${item.vol}%` }}
-                      className="w-3.5 rounded-full bg-[#16DBCC] transition-all hover:opacity-80"
+                      className="w-3.5 rounded-full bg-[#E2C889] transition-all hover:opacity-80"
                       title={`Sales: ${item.vol}%`}
                     />
                   </div>
@@ -325,10 +325,10 @@ export default function ShopOwnerDashboardPage() {
             <div className="space-y-3">
               <Link
                 href="/shop-owner/catalog"
-                className="p-4 rounded-2xl bg-[#F5F7FA] hover:bg-[#E7EDFF] transition-colors flex items-center justify-between group"
+                className="p-4 rounded-2xl bg-[#F5F7FA] hover:bg-[#FAF3EA] transition-colors flex items-center justify-between group"
               >
                 <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-full bg-[#E7EDFF] group-hover:bg-white text-[#2D60FF] flex items-center justify-center">
+                  <div className="w-10 h-10 rounded-full bg-[#FAF3EA] group-hover:bg-white text-[#B88E2F] flex items-center justify-center">
                     <Layers className="w-5 h-5" />
                   </div>
                   <div>
@@ -336,7 +336,7 @@ export default function ShopOwnerDashboardPage() {
                     <div className="text-xs text-[#718EBF]">Add products with custom price</div>
                   </div>
                 </div>
-                <ChevronRight className="w-4 h-4 text-[#718EBF] group-hover:text-[#2D60FF]" />
+                <ChevronRight className="w-4 h-4 text-[#718EBF] group-hover:text-[#B88E2F]" />
               </Link>
 
               <Link
