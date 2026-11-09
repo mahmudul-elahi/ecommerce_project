@@ -5,8 +5,6 @@ if (function_exists('ini_set')) {
     @ini_set('memory_limit', '512M');
 }
 
-use App\Http\Middleware\AdminMiddleware;
-use App\Http\Middleware\ShopOwnerMiddleware;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
