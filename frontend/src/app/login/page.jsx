@@ -157,7 +157,7 @@ export default function LoginPage() {
               </button>
               <button
                 type="button"
-                onClick={() => handleQuickLogin('furniro@ecommerce.com', 'password')}
+                onClick={() => handleQuickLogin('woodora@ecommerce.com', 'password')}
                 className="py-3 px-2 text-xs font-semibold bg-[#FAF7F2] hover:bg-[#B88E2F] hover:text-white text-[#333333] transition-colors rounded-none border-0 outline-none cursor-pointer text-center"
               >
                 Flagship
