@@ -29,8 +29,8 @@ export default function WishlistDrawer() {
   const handleAddToCart = (item) => {
     const shop = item.shop || {
       id: 1,
-      name: 'Furniro Flagship',
-      slug: 'furniro',
+      name: 'Woodora Flagship',
+      slug: 'woodora',
     };
     const cartProduct = {
       shop_product_id: item.shop_product_id || item.id,
@@ -50,8 +50,8 @@ export default function WishlistDrawer() {
     favorites.forEach((item) => {
       const shop = item.shop || {
         id: 1,
-        name: 'Furniro Flagship',
-        slug: 'furniro',
+        name: 'Woodora Flagship',
+        slug: 'woodora',
       };
       const cartProduct = {
         shop_product_id: item.shop_product_id || item.id,

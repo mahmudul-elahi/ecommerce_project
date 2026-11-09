@@ -25,8 +25,8 @@ export default function ProductCard({ product }) {
 
     const shop = {
       id: product.shop_id || 1,
-      name: product.shop_name || 'Furniro Flagship',
-      slug: product.shop_slug || 'furniro',
+      name: product.shop_name || 'Woodora Flagship',
+      slug: product.shop_slug || 'woodora',
     };
 
     const cartProduct = {
@@ -175,9 +175,9 @@ export default function ProductCard({ product }) {
           </p>
           <span
             className="product-card-shop"
-            title={product.shop_name || 'Furniro Flagship'}
+            title={product.shop_name || 'Woodora Flagship'}
           >
-            {product.shop_name || 'Furniro Flagship'}
+            {product.shop_name || 'Woodora Flagship'}
           </span>
         </div>
 

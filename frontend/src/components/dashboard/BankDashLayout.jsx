@@ -87,13 +87,13 @@ export default function BankDashLayout({ children, title = 'Overview', role = 'a
               <div className="w-10 h-10 rounded-xl bg-[#FAF3EA] border border-[#ebd9c5] flex items-center justify-center p-1.5 shadow-sm">
                 <img
                   src="/images/furniro/imgMeubelHouseLogos05.png"
-                  alt="Furniro Logo"
+                  alt="Woodora Logo"
                   className="w-full h-full object-contain"
                 />
               </div>
               <div className="flex flex-col">
                 <span className="font-bold text-2xl tracking-tight text-[#000000] font-montserrat">
-                  Furniro<span className="text-[#B88E2F]">.</span>
+                  Woodora<span className="text-[#B88E2F]">.</span>
                 </span>
                 <span className="text-[10px] uppercase font-bold tracking-wider text-[#B88E2F] -mt-1 font-inter">
                   {role === 'admin' ? 'Admin Hub' : 'Merchant Desk'}

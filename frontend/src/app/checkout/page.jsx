@@ -79,7 +79,7 @@ export default function CheckoutPage() {
       const orderNumber = res?.order?.order_number || `ORD-${Math.floor(100000 + Math.random() * 900000)}`;
 
       toast.success('Order Placed Successfully!', {
-        description: `Order #${orderNumber} has been recorded with ${cartShop?.name || 'Furniro'}.`,
+        description: `Order #${orderNumber} has been recorded with ${cartShop?.name || 'Woodora'}.`,
       });
 
       clearCart();

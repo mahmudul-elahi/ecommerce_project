@@ -84,7 +84,7 @@ export default function HomePage() {
     return rawShops.filter((shop) => {
       const text = `${shop.name} ${shop.description || ''}`.toLowerCase();
       if (storeCategory === 'all') return true;
-      if (storeCategory === 'flagship') return /flagship|furniro/.test(text);
+      if (storeCategory === 'flagship') return /flagship|furniro|woodora/.test(text);
       if (storeCategory === 'artisan') return /artisan|boutique|studio/.test(text);
       return true;
     });
@@ -370,10 +370,10 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* 6. Setup Collage (#FuniroFurniture) */}
+      {/* 6. Setup Collage (#WoodoraFurniture) */}
       <section className="setup-section" aria-labelledby="setup-title">
         <p>Share your setup with</p>
-        <h2 id="setup-title">#FuniroFurniture</h2>
+        <h2 id="setup-title">#WoodoraFurniture</h2>
         <div className="setup-gallery">
           {gallery.map((number, i) => (
             <img

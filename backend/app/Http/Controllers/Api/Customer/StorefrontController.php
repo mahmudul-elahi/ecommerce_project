@@ -284,6 +284,9 @@ class StorefrontController extends Controller
             ->where(function ($q) use ($slugOrId) {
                 $q->where('id', $slugOrId)
                     ->orWhere('slug', $slugOrId);
+                if ($slugOrId === 'furniro') {
+                    $q->orWhere('slug', 'woodora');
+                }
             })
             ->withCount(['shopProducts as products_count' => function ($q) {
                 $q->where('is_active', true)
@@ -307,6 +310,9 @@ class StorefrontController extends Controller
             ->where(function ($q) use ($slugOrId) {
                 $q->where('id', $slugOrId)
                     ->orWhere('slug', $slugOrId);
+                if ($slugOrId === 'furniro') {
+                    $q->orWhere('slug', 'woodora');
+                }
             })
             ->firstOrFail();
 
@@ -400,6 +406,9 @@ class StorefrontController extends Controller
             ->where(function ($q) use ($slugOrId) {
                 $q->where('id', $slugOrId)
                     ->orWhere('slug', $slugOrId);
+                if ($slugOrId === 'furniro') {
+                    $q->orWhere('slug', 'woodora');
+                }
             })
             ->firstOrFail();
 

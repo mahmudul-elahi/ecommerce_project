@@ -39,10 +39,10 @@ class DatabaseSeeder extends Seeder
         ]);
         $admin->assignRole($adminRole);
 
-        // 2. Create Furniro Flagship Owner
+        // 2. Create Woodora Flagship Owner
         $furniroOwner = User::create([
-            'name' => 'Furniro Design Studio',
-            'email' => 'furniro@ecommerce.com',
+            'name' => 'Woodora Design Studio',
+            'email' => 'woodora@ecommerce.com',
             'password' => Hash::make('password'),
             'role' => 'shop_owner',
             'phone' => '+(84) 546-6789',
@@ -61,15 +61,15 @@ class DatabaseSeeder extends Seeder
         ]);
         $partnerOwner->assignRole($shopOwnerRole);
 
-        // 4. Create Flagship Furniro Store
+        // 4. Create Flagship Woodora Store
         $furniroShop = Shop::create([
             'user_id' => $furniroOwner->id,
-            'name' => 'Furniro Flagship Store',
-            'slug' => 'furniro',
-            'description' => 'Thoughtful interior collections, artisanal wooden furniture, and designer accents for modern spaces.',
+            'name' => 'Woodora Flagship Store',
+            'slug' => 'woodora',
+            'description' => 'Thoughtful interior collections, artisanal wooden furniture, and designer accents for modern spaces by Woodora.',
             'logo' => '/images/furniro/imgMeubelHouseLogos05.png',
             'banner' => '/images/furniro/pageBanner.png',
-            'email' => 'hello@furniro.store',
+            'email' => 'hello@woodora.store',
             'phone' => '+(84) 546-6789',
             'address' => '400 University Drive Suite 200 Coral Gables, FL 33134 USA',
             'status' => 'active',

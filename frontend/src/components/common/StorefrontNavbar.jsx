@@ -19,11 +19,11 @@ export default function StorefrontNavbar() {
 
   return (
     <header className="storefront-header">
-      <Link className="storefront-logo" href="/" aria-label="Furniro home">
+      <Link className="storefront-logo" href="/" aria-label="Woodora home">
         <span className="storefront-logo-mark">
-          <img src="/images/furniro/imgMeubelHouseLogos05.png" alt="Furniro Logo" />
+          <img src="/images/furniro/imgMeubelHouseLogos05.png" alt="Woodora Logo" />
         </span>
-        Furniro
+        Woodora
       </Link>
 
       <nav className={`storefront-nav ${open ? 'is-open' : ''}`} aria-label="Main navigation">

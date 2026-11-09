@@ -104,7 +104,7 @@ class EcommerceApiTest extends TestCase
 
     public function test_shop_owner_can_create_product_and_it_is_added_to_shared_catalog_and_shop(): void
     {
-        $owner = User::where('email', 'furniro@ecommerce.com')->first();
+        $owner = User::whereIn('email', ['woodora@ecommerce.com', 'furniro@ecommerce.com'])->first();
 
         $response = $this->actingAs($owner)
             ->postJson('/api/shop-owner/catalog/create', [
@@ -203,7 +203,7 @@ class EcommerceApiTest extends TestCase
 
     public function test_customer_can_checkout_and_place_order(): void
     {
-        $shop = Shop::where('slug', 'furniro')->first();
+        $shop = Shop::whereIn('slug', ['woodora', 'furniro'])->first();
         $shopProduct = ShopProduct::where('shop_id', $shop->id)->where('is_active', true)->first();
 
         $response = $this->postJson('/api/customer/checkout', [

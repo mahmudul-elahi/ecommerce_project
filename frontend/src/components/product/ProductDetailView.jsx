@@ -45,8 +45,8 @@ export default function ProductDetailView({ product, relatedProducts = [] }) {
   const handleAddToCart = () => {
     const shop = {
       id: product.shop?.id || product.shop_id || 1,
-      name: product.shop?.name || product.shop_name || 'Furniro Flagship',
-      slug: product.shop?.slug || product.shop_slug || 'furniro',
+      name: product.shop?.name || product.shop_name || 'Woodora Flagship',
+      slug: product.shop?.slug || product.shop_slug || 'woodora',
     };
 
     const cartProduct = {
@@ -75,8 +75,8 @@ export default function ProductDetailView({ product, relatedProducts = [] }) {
       stock: product.stock ?? 10,
       shop: product.shop || {
         id: product.shop_id || 1,
-        name: product.shop_name || 'Furniro Flagship',
-        slug: product.shop_slug || 'furniro',
+        name: product.shop_name || 'Woodora Flagship',
+        slug: product.shop_slug || 'woodora',
       },
     };
 
@@ -247,7 +247,7 @@ export default function ProductDetailView({ product, relatedProducts = [] }) {
                 <span className="meta-key">Store</span>
                 <span className="meta-sep">:</span>
                 <span className="meta-val text-[#B88E2F] font-semibold">
-                  {product.shop?.name || product.shop_name || 'Furniro Flagship'}
+                  {product.shop?.name || product.shop_name || 'Woodora Flagship'}
                 </span>
               </div>
               <div className="meta-row">

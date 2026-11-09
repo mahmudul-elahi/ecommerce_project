@@ -12,7 +12,7 @@ export const WishlistProvider = ({ children }) => {
   // Load favorites from localStorage
   useEffect(() => {
     try {
-      const saved = localStorage.getItem('furniro_wishlist');
+      const saved = localStorage.getItem('woodora_wishlist') || localStorage.getItem('furniro_wishlist');
       if (saved) {
         setFavorites(JSON.parse(saved));
       }
@@ -26,7 +26,7 @@ export const WishlistProvider = ({ children }) => {
   useEffect(() => {
     if (!initialized) return;
     try {
-      localStorage.setItem('furniro_wishlist', JSON.stringify(favorites));
+      localStorage.setItem('woodora_wishlist', JSON.stringify(favorites));
     } catch (e) {
       console.warn('Failed to save wishlist to localStorage', e);
     }
@@ -64,8 +64,8 @@ export const WishlistProvider = ({ children }) => {
           category: product.category || '',
           shop: product.shop || {
             id: product.shop_id || 1,
-            name: product.shop_name || 'Furniro Flagship',
-            slug: product.shop_slug || 'furniro',
+            name: product.shop_name || 'Woodora Flagship',
+            slug: product.shop_slug || 'woodora',
           },
         },
         ...prev,

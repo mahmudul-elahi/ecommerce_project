@@ -14,8 +14,8 @@ import WishlistDrawer from '../components/common/WishlistDrawer';
 import { Toaster } from 'sonner';
 
 export const metadata = {
-  title: 'Furniro | Interior Furniture & Handcrafted Living',
-  description: 'High-end interior crafted furniture, artisanal collections and multi-vendor storefronts.',
+  title: 'Woodora | Interior Furniture & Handcrafted Living',
+  description: 'High-end interior crafted furniture, artisanal collections and multi-vendor storefronts by Woodora.',
 };
 
 export default function RootLayout({ children }) {

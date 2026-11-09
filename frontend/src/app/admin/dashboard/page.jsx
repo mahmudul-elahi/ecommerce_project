@@ -170,7 +170,7 @@ export default function AdminDashboardPage() {
               <div className="grid grid-cols-2 gap-4 my-3 text-xs text-white/85">
                 <div>
                   <span className="block text-[10px] text-white/70 uppercase">Card Holder</span>
-                  <span className="font-semibold text-sm">Furniro Admin</span>
+                  <span className="font-semibold text-sm">Woodora Admin</span>
                 </div>
                 <div>
                   <span className="block text-[10px] text-white/70 uppercase">Valid Thru</span>
@@ -398,7 +398,7 @@ export default function AdminDashboardPage() {
                     </div>
                     <div>
                       <div>{shop.name}</div>
-                      <div className="text-xs text-[#718EBF]">{shop.email || 'support@furniro.store'}</div>
+                      <div className="text-xs text-[#718EBF]">{shop.email || 'support@woodora.store'}</div>
                     </div>
                   </td>
                   <td className="py-4 font-mono text-xs text-[#718EBF]">/{shop.slug}</td>

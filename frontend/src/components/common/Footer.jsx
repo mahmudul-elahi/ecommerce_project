@@ -43,7 +43,7 @@ export default function Footer() {
       <div className="footer-columns">
         <div className="footer-col-brand">
           <Link className="footer-brand" href="/">
-            Funiro.
+            Woodora.
           </Link>
           <address className="footer-address">
             400 University Drive Suite 200 Coral Gables,
@@ -110,7 +110,7 @@ export default function Footer() {
       </div>
 
       <div className="footer-bottom">
-        <p className="footer-copyright">2023 furino. All rights reverved</p>
+        <p className="footer-copyright">2026 Woodora. All rights reserved</p>
       </div>
     </footer>
   );

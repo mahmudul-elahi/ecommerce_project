@@ -33,7 +33,7 @@ export default function ContactPage() {
 
   const onSubmit = async (data) => {
     toast.success('Message Sent Successfully!', {
-      description: `Thank you ${data.name}. Our Furniro team will contact you at ${data.email} shortly.`,
+      description: `Thank you ${data.name}. Our Woodora team will contact you at ${data.email} shortly.`,
     });
     reset();
   };
