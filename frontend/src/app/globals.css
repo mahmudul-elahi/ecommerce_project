@@ -788,11 +788,7 @@
 .product-details-column { padding-top: 6px; }
 .product-title { font-size: 42px; font-weight: 400; color: black; line-height: 1.2; }
 .product-price { font-size: 24px; font-weight: 500; color: #9f9f9f; margin-top: 10px; }
-.product-rating-row { display: flex; align-items: center; gap: 16px; margin-top: 14px; }
-.stars-wrapper { display: flex; gap: 4px; }
-.rating-divider { width: 1px; height: 30px; background: #9f9f9f; }
-.reviews-count-text { font-size: 13px; color: #9f9f9f; }
-.product-short-desc { font-size: 13px; color: black; line-height: 1.6; margin-top: 14px; max-width: 440px; }
+.product-short-desc { font-size: 14px; color: #333333; line-height: 1.6; margin-top: 18px; max-width: 440px; }
 .option-group { margin-top: 22px; }
 .option-label { display: block; font-size: 14px; color: #9f9f9f; margin-bottom: 10px; }
 .size-buttons-row { display: flex; gap: 14px; }

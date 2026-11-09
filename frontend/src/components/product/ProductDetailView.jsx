@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { Star, Share2, Heart } from 'lucide-react';
+import { Share2, Heart } from 'lucide-react';
 import { useCart } from '../../context/CartContext';
 import { useWishlist } from '../../context/WishlistContext';
 import ProductCard from './ProductCard';
@@ -31,7 +31,6 @@ export default function ProductDetailView({ product, relatedProducts = [] }) {
   const [selectedSize, setSelectedSize] = useState('L');
   const [selectedColor, setSelectedColor] = useState('gold');
   const [quantity, setQuantity] = useState(1);
-  const [activeTab, setActiveTab] = useState('description');
 
   useEffect(() => {
     if (imagesList.length > 0 && (!selectedImg || !imagesList.includes(selectedImg))) {
@@ -143,16 +142,6 @@ export default function ProductDetailView({ product, relatedProducts = [] }) {
           <div className="product-details-column">
             <h1 className="product-title">{product.name}</h1>
             <p className="product-price">{formatPrice(product.price)}</p>
-
-            <div className="product-rating-row">
-              <div className="stars-wrapper">
-                {[1, 2, 3, 4, 5].map((star) => (
-                  <Star key={star} size={18} fill="#FFC700" color="#FFC700" />
-                ))}
-              </div>
-              <div className="rating-divider" />
-              <span className="reviews-count-text">5 Customer Review</span>
-            </div>
 
             {product.description && (
               <p className="product-short-desc">{product.description}</p>
@@ -286,31 +275,13 @@ export default function ProductDetailView({ product, relatedProducts = [] }) {
         </div>
       </main>
 
-      {/* 3. Description & Additional Info Tabs */}
+      {/* 3. Product Description */}
       <section className="product-tabs-section">
         <div className="section-container">
           <div className="tabs-header">
-            <button
-              type="button"
-              onClick={() => setActiveTab('description')}
-              className={`tab-title-btn ${activeTab === 'description' ? 'active' : ''}`}
-            >
+            <h2 className="tab-title-btn active !text-black !font-medium cursor-default">
               Description
-            </button>
-            <button
-              type="button"
-              onClick={() => setActiveTab('additional')}
-              className={`tab-title-btn ${activeTab === 'additional' ? 'active' : ''}`}
-            >
-              Additional Information
-            </button>
-            <button
-              type="button"
-              onClick={() => setActiveTab('reviews')}
-              className={`tab-title-btn ${activeTab === 'reviews' ? 'active' : ''}`}
-            >
-              Reviews [5]
-            </button>
+            </h2>
           </div>
 
           <div className="tab-content-body">
