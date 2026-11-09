@@ -1,35 +1,41 @@
 'use client';
 
-import React, { useState } from 'react';
+import React from 'react';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { z } from 'zod';
 import PageBanner from '../../components/common/PageBanner';
 import FeaturesBar from '../../components/common/FeaturesBar';
 import { toast } from 'sonner';
 
+const contactSchema = z.object({
+  name: z.string().min(2, 'Please enter your name (min 2 characters)'),
+  email: z.string().min(1, 'Email is required').email('Please enter a valid email address'),
+  subject: z.string().optional(),
+  message: z.string().min(5, 'Message must be at least 5 characters'),
+});
+
 export default function ContactPage() {
-  const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    subject: '',
-    message: '',
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: { errors, isSubmitting },
+  } = useForm({
+    resolver: zodResolver(contactSchema),
+    defaultValues: {
+      name: '',
+      email: '',
+      subject: '',
+      message: '',
+    },
   });
-  const [submitted, setSubmitted] = useState(false);
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
-  };
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    if (!formData.name || !formData.email || !formData.message) {
-      toast.error('Please fill in required fields');
-      return;
-    }
-    setSubmitted(true);
-    toast.success('Message Sent!', {
-      description: 'Thank you for reaching out. Our team will contact you shortly.',
+  const onSubmit = async (data) => {
+    toast.success('Message Sent Successfully!', {
+      description: `Thank you ${data.name}. Our Furniro team will contact you at ${data.email} shortly.`,
     });
-    setFormData({ name: '', email: '', subject: '', message: '' });
+    reset();
   };
 
   return (
@@ -88,21 +94,23 @@ export default function ContactPage() {
             </div>
           </div>
 
-          {/* Right Contact Form */}
+          {/* Right Contact Form with React Hook Form + Zod */}
           <div className="contact-form-column">
-            <form onSubmit={handleSubmit} className="contact-form">
+            <form onSubmit={handleSubmit(onSubmit)} className="contact-form" noValidate>
               <div className="form-field">
                 <label htmlFor="contact-name">Your name</label>
                 <input
                   type="text"
                   id="contact-name"
-                  name="name"
-                  required
                   placeholder="Abc"
-                  value={formData.name}
-                  onChange={handleChange}
+                  {...register('name')}
                   className="furniro-input"
                 />
+                {errors.name && (
+                  <span className="text-xs text-rose-600 mt-1 block">
+                    {errors.name.message}
+                  </span>
+                )}
               </div>
 
               <div className="form-field">
@@ -110,13 +118,15 @@ export default function ContactPage() {
                 <input
                   type="email"
                   id="contact-email"
-                  name="email"
-                  required
                   placeholder="Abc@def.com"
-                  value={formData.email}
-                  onChange={handleChange}
+                  {...register('email')}
                   className="furniro-input"
                 />
+                {errors.email && (
+                  <span className="text-xs text-rose-600 mt-1 block">
+                    {errors.email.message}
+                  </span>
+                )}
               </div>
 
               <div className="form-field">
@@ -124,31 +134,36 @@ export default function ContactPage() {
                 <input
                   type="text"
                   id="contact-subject"
-                  name="subject"
                   placeholder="This is an optional"
-                  value={formData.subject}
-                  onChange={handleChange}
+                  {...register('subject')}
                   className="furniro-input"
                 />
+                {errors.subject && (
+                  <span className="text-xs text-rose-600 mt-1 block">
+                    {errors.subject.message}
+                  </span>
+                )}
               </div>
 
               <div className="form-field">
                 <label htmlFor="contact-message">Message</label>
                 <textarea
                   id="contact-message"
-                  name="message"
-                  required
                   rows={4}
                   placeholder="Hi! i’d like to ask about"
-                  value={formData.message}
-                  onChange={handleChange}
+                  {...register('message')}
                   className="furniro-textarea"
                 />
+                {errors.message && (
+                  <span className="text-xs text-rose-600 mt-1 block">
+                    {errors.message.message}
+                  </span>
+                )}
               </div>
 
               <div className="form-submit-wrapper">
-                <button type="submit" className="furniro-submit-btn">
-                  Submit
+                <button type="submit" disabled={isSubmitting} className="furniro-submit-btn">
+                  {isSubmitting ? 'Sending...' : 'Submit'}
                 </button>
               </div>
             </form>

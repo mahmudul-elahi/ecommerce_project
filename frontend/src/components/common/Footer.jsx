@@ -1,28 +1,41 @@
 'use client';
 
-import { useState } from 'react';
+import React from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { z } from 'zod';
 import { toast } from 'sonner';
+
+const newsletterSchema = z.object({
+  email: z.string().min(1, 'Email is required').email('Please enter a valid email address'),
+});
 
 export default function Footer() {
   const pathname = usePathname();
-  const [email, setEmail] = useState('');
+
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: { errors },
+  } = useForm({
+    resolver: zodResolver(newsletterSchema),
+    defaultValues: {
+      email: '',
+    },
+  });
 
   if (pathname?.startsWith('/admin') || pathname?.startsWith('/shop-owner')) {
     return null;
   }
 
-  const handleSubscribe = (e) => {
-    e.preventDefault();
-    if (!email || !email.includes('@')) {
-      toast.error('Please enter a valid email address');
-      return;
-    }
+  const onSubscribe = (data) => {
     toast.success('Thank you for subscribing!', {
-      description: 'You will receive our latest interior updates and offers.',
+      description: `Updates will be sent to ${data.email}.`,
     });
-    setEmail('');
+    reset();
   };
 
   return (
@@ -74,15 +87,21 @@ export default function Footer() {
 
         <div className="footer-col-newsletter">
           <h4 className="footer-col-title">Newsletter</h4>
-          <form onSubmit={handleSubscribe} className="footer-newsletter-form">
-            <input
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              placeholder="Enter Your Email Address"
-              className="footer-email-input"
-              aria-label="Your email address"
-            />
+          <form onSubmit={handleSubmit(onSubscribe)} className="footer-newsletter-form" noValidate>
+            <div className="flex flex-col w-full">
+              <input
+                type="email"
+                placeholder="Enter Your Email Address"
+                {...register('email')}
+                className="footer-email-input"
+                aria-label="Your email address"
+              />
+              {errors.email && (
+                <span className="text-[10px] text-rose-500 mt-1">
+                  {errors.email.message}
+                </span>
+              )}
+            </div>
             <button type="submit" className="footer-subscribe-btn">
               SUBSCRIBE
             </button>
