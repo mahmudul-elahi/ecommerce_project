@@ -19,6 +19,11 @@ import {
   Package,
 } from 'lucide-react';
 import { useAdminDashboardQuery } from '../../../hooks/useAdmin';
+import {
+  formatCompactCurrency,
+  formatCompactNumber,
+  formatExactCurrency,
+} from '../../../utils/formatters';
 
 export default function AdminDashboardPage() {
   const { data, isLoading, isError } = useAdminDashboardQuery();
@@ -49,8 +54,11 @@ export default function AdminDashboardPage() {
             <span className="text-xs font-semibold uppercase tracking-wider text-[#718EBF]">
               Active Stores
             </span>
-            <div className="text-2xl lg:text-[28px] font-bold text-[#343C6A] mt-1 font-inter">
-              {stats.active_shops ?? 0}
+            <div
+              className="text-2xl lg:text-[28px] font-bold text-[#343C6A] mt-1 font-inter"
+              title={`${stats.active_shops ?? 0} active stores`}
+            >
+              {formatCompactNumber(stats.active_shops ?? 0)}
             </div>
             <div className="text-xs text-[#16DBAA] font-semibold mt-0.5 flex items-center gap-1">
               <TrendingUp className="w-3.5 h-3.5" />
@@ -68,8 +76,11 @@ export default function AdminDashboardPage() {
             <span className="text-xs font-semibold uppercase tracking-wider text-[#718EBF]">
               Catalog Items
             </span>
-            <div className="text-2xl lg:text-[28px] font-bold text-[#343C6A] mt-1 font-inter">
-              {stats.total_products ?? 0}
+            <div
+              className="text-2xl lg:text-[28px] font-bold text-[#343C6A] mt-1 font-inter"
+              title={`${stats.total_products ?? 0} products in catalog`}
+            >
+              {formatCompactNumber(stats.total_products ?? 0)}
             </div>
             <div className="text-xs text-[#718EBF] mt-0.5">
               Available across shops
@@ -86,8 +97,11 @@ export default function AdminDashboardPage() {
             <span className="text-xs font-semibold uppercase tracking-wider text-[#718EBF]">
               Merchant Owners
             </span>
-            <div className="text-2xl lg:text-[28px] font-bold text-[#343C6A] mt-1 font-inter">
-              {stats.total_shop_owners ?? 0}
+            <div
+              className="text-2xl lg:text-[28px] font-bold text-[#343C6A] mt-1 font-inter"
+              title={`${stats.total_shop_owners ?? 0} registered merchant owners`}
+            >
+              {formatCompactNumber(stats.total_shop_owners ?? 0)}
             </div>
             <div className="text-xs text-[#16DBAA] font-semibold mt-0.5 flex items-center gap-1">
               <TrendingUp className="w-3.5 h-3.5" />
@@ -105,8 +119,11 @@ export default function AdminDashboardPage() {
             <span className="text-xs font-semibold uppercase tracking-wider text-[#718EBF]">
               Platform Sales
             </span>
-            <div className="text-2xl lg:text-[28px] font-bold text-[#343C6A] mt-1 font-inter">
-              ${Number(stats.total_revenue || 0).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+            <div
+              className="text-2xl lg:text-[28px] font-bold text-[#343C6A] mt-1 font-inter"
+              title={formatExactCurrency(stats.total_revenue || 0)}
+            >
+              {formatCompactCurrency(stats.total_revenue || 0)}
             </div>
             <div className="text-xs text-[#718EBF] mt-0.5">
               {stats.total_orders ?? 0} orders settled
@@ -137,8 +154,11 @@ export default function AdminDashboardPage() {
               <div className="flex items-start justify-between">
                 <div>
                   <span className="text-xs text-white/75 font-medium">Balance</span>
-                  <div className="text-2xl font-bold font-inter mt-1">
-                    ${Number(stats.total_revenue || 0).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                  <div
+                    className="text-2xl font-bold font-inter mt-1"
+                    title={formatExactCurrency(stats.total_revenue || 0)}
+                  >
+                    {formatCompactCurrency(stats.total_revenue || 0)}
                   </div>
                 </div>
                 {/* Chip Icon */}
@@ -173,8 +193,11 @@ export default function AdminDashboardPage() {
               <div className="flex items-start justify-between">
                 <div>
                   <span className="text-xs text-[#718EBF] font-medium">Escrow Settlement</span>
-                  <div className="text-2xl font-bold text-[#343C6A] font-inter mt-1">
-                    $14,250.00
+                  <div
+                    className="text-2xl font-bold text-[#343C6A] font-inter mt-1"
+                    title={formatExactCurrency(14250)}
+                  >
+                    {formatCompactCurrency(14250)}
                   </div>
                 </div>
                 <div className="w-9 h-7 rounded-md bg-slate-100 border border-slate-200 flex items-center justify-center">

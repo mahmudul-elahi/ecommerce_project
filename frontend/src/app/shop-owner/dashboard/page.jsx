@@ -21,6 +21,11 @@ import {
 } from 'lucide-react';
 import { useShopOwnerDashboardQuery, useMyShopQuery } from '../../../hooks/useShopOwner';
 import { useAuth } from '../../../context/AuthContext';
+import {
+  formatCompactCurrency,
+  formatCompactNumber,
+  formatExactCurrency,
+} from '../../../utils/formatters';
 
 export default function ShopOwnerDashboardPage() {
   const { user } = useAuth();
@@ -62,8 +67,11 @@ export default function ShopOwnerDashboardPage() {
             <span className="text-xs font-semibold uppercase tracking-wider text-[#718EBF]">
               My Active Listings
             </span>
-            <div className="text-2xl lg:text-[28px] font-bold text-[#343C6A] mt-1 font-inter">
-              {stats.my_products_count ?? 0}
+            <div
+              className="text-2xl lg:text-[28px] font-bold text-[#343C6A] mt-1 font-inter"
+              title={`${stats.my_products_count ?? 0} active listings`}
+            >
+              {formatCompactNumber(stats.my_products_count ?? 0)}
             </div>
             <div className="text-xs text-[#16DBAA] font-semibold mt-0.5 flex items-center gap-1">
               <TrendingUp className="w-3.5 h-3.5" />
@@ -81,8 +89,11 @@ export default function ShopOwnerDashboardPage() {
             <span className="text-xs font-semibold uppercase tracking-wider text-[#718EBF]">
               Shared Catalog
             </span>
-            <div className="text-2xl lg:text-[28px] font-bold text-[#343C6A] mt-1 font-inter">
-              {stats.total_catalog_count ?? 0}
+            <div
+              className="text-2xl lg:text-[28px] font-bold text-[#343C6A] mt-1 font-inter"
+              title={`${stats.total_catalog_count ?? 0} shared products`}
+            >
+              {formatCompactNumber(stats.total_catalog_count ?? 0)}
             </div>
             <div className="text-xs text-[#718EBF] mt-0.5">
               Ready to add to store
@@ -99,8 +110,11 @@ export default function ShopOwnerDashboardPage() {
             <span className="text-xs font-semibold uppercase tracking-wider text-[#718EBF]">
               Customer Orders
             </span>
-            <div className="text-2xl lg:text-[28px] font-bold text-[#343C6A] mt-1 font-inter">
-              {stats.total_orders ?? 0}
+            <div
+              className="text-2xl lg:text-[28px] font-bold text-[#343C6A] mt-1 font-inter"
+              title={`${stats.total_orders ?? 0} orders`}
+            >
+              {formatCompactNumber(stats.total_orders ?? 0)}
             </div>
             <div className="text-xs text-[#16DBAA] font-semibold mt-0.5 flex items-center gap-1">
               <TrendingUp className="w-3.5 h-3.5" />
@@ -118,8 +132,11 @@ export default function ShopOwnerDashboardPage() {
             <span className="text-xs font-semibold uppercase tracking-wider text-[#718EBF]">
               Total Revenue
             </span>
-            <div className="text-2xl lg:text-[28px] font-bold text-[#343C6A] mt-1 font-inter">
-              ${Number(stats.total_revenue || 0).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+            <div
+              className="text-2xl lg:text-[28px] font-bold text-[#343C6A] mt-1 font-inter"
+              title={formatExactCurrency(stats.total_revenue || 0)}
+            >
+              {formatCompactCurrency(stats.total_revenue || 0)}
             </div>
             <div className="text-xs text-[#718EBF] mt-0.5">
               Settled gross earnings
@@ -150,8 +167,11 @@ export default function ShopOwnerDashboardPage() {
               <div className="flex items-start justify-between">
                 <div>
                   <span className="text-xs text-white/75 font-medium">Available Balance</span>
-                  <div className="text-2xl font-bold font-inter mt-1">
-                    ${Number(stats.total_revenue || 0).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                  <div
+                    className="text-2xl font-bold font-inter mt-1"
+                    title={formatExactCurrency(stats.total_revenue || 0)}
+                  >
+                    {formatCompactCurrency(stats.total_revenue || 0)}
                   </div>
                 </div>
                 <div className="w-9 h-7 rounded-md bg-white/20 border border-white/30 flex items-center justify-center">
@@ -184,8 +204,11 @@ export default function ShopOwnerDashboardPage() {
               <div className="flex items-start justify-between">
                 <div>
                   <span className="text-xs text-[#718EBF] font-medium">Next Payout Cycle</span>
-                  <div className="text-2xl font-bold text-[#343C6A] font-inter mt-1">
-                    ${(Number(stats.total_revenue || 0) * 0.95).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                  <div
+                    className="text-2xl font-bold text-[#343C6A] font-inter mt-1"
+                    title={formatExactCurrency((Number(stats.total_revenue || 0) * 0.95))}
+                  >
+                    {formatCompactCurrency((Number(stats.total_revenue || 0) * 0.95))}
                   </div>
                 </div>
                 <div className="w-9 h-7 rounded-md bg-slate-100 border border-slate-200 flex items-center justify-center">
