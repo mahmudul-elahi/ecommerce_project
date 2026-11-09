@@ -218,13 +218,10 @@ export default function ProductDetailView({ product, relatedProducts = [] }) {
               <button
                 type="button"
                 onClick={handleToggleWishlist}
-                className={`flex items-center justify-center gap-2 px-6 py-3.5 rounded-[15px] border text-base font-medium transition-all cursor-pointer ${
-                  favorited
-                    ? 'border-rose-500 bg-rose-50 text-rose-600 shadow-xs'
-                    : 'border-black text-black hover:bg-black hover:text-white'
-                }`}
+                className={`btn-wishlist ${favorited ? 'is-favorited' : ''}`}
+                aria-label={favorited ? 'Remove from favorites' : 'Add to wishlist'}
               >
-                <Heart className={`w-5 h-5 ${favorited ? 'fill-rose-500 text-rose-500' : ''}`} />
+                <Heart className={`w-5 h-5 ${favorited ? 'fill-current' : ''}`} />
                 <span>{favorited ? 'In Favorites' : 'Add to Wishlist'}</span>
               </button>
             </div>
