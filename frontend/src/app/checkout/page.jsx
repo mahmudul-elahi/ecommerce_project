@@ -31,8 +31,6 @@ export default function CheckoutPage() {
   const router = useRouter();
   const checkoutMutation = useCheckoutMutation();
 
-  const [paymentMethod, setPaymentMethod] = useState('bank');
-
   const {
     register,
     handleSubmit,
@@ -69,7 +67,7 @@ export default function CheckoutPage() {
         customer_email: data.email,
         customer_phone: data.phone,
         shipping_address: fullAddress,
-        notes: data.notes ? `${data.notes} | Payment: ${paymentMethod}` : `Payment: ${paymentMethod}`,
+        notes: data.notes ? `${data.notes} | Payment: Cash On Delivery` : 'Payment: Cash On Delivery',
         items: items.map((i) => ({
           shop_product_id: i.shop_product_id,
           quantity: i.quantity,
@@ -317,32 +315,17 @@ export default function CheckoutPage() {
 
                 <div className="summary-divider" />
 
-                {/* Payment Methods */}
+                {/* Payment Method - Cash on Delivery */}
                 <div className="payment-methods-box">
-                  <label className="payment-option">
-                    <input
-                      type="radio"
-                      name="payment"
-                      checked={paymentMethod === 'bank'}
-                      onChange={() => setPaymentMethod('bank')}
-                    />
-                    <span className="payment-label">Direct Bank Transfer</span>
-                  </label>
-                  {paymentMethod === 'bank' && (
-                    <p className="payment-description">
-                      Make your payment directly into our bank account. Please use your Order ID as the payment reference. Your order will not be shipped until the funds have cleared in our account.
-                    </p>
-                  )}
-
-                  <label className="payment-option">
-                    <input
-                      type="radio"
-                      name="payment"
-                      checked={paymentMethod === 'cod'}
-                      onChange={() => setPaymentMethod('cod')}
-                    />
-                    <span className="payment-label text-[#9F9F9F]">Cash On Delivery</span>
-                  </label>
+                  <div className="flex items-center gap-2.5 mb-2">
+                    <span className="w-3.5 h-3.5 rounded-full bg-black ring-4 ring-black/10 inline-block flex-shrink-0" />
+                    <span className="payment-label !text-black !font-medium text-base">
+                      Cash On Delivery
+                    </span>
+                  </div>
+                  <p className="payment-description !text-slate-600 !ml-6 !mb-2">
+                    Pay with cash directly upon delivery to your doorstep. Inspect your handcrafted furniture and pay our delivery courier once your order arrives.
+                  </p>
                 </div>
 
                 <p className="privacy-notice">
