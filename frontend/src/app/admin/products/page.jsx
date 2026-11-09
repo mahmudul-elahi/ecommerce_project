@@ -32,6 +32,7 @@ import {
   useSaveAdminProductMutation,
   useDeleteAdminProductMutation,
 } from '../../../hooks/useAdmin';
+import { formatPrice, DEFAULT_CURRENCY } from '../../../utils/formatters';
 
 const adminProductSchema = z.object({
   name: z.string().min(2, 'Product name is required'),
@@ -318,7 +319,7 @@ export default function ProductManagementPage() {
                         </span>
                       </td>
                       <td className="px-5 py-3.5 font-mono text-slate-900 font-semibold">
-                        Rp {Number(prod.base_price).toLocaleString('id-ID')}
+                        {formatPrice(prod.base_price)}
                       </td>
                       <td className="px-5 py-3.5 text-slate-500">
                         {prod.creator?.name || 'Administrator'}
@@ -393,7 +394,7 @@ export default function ProductManagementPage() {
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
             <div>
               <label className="block text-xs font-semibold text-[#343C6A] mb-1.5">
-                Base Price (Rp) <span className="text-[#B88E2F]">*</span>
+                Base Price ({DEFAULT_CURRENCY}) <span className="text-[#B88E2F]">*</span>
               </label>
               <input
                 type="number"

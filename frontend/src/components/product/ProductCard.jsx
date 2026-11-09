@@ -6,6 +6,7 @@ import { useRouter } from 'next/navigation';
 import { Heart, Share2 } from 'lucide-react';
 import { useCart } from '../../context/CartContext';
 import { useWishlist } from '../../context/WishlistContext';
+import { formatPrice } from '../../utils/formatters';
 import { toast } from 'sonner';
 
 export default function ProductCard({ product }) {
@@ -14,10 +15,6 @@ export default function ProductCard({ product }) {
   const router = useRouter();
 
   const favorited = isFavorite(product.shop_product_id || product.id);
-
-  const formatPrice = (val) => {
-    return `Rp ${Number(val).toLocaleString('id-ID')}`;
-  };
 
   const handleAddToCart = (e) => {
     e.preventDefault();

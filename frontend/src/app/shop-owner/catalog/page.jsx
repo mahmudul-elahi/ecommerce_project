@@ -34,6 +34,7 @@ import {
 } from '../../../hooks/useCatalog';
 import Modal from '../../../components/common/Modal';
 import DashFileUpload from '../../../components/dashboard/DashFileUpload';
+import { formatPrice, DEFAULT_CURRENCY } from '../../../utils/formatters';
 
 // Schema for adding existing catalog product to own shop
 const addToShopSchema = z.object({
@@ -379,7 +380,7 @@ export default function CatalogBrowsePage() {
                           Catalog Base Price
                         </span>
                         <span className="font-bold text-slate-900 text-sm">
-                          ${Number(product.base_price).toFixed(2)}
+                          {formatPrice(product.base_price)}
                         </span>
                       </div>
 
@@ -389,7 +390,7 @@ export default function CatalogBrowsePage() {
                             Your Active Price
                           </span>
                           <span className="font-bold text-slate-900 text-sm">
-                            ${Number(product.shop_listing.custom_price || product.base_price).toFixed(2)}
+                            {formatPrice(product.shop_listing.custom_price || product.base_price)}
                           </span>
                         </div>
                       )}
@@ -607,7 +608,7 @@ export default function CatalogBrowsePage() {
 
             <div>
               <label className="block text-xs font-semibold text-[#343C6A] mb-1.5">
-                Base Price (Rp) <span className="text-[#B88E2F]">*</span>
+                Base Price ({DEFAULT_CURRENCY}) <span className="text-[#B88E2F]">*</span>
               </label>
               <input
                 type="number"
@@ -627,7 +628,7 @@ export default function CatalogBrowsePage() {
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
             <div>
               <label className="block text-xs font-semibold text-[#343C6A] mb-1.5">
-                Your Storefront Retail Price (Rp)
+                Your Storefront Retail Price ({DEFAULT_CURRENCY})
               </label>
               <input
                 type="number"

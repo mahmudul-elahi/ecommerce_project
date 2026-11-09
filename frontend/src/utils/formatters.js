@@ -53,3 +53,16 @@ export function formatExactCurrency(value, currency = '$') {
     maximumFractionDigits: 2,
   })}`;
 }
+
+export const DEFAULT_CURRENCY = process.env.NEXT_PUBLIC_CURRENCY_SYMBOL || '$';
+
+export function formatPrice(value, currency = DEFAULT_CURRENCY) {
+  if (value === null || value === undefined || isNaN(value)) {
+    return `${currency}0.00`;
+  }
+  const num = Number(value);
+  return `${currency}${num.toLocaleString('en-US', {
+    minimumFractionDigits: Number.isInteger(num) ? 0 : 2,
+    maximumFractionDigits: 2,
+  })}`;
+}

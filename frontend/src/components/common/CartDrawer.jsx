@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { X, Trash2, ShoppingBag } from 'lucide-react';
 import { useCart } from '../../context/CartContext';
+import { formatPrice } from '../../utils/formatters';
 
 export default function CartDrawer() {
   const {
@@ -19,10 +20,6 @@ export default function CartDrawer() {
   const router = useRouter();
 
   if (!isCartOpen) return null;
-
-  const formatPrice = (val) => {
-    return `Rp ${Number(val).toLocaleString('id-ID')}`;
-  };
 
   return (
     <div className="fixed inset-0 z-50 overflow-hidden" role="dialog" aria-modal="true">

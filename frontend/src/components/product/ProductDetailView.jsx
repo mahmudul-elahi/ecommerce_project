@@ -6,6 +6,7 @@ import { useRouter } from 'next/navigation';
 import { Share2, Heart } from 'lucide-react';
 import { useCart } from '../../context/CartContext';
 import { useWishlist } from '../../context/WishlistContext';
+import { formatPrice } from '../../utils/formatters';
 import ProductCard from './ProductCard';
 import { toast } from 'sonner';
 
@@ -35,10 +36,6 @@ export default function ProductDetailView({ product, relatedProducts = [] }) {
       setSelectedImg(imagesList[0]);
     }
   }, [product.id, imagesList.join(',')]);
-
-  const formatPrice = (val) => {
-    return `Rp ${Number(val).toLocaleString('id-ID')}`;
-  };
 
   const handleAddToCart = () => {
     const shop = {

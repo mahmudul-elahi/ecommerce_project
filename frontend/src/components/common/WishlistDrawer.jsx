@@ -6,6 +6,7 @@ import { useRouter } from 'next/navigation';
 import { X, Trash2, Heart, ShoppingBag, ArrowRight } from 'lucide-react';
 import { useWishlist } from '../../context/WishlistContext';
 import { useCart } from '../../context/CartContext';
+import { formatPrice } from '../../utils/formatters';
 import { toast } from 'sonner';
 
 export default function WishlistDrawer() {
@@ -21,10 +22,6 @@ export default function WishlistDrawer() {
   const router = useRouter();
 
   if (!isWishlistOpen) return null;
-
-  const formatPrice = (val) => {
-    return `Rp ${Number(val).toLocaleString('id-ID')}`;
-  };
 
   const handleAddToCart = (item) => {
     const shop = item.shop || {

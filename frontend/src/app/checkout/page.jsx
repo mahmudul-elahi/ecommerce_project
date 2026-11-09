@@ -10,6 +10,7 @@ import PageBanner from '../../components/common/PageBanner';
 import FeaturesBar from '../../components/common/FeaturesBar';
 import { useCart } from '../../context/CartContext';
 import { useCheckoutMutation } from '../../hooks/useShops';
+import { formatPrice } from '../../utils/formatters';
 import { ChevronDown } from 'lucide-react';
 import { toast } from 'sonner';
 
@@ -52,10 +53,6 @@ export default function CheckoutPage() {
       notes: '',
     },
   });
-
-  const formatPrice = (val) => {
-    return `Rp ${Number(val).toLocaleString('id-ID')}`;
-  };
 
   const handlePlaceOrder = async (data) => {
     const customerName = `${data.firstName} ${data.lastName}`.trim();

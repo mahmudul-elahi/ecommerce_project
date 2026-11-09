@@ -5,6 +5,7 @@ import Link from 'next/link';
 import PageBanner from '../../components/common/PageBanner';
 import FeaturesBar from '../../components/common/FeaturesBar';
 import { useCart } from '../../context/CartContext';
+import { formatPrice } from '../../utils/formatters';
 import { ShoppingBag } from 'lucide-react';
 
 export default function CartPage() {
@@ -14,10 +15,6 @@ export default function CartPage() {
     updateQuantity,
     removeFromCart,
   } = useCart();
-
-  const formatPrice = (val) => {
-    return `Rp ${Number(val).toLocaleString('id-ID')}`;
-  };
 
   return (
     <div className="furniro-cart-page">
