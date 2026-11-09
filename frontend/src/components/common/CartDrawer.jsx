@@ -67,8 +67,11 @@ export default function CartDrawer() {
               </div>
             ) : (
               items.map((item) => (
-                <div key={item.shop_product_id} className="flex items-center gap-4 group">
-                  <div className="w-[105px] h-[105px] rounded-[10px] bg-[#FAF3EA] overflow-hidden flex-shrink-0 flex items-center justify-center">
+                <div
+                  key={item.shop_product_id}
+                  className="flex items-center gap-3.5 p-3 rounded-2xl bg-[#F9F9F9] hover:bg-[#F5F7FA] transition-colors border border-[#F0F0F0] hover:border-[#E6EFF5] group"
+                >
+                  <div className="w-[88px] h-[88px] rounded-[10px] bg-[#FAF3EA] overflow-hidden flex-shrink-0 flex items-center justify-center shadow-xs">
                     {item.thumbnail ? (
                       <img
                         src={item.thumbnail}
@@ -80,26 +83,30 @@ export default function CartDrawer() {
                     )}
                   </div>
 
-                  <div className="flex-1 min-w-0">
-                    <h3 className="text-base font-normal text-black truncate mb-2">{item.name}</h3>
-                    <div className="flex items-center gap-3 text-sm">
-                      <span className="font-light text-black">{item.quantity}</span>
-                      <span className="text-xs text-black font-light">X</span>
-                      <span className="font-medium text-[#B88E2F]">{formatPrice(item.price)}</span>
+                  <div className="flex-1 min-w-0 pr-1">
+                    <h3 className="text-sm font-semibold text-slate-800 truncate mb-1" title={item.name}>
+                      {item.name}
+                    </h3>
+                    <div className="flex items-center gap-2 text-xs">
+                      <span className="font-medium text-slate-600">{item.quantity}</span>
+                      <span className="text-[11px] text-slate-400">×</span>
+                      <span className="font-semibold text-[#B88E2F]">{formatPrice(item.price)}</span>
                     </div>
 
-                    <div className="flex items-center gap-2 mt-2">
+                    <div className="flex items-center gap-1.5 mt-2.5">
                       <button
                         onClick={() => updateQuantity(item.shop_product_id, item.quantity - 1)}
-                        className="w-6 h-6 rounded border border-slate-300 text-xs flex items-center justify-center hover:bg-slate-100"
+                        className="w-6 h-6 rounded-md bg-white border border-slate-200 text-xs text-slate-600 flex items-center justify-center hover:bg-slate-100 hover:border-slate-300 transition-colors cursor-pointer"
                         title="Decrease quantity"
                       >
                         -
                       </button>
-                      <span className="text-xs font-medium px-1">{item.quantity}</span>
+                      <span className="text-xs font-semibold px-2 min-w-[20px] text-center text-slate-700">
+                        {item.quantity}
+                      </span>
                       <button
                         onClick={() => updateQuantity(item.shop_product_id, item.quantity + 1)}
-                        className="w-6 h-6 rounded border border-slate-300 text-xs flex items-center justify-center hover:bg-slate-100"
+                        className="w-6 h-6 rounded-md bg-white border border-slate-200 text-xs text-slate-600 flex items-center justify-center hover:bg-slate-100 hover:border-slate-300 transition-colors cursor-pointer"
                         title="Increase quantity"
                       >
                         +
@@ -109,10 +116,11 @@ export default function CartDrawer() {
 
                   <button
                     onClick={() => removeFromCart(item.shop_product_id)}
-                    className="w-6 h-6 rounded-full bg-[#9F9F9F]/20 text-[#9F9F9F] hover:bg-red-100 hover:text-red-600 flex items-center justify-center transition-colors flex-shrink-0"
+                    className="p-1.5 rounded-full text-slate-400 hover:text-rose-600 hover:bg-rose-50 transition-colors flex-shrink-0 self-center cursor-pointer"
                     title="Remove item"
+                    aria-label={`Remove ${item.name} from cart`}
                   >
-                    <X className="w-3.5 h-3.5" />
+                    <X className="w-4 h-4" />
                   </button>
                 </div>
               ))

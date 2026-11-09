@@ -992,4 +992,75 @@
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
 }
 
+/* Sonner Toaster & Pure White Cross (Close Button) Overrides */
+[data-sonner-toaster] [data-sonner-toast] {
+  background: #ffffff !important;
+  color: #1e293b !important;
+  border: 1px solid #e7e5e4 !important;
+  box-shadow: 0 14px 38px -4px rgba(0, 0, 0, 0.14), 0 4px 12px -2px rgba(0, 0, 0, 0.06) !important;
+  border-radius: 14px !important;
+  font-family: inherit !important;
+}
+
+/* Cross / Close button with matching pure white background */
+[data-sonner-toaster] [data-sonner-toast] [data-close-button],
+[data-sonner-toast][data-type] [data-close-button],
+[data-sonner-toast][data-type="success"] [data-close-button],
+[data-sonner-toast][data-type="error"] [data-close-button],
+[data-sonner-toast][data-type="info"] [data-close-button],
+[data-sonner-toast][data-type="warning"] [data-close-button] {
+  background: #ffffff !important;
+  background-color: #ffffff !important;
+  color: #64748b !important;
+  border: 1px solid #e2e8f0 !important;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08) !important;
+  border-radius: 50% !important;
+  opacity: 1 !important;
+  width: 22px !important;
+  height: 22px !important;
+  top: 10px !important;
+  right: 10px !important;
+  left: auto !important;
+  transform: none !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  cursor: pointer !important;
+  transition: all 0.2s ease !important;
+  z-index: 20 !important;
+}
+
+[data-sonner-toaster] [data-sonner-toast] [data-close-button]:hover,
+[data-sonner-toast][data-type] [data-close-button]:hover {
+  background: #f8fafc !important;
+  background-color: #f8fafc !important;
+  color: #0f172a !important;
+  border-color: #cbd5e1 !important;
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.12) !important;
+}
+
+[data-sonner-toast] [data-close-button] svg {
+  color: #64748b !important;
+  stroke: #64748b !important;
+  width: 12px !important;
+  height: 12px !important;
+}
+
+[data-sonner-toast] [data-close-button]:hover svg {
+  color: #0f172a !important;
+  stroke: #0f172a !important;
+}
+
+[data-sonner-toast] [data-title] {
+  font-weight: 600 !important;
+  color: #1e293b !important;
+  font-size: 13px !important;
+}
+
+[data-sonner-toast] [data-description] {
+  color: #64748b !important;
+  font-size: 12px !important;
+  margin-top: 2px !important;
+}
+
 @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto !important; } .furniro-home * { transition: none !important; } }

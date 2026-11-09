@@ -36,8 +36,7 @@ export default function RootLayout({ children }) {
                   <main className="flex-1">{children}</main>
                   <Footer />
                   <Toaster
-                    position="top-right"
-                    richColors
+                    position="bottom-left"
                     theme="light"
                     closeButton
                     toastOptions={{
@@ -46,8 +45,9 @@ export default function RootLayout({ children }) {
                         border: '1px solid #e7e5e4',
                         color: '#1c1917',
                         fontSize: '13px',
-                        borderRadius: '12px',
-                        boxShadow: '0 10px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.04)',
+                        borderRadius: '14px',
+                        boxShadow: '0 14px 38px -4px rgba(0, 0, 0, 0.12), 0 4px 12px -2px rgba(0, 0, 0, 0.05)',
+                        padding: '14px 18px',
                       },
                     }}
                   />
