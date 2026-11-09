@@ -16,10 +16,34 @@ const merchantCategories = [
   { id: 'artisan', label: 'Artisan & Boutiques' },
 ];
 
-const rooms = [
-  { image: 'imgRectangle24', title: 'Inner Peace', label: 'Bed Room' },
-  { image: 'imgRectangle25', title: 'Everyday Light', label: 'Dining Room' },
-  { image: 'imgRectangle26', title: 'A Quiet Corner', label: 'Living Room' },
+const categoryInspirationImages = {
+  bedroom: '/images/furniro/imgRectangle24.png',
+  dining: '/images/furniro/imgRectangle25.png',
+  living: '/images/furniro/imgRectangle26.png',
+};
+
+const defaultRooms = [
+  {
+    id: 'bedroom',
+    name: 'Bedroom',
+    slug: 'bedroom',
+    description: 'Peaceful bed sets, ambient night lamps, and bedroom storage.',
+    image: '/images/furniro/imgRectangle24.png',
+  },
+  {
+    id: 'dining',
+    name: 'Dining',
+    slug: 'dining',
+    description: 'Curated dining tables, artisanal chairs, and dining sets.',
+    image: '/images/furniro/imgRectangle25.png',
+  },
+  {
+    id: 'living',
+    name: 'Living',
+    slug: 'living',
+    description: 'Handcrafted sofas, lounge chairs, and cozy living essentials.',
+    image: '/images/furniro/imgRectangle26.png',
+  },
 ];
 
 const gallery = ['36', '38', '40', '39', '41', '44', '43', '45', '37'];
@@ -65,6 +89,54 @@ export default function HomePage() {
       return true;
     });
   }, [rawShops, storeCategory]);
+
+  // Construct dynamic category inspiration slides from database
+  const categorySlides = useMemo(() => {
+    if (!categories || categories.length === 0) {
+      return defaultRooms;
+    }
+
+    const preferredOrder = ['bedroom', 'dining', 'living'];
+    const sorted = [...categories].sort((a, b) => {
+      const idxA = preferredOrder.indexOf((a.slug || a.name || '').toLowerCase());
+      const idxB = preferredOrder.indexOf((b.slug || b.name || '').toLowerCase());
+      if (idxA !== -1 && idxB !== -1) return idxA - idxB;
+      if (idxA !== -1) return -1;
+      if (idxB !== -1) return 1;
+      return 0;
+    });
+
+    const fallbackImgs = [
+      '/images/furniro/imgRectangle24.png',
+      '/images/furniro/imgRectangle25.png',
+      '/images/furniro/imgRectangle26.png',
+    ];
+
+    return sorted.map((cat, idx) => {
+      const slug = (cat.slug || cat.name || '').toLowerCase();
+      const roomImg =
+        categoryInspirationImages[slug] ||
+        (cat.image && !cat.image.includes('imgImage')
+          ? cat.image
+          : fallbackImgs[idx % fallbackImgs.length]);
+
+      return {
+        id: cat.id || slug,
+        name: cat.name,
+        slug: cat.slug || cat.name.toLowerCase(),
+        description:
+          cat.description || `Curated furniture and stylish inspiration for your ${cat.name.toLowerCase()}.`,
+        image: roomImg,
+      };
+    });
+  }, [categories]);
+
+  const activeRoom = room % Math.max(1, categorySlides.length);
+  const nextRoom = (activeRoom + 1) % Math.max(1, categorySlides.length);
+
+  const handleNextRoom = () => {
+    setRoom((prev) => (prev + 1) % categorySlides.length);
+  };
 
   return (
     <div className="furniro-home">
@@ -183,7 +255,7 @@ export default function HomePage() {
         onRetry={refetchShops}
       />
 
-      {/* 5. Inspirations Section (Figma Carousel) */}
+      {/* 5. Inspirations Section (Figma Carousel with Dynamic Categories & Smooth Transitions) */}
       <section className="inspiration-section" id="about" aria-labelledby="inspiration-title">
         <div className="inspiration-copy">
           <h2 id="inspiration-title">
@@ -194,47 +266,101 @@ export default function HomePage() {
           <p>
             Our designer already made a lot of beautiful prototipe of rooms that inspire you
           </p>
-          <Link href="/shop" className="gold-button">
+          <Link
+            href={`/shop?category=${encodeURIComponent(categorySlides[activeRoom]?.name || '')}`}
+            className="gold-button"
+          >
             Explore More
           </Link>
         </div>
 
         <div className="inspiration-main">
-          <img src={image(rooms[room].image)} alt={rooms[room].label} loading="lazy" />
-          <div className="room-caption">
-            <p>
-              0{room + 1} <span>—</span> {rooms[room].label}
-            </p>
-            <h3>{rooms[room].title}</h3>
-          </div>
-          <Link
-            className="room-link"
-            href={`/shop?category=${rooms[room].label.split(' ')[0]}`}
-            aria-label={`Explore ${rooms[room].label} collection`}
-          >
-            <img src="/images/furniro/imgRight16Px.svg" alt="" />
-          </Link>
+          {categorySlides.map((slide, idx) => {
+            const isActive = idx === activeRoom;
+            return (
+              <div
+                key={slide.id || idx}
+                className={`inspiration-slide ${isActive ? 'is-active' : ''}`}
+                aria-hidden={!isActive}
+              >
+                <img
+                  src={slide.image}
+                  alt={slide.name}
+                  loading={idx === 0 ? 'eager' : 'lazy'}
+                />
+                <div className="room-caption-wrapper">
+                  <div className="room-caption">
+                    <p>
+                      0{idx + 1} <span>—</span> Category
+                    </p>
+                    <h3>{slide.name}</h3>
+                    {slide.description && (
+                      <span className="room-caption-desc" title={slide.description}>
+                        {slide.description}
+                      </span>
+                    )}
+                  </div>
+                  <Link
+                    className="room-link"
+                    href={`/shop?category=${encodeURIComponent(slide.name)}`}
+                    aria-label={`Explore ${slide.name} category`}
+                  >
+                    <img src="/images/furniro/imgRight16Px.svg" alt="" />
+                  </Link>
+                </div>
+              </div>
+            );
+          })}
         </div>
 
         <div className="inspiration-next">
-          <img
-            src={image(rooms[(room + 1) % rooms.length].image)}
-            alt={rooms[(room + 1) % rooms.length].label}
-            loading="lazy"
-          />
+          <div className="inspiration-next-window">
+            {categorySlides.map((slide, idx) => {
+              const isNext = idx === nextRoom;
+              return (
+                <div
+                  key={`next-${slide.id || idx}`}
+                  className={`inspiration-next-slide ${isNext ? 'is-active' : ''}`}
+                  onClick={handleNextRoom}
+                  role="button"
+                  tabIndex={isNext ? 0 : -1}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                      e.preventDefault();
+                      handleNextRoom();
+                    }
+                  }}
+                  aria-label={`Next room inspiration: ${slide.name}`}
+                >
+                  <img
+                    src={slide.image}
+                    alt={slide.name}
+                    loading="lazy"
+                  />
+                  <div className="next-badge">
+                    <span>Next:</span> {slide.name}
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+
           <button
+            type="button"
             className="next-room"
-            aria-label="Next room inspiration"
-            onClick={() => setRoom((room + 1) % rooms.length)}
+            aria-label="Next category inspiration"
+            onClick={handleNextRoom}
           >
             <ChevronRight />
           </button>
+
           <div className="room-dots">
-            {rooms.map((item, i) => (
+            {categorySlides.map((item, i) => (
               <button
-                key={item.image}
-                aria-label={`Show ${item.label}`}
-                aria-pressed={i === room}
+                key={item.id || i}
+                type="button"
+                aria-label={`Show ${item.name} category`}
+                aria-pressed={i === activeRoom}
                 onClick={() => setRoom(i)}
               >
                 <span />
