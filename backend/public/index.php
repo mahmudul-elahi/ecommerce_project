@@ -5,6 +5,11 @@ use Illuminate\Http\Request;
 
 define('LARAVEL_START', microtime(true));
 
+// Ensure adequate memory for image processing and file uploads
+if (function_exists('ini_set')) {
+    @ini_set('memory_limit', '512M');
+}
+
 // Determine if the application is in maintenance mode...
 if (file_exists($maintenance = __DIR__.'/../storage/framework/maintenance.php')) {
     require $maintenance;

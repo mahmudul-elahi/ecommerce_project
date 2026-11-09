@@ -1,5 +1,10 @@
 <?php
 
+// Ensure adequate memory for image processing and high-resolution media
+if (function_exists('ini_set')) {
+    @ini_set('memory_limit', '512M');
+}
+
 use App\Http\Middleware\AdminMiddleware;
 use App\Http\Middleware\ShopOwnerMiddleware;
 use Illuminate\Foundation\Application;
