@@ -165,64 +165,50 @@ export default function UserManagementPage() {
   };
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-10">
-      {/* Editorial Header */}
-      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between pb-6 border-b border-slate-200 mb-8 gap-4">
-        <div>
-          <div className="inline-flex items-center space-x-1.5 px-2.5 py-0.5 rounded-full bg-slate-100 text-slate-700 text-[11px] font-semibold border border-slate-200 mb-2">
-            <Users className="w-3.5 h-3.5 text-slate-700" />
-            <span className="font-mono uppercase tracking-wider">Access & Identity Management</span>
-          </div>
-          <h1 className="text-2xl sm:text-3xl font-bold text-slate-900 tracking-tight">
-            Shop Owner Accounts
-          </h1>
-          <p className="text-xs text-slate-500 mt-1 max-w-xl font-normal">
-            Create and supervise merchant accounts, assign stores, and manage permissions.
-          </p>
-        </div>
-
-        <button
-          onClick={handleOpenCreateModal}
-          className="px-4 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-slate-50 text-xs font-semibold transition-colors shadow-xs flex items-center space-x-1.5"
-        >
-          <Plus className="w-4 h-4" />
-          <span>New Shop Owner</span>
-        </button>
-      </div>
-
-      {/* Filter bar */}
-      <div className="bg-white p-3.5 rounded-2xl border border-slate-200 mb-6 shadow-xs flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+    <div className="space-y-6">
+      {/* BankDash Filter & Action Bar */}
+      <div className="bg-white rounded-[25px] p-6 border-0 shadow-sm flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
         <div className="relative w-full sm:w-80">
-          <Search className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
+          <Search className="w-4 h-4 text-[#718EBF] absolute left-4 top-1/2 -translate-y-1/2 pointer-events-none" />
           <input
             type="text"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             placeholder="Search accounts by name or email..."
-            className="w-full pl-10 pr-4 py-2 text-xs bg-slate-50 border border-slate-200 rounded-xl text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-1 focus:ring-blue-500 focus:bg-white"
+            className="w-full pl-11 pr-4 py-2.5 text-sm bg-[#F5F7FA] text-[#343C6A] placeholder-[#8BA3CB] rounded-full border-0 outline-none focus:ring-1 focus:ring-[#2D60FF]/40"
           />
         </div>
 
-        <div className="text-xs font-mono text-slate-500">
-          Total Accounts: <span className="font-bold text-slate-900">{users.length}</span>
+        <div className="flex items-center gap-4 w-full sm:w-auto justify-between sm:justify-end">
+          <span className="text-xs text-[#718EBF]">
+            Total Accounts: <strong className="text-[#343C6A]">{users.length}</strong>
+          </span>
+
+          <button
+            onClick={handleOpenCreateModal}
+            className="px-5 py-2.5 rounded-xl bg-[#2D60FF] hover:bg-[#1814F3] text-white text-sm font-semibold transition-all shadow-sm flex items-center gap-2 border-0 outline-none cursor-pointer"
+          >
+            <Plus className="w-4 h-4" />
+            <span>New Merchant Account</span>
+          </button>
         </div>
       </div>
 
-      {/* Table Container */}
-      <div className="bg-white rounded-2xl border border-slate-200 shadow-xs overflow-hidden">
+      {/* BankDash Users Table Container */}
+      <div className="bg-white rounded-[25px] p-6 border-0 shadow-sm overflow-hidden">
         <div className="overflow-x-auto">
-          <table className="w-full text-left text-xs">
-            <thead className="bg-slate-50 border-b border-slate-200 text-slate-500 uppercase font-mono text-[10px] tracking-wider">
+          <table className="w-full text-left text-sm text-[#343C6A]">
+            <thead className="border-b border-[#E6EFF5] text-[#718EBF] text-xs font-semibold uppercase tracking-wider">
               <tr>
-                <th className="px-5 py-3.5">User / Contact</th>
-                <th className="px-5 py-3.5">System Role</th>
-                <th className="px-5 py-3.5">Assigned Shop</th>
-                <th className="px-5 py-3.5">Status</th>
-                <th className="px-5 py-3.5">Registered</th>
-                <th className="px-5 py-3.5 text-right">Actions</th>
+                <th className="pb-4 font-inter">User / Contact</th>
+                <th className="pb-4 font-inter">System Role</th>
+                <th className="pb-4 font-inter">Assigned Shop</th>
+                <th className="pb-4 font-inter">Status</th>
+                <th className="pb-4 font-inter">Registered</th>
+                <th className="pb-4 font-inter text-right">Actions</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-stone-100">
+            <tbody className="divide-y divide-[#F4F6F8]">
               {isLoading ? (
                 <tr>
                   <td colSpan="6" className="px-5 py-12 text-center text-slate-400">

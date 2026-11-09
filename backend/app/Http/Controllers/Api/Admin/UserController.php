@@ -56,6 +56,7 @@ class UserController extends Controller
             'phone' => $validated['phone'] ?? null,
             'is_active' => $validated['is_active'] ?? true,
         ]);
+        $user->assignRole($user->role);
 
         // If existing shop_id is provided, attach to shop
         if (! empty($validated['shop_id'])) {
@@ -117,6 +118,7 @@ class UserController extends Controller
 
         if (! empty($validated['role'])) {
             $updateData['role'] = $validated['role'];
+            $user->syncRoles([$validated['role']]);
         }
 
         if (! empty($validated['password'])) {

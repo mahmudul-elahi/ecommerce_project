@@ -9,11 +9,14 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
+use Spatie\Permission\Traits\HasRoles;
 
 class User extends Authenticatable
 {
     /** @use HasFactory<UserFactory> */
-    use HasApiTokens, HasFactory, Notifiable;
+    use HasApiTokens, HasFactory, HasRoles, Notifiable;
+
+    protected $guard_name = 'sanctum';
 
     protected $fillable = [
         'name',
@@ -45,12 +48,12 @@ class User extends Authenticatable
 
     public function isAdmin(): bool
     {
-        return $this->role === 'admin';
+        return $this->hasRole('admin') || $this->role === 'admin';
     }
 
     public function isShopOwner(): bool
     {
-        return $this->role === 'shop_owner';
+        return $this->hasRole('shop_owner') || $this->role === 'shop_owner';
     }
 
     public function shop(): HasOne

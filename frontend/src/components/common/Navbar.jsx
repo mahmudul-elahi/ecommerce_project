@@ -59,6 +59,11 @@ export default function Navbar() {
 
   const isActive = (path) => pathname === path;
 
+  // For Admin and Shop Owner pages, the BankDash dashboard layout provides its own sidebar and header
+  if (pathname.startsWith('/admin') || pathname.startsWith('/shop-owner')) {
+    return null;
+  }
+
   if (!pathname.startsWith('/admin') && !pathname.startsWith('/shop-owner')) return <StorefrontNavbar />;
 
   return (

@@ -158,102 +158,65 @@ export default function CategoryManagementPage() {
   );
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 bg-slate-50 min-h-screen">
-      {/* Navigation Bar */}
-      <div className="flex flex-wrap items-center gap-3 mb-6 pb-4 border-b border-slate-200">
-        <Link
-          href="/admin/dashboard"
-          className="px-3 py-1.5 rounded-lg text-xs font-semibold text-slate-600 hover:text-slate-900 hover:bg-slate-100"
-        >
-          Dashboard
-        </Link>
-        <Link
-          href="/admin/products"
-          className="px-3 py-1.5 rounded-lg text-xs font-semibold text-slate-600 hover:text-slate-900 hover:bg-slate-100"
-        >
-          Products
-        </Link>
-        <Link
-          href="/admin/categories"
-          className="px-3 py-1.5 rounded-lg text-xs font-semibold bg-blue-50 text-blue-700 border border-blue-100"
-        >
-          Categories (Dynamic)
-        </Link>
-        <Link
-          href="/admin/shops"
-          className="px-3 py-1.5 rounded-lg text-xs font-semibold text-slate-600 hover:text-slate-900 hover:bg-slate-100"
-        >
-          Shops
-        </Link>
-        <Link
-          href="/admin/users"
-          className="px-3 py-1.5 rounded-lg text-xs font-semibold text-slate-600 hover:text-slate-900 hover:bg-slate-100"
-        >
-          Users
-        </Link>
-      </div>
-
-      {/* Header */}
-      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 pb-6 border-b border-slate-200 mb-6">
-        <div>
-          <div className="inline-flex items-center space-x-1 px-2 py-0.5 rounded-md bg-slate-100 border border-slate-200 text-slate-700 text-[10px] font-mono uppercase tracking-wide mb-1.5">
-            <FolderTree className="w-3 h-3 text-blue-700" />
-            <span>Database Category Registry</span>
-          </div>
-          <h1 className="text-xl font-bold text-slate-900 tracking-tight">Dynamic Categories Table</h1>
-          <p className="text-xs text-slate-500 mt-0.5">
-            Manage dynamic categories shown on storefront (Browse The Range) with Laravel 13 optimized images.
-          </p>
-        </div>
-
-        <button
-          onClick={handleOpenCreateModal}
-          className="px-3.5 py-1.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-xs font-semibold shadow-subtle flex items-center space-x-1.5 transition-all active:scale-[0.99]"
-        >
-          <Plus className="w-3.5 h-3.5" />
-          <span>New Category</span>
-        </button>
-      </div>
-
-      {/* Search */}
-      <div className="bg-white p-3.5 rounded-xl border border-slate-200 mb-6 shadow-subtle flex items-center justify-between">
+    <div className="space-y-6">
+      {/* BankDash Filter & Action Bar */}
+      <div className="bg-white rounded-[25px] p-6 border-0 shadow-sm flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
         <div className="relative w-full sm:w-80">
-          <Search className="w-3.5 h-3.5 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none" />
+          <Search className="w-4 h-4 text-[#718EBF] absolute left-4 top-1/2 -translate-y-1/2 pointer-events-none" />
           <input
             type="text"
             placeholder="Search categories..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="w-full pl-9 pr-3 py-1.5 text-xs bg-slate-50 border border-slate-200 rounded-lg text-slate-900"
+            className="w-full pl-11 pr-4 py-2.5 text-sm bg-[#F5F7FA] text-[#343C6A] placeholder-[#8BA3CB] rounded-full border-0 outline-none focus:ring-1 focus:ring-[#2D60FF]/40"
           />
         </div>
-        <span className="text-xs text-slate-500 font-mono">
-          {filteredCategories.length} categories
-        </span>
+
+        <div className="flex items-center gap-4 w-full sm:w-auto justify-between sm:justify-end">
+          <span className="text-xs text-[#718EBF]">
+            Total Categories: <strong className="text-[#343C6A]">{categories.length}</strong>
+          </span>
+
+          <button
+            onClick={handleOpenCreateModal}
+            className="px-5 py-2.5 rounded-xl bg-[#2D60FF] hover:bg-[#1814F3] text-white text-sm font-semibold transition-all shadow-sm flex items-center gap-2 border-0 outline-none cursor-pointer"
+          >
+            <Plus className="w-4 h-4" />
+            <span>New Category</span>
+          </button>
+        </div>
       </div>
 
-      {/* Category Table */}
-      <div className="bg-white rounded-xl border border-slate-200 shadow-subtle overflow-hidden">
-        {isLoading ? (
-          <div className="p-12 text-center text-slate-400 text-xs">Loading categories...</div>
-        ) : filteredCategories.length === 0 ? (
-          <div className="p-12 text-center text-slate-400 text-xs">No categories found.</div>
-        ) : (
-          <table className="w-full text-left border-collapse text-xs">
-            <thead>
-              <tr className="bg-slate-50/75 border-b border-slate-200 text-slate-500 uppercase tracking-wider text-[10px] font-mono">
-                <th className="py-3 px-4">Image</th>
-                <th className="py-3 px-4">Category Name</th>
-                <th className="py-3 px-4">Slug</th>
-                <th className="py-3 px-4">Description</th>
-                <th className="py-3 px-4 text-center">Products</th>
-                <th className="py-3 px-4 text-center">Status</th>
-                <th className="py-3 px-4 text-right">Actions</th>
+      {/* BankDash Categories Table Container */}
+      <div className="bg-white rounded-[25px] p-6 border-0 shadow-sm overflow-hidden">
+        <div className="overflow-x-auto">
+          <table className="w-full text-left text-sm text-[#343C6A]">
+            <thead className="border-b border-[#E6EFF5] text-[#718EBF] text-xs font-semibold uppercase tracking-wider">
+              <tr>
+                <th className="pb-4 font-inter">Category</th>
+                <th className="pb-4 font-inter">Slug</th>
+                <th className="pb-4 font-inter">Description</th>
+                <th className="pb-4 font-inter">Storefront (Browse The Range)</th>
+                <th className="pb-4 font-inter">Status</th>
+                <th className="pb-4 font-inter text-right">Actions</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-slate-100">
-              {filteredCategories.map((cat) => (
-                <tr key={cat.id} className="hover:bg-slate-50/50 transition-colors">
+            <tbody className="divide-y divide-[#F4F6F8]">
+              {isLoading ? (
+                <tr>
+                  <td colSpan={7} className="py-8 text-center text-[#718EBF]">
+                    Loading categories...
+                  </td>
+                </tr>
+              ) : filteredCategories.length === 0 ? (
+                <tr>
+                  <td colSpan={7} className="py-8 text-center text-[#718EBF]">
+                    No categories found.
+                  </td>
+                </tr>
+              ) : (
+                filteredCategories.map((cat) => (
+                  <tr key={cat.id} className="hover:bg-slate-50/50 transition-colors">
                   <td className="py-3 px-4">
                     <div className="w-12 h-12 rounded-lg bg-slate-100 overflow-hidden border border-slate-200 flex items-center justify-center">
                       {cat.image_url || cat.image ? (
@@ -303,10 +266,11 @@ export default function CategoryManagementPage() {
                     </div>
                   </td>
                 </tr>
-              ))}
+                ))
+              )}
             </tbody>
           </table>
-        )}
+        </div>
       </div>
 
       {/* Modal: Create or Edit Category */}

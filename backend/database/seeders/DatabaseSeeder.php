@@ -12,6 +12,7 @@ use App\Models\User;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
+use Spatie\Permission\Models\Role;
 
 class DatabaseSeeder extends Seeder
 {
@@ -21,6 +22,12 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
+        // 0. Seed Spatie Roles for Multi-Role authorization
+        $adminRole = Role::firstOrCreate(['name' => 'admin', 'guard_name' => 'sanctum']);
+        $shopOwnerRole = Role::firstOrCreate(['name' => 'shop_owner', 'guard_name' => 'sanctum']);
+        $customerRole = Role::firstOrCreate(['name' => 'customer', 'guard_name' => 'sanctum']);
+        $userRole = Role::firstOrCreate(['name' => 'user', 'guard_name' => 'sanctum']);
+
         // 1. Create Administrator
         $admin = User::create([
             'name' => 'System Administrator',
@@ -30,6 +37,7 @@ class DatabaseSeeder extends Seeder
             'phone' => '+1 (555) 019-2834',
             'is_active' => true,
         ]);
+        $admin->assignRole($adminRole);
 
         // 2. Create Furniro Flagship Owner
         $furniroOwner = User::create([
@@ -40,6 +48,7 @@ class DatabaseSeeder extends Seeder
             'phone' => '+(84) 546-6789',
             'is_active' => true,
         ]);
+        $furniroOwner->assignRole($shopOwnerRole);
 
         // 3. Create Multi-Tenant Partner Shop Owner (for marketplace catalog sharing)
         $partnerOwner = User::create([
@@ -50,6 +59,7 @@ class DatabaseSeeder extends Seeder
             'phone' => '+1 (555) 345-6789',
             'is_active' => true,
         ]);
+        $partnerOwner->assignRole($shopOwnerRole);
 
         // 4. Create Flagship Furniro Store
         $furniroShop = Shop::create([

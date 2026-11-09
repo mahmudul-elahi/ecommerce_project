@@ -84,7 +84,7 @@ export default function ProductFilterBar({
             />
             <span className="font-medium text-lg">Filter</span>
             {activeFiltersCount > 0 && (
-              <span className="w-5 h-5 rounded-full bg-[#B88E2F] text-white text-[11px] font-bold flex items-center justify-center">
+              <span className="w-5 h-5 bg-[#B88E2F] text-white text-[11px] font-bold flex items-center justify-center">
                 {activeFiltersCount}
               </span>
             )}

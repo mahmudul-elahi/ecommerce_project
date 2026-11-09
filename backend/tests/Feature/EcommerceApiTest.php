@@ -308,4 +308,13 @@ class EcommerceApiTest extends TestCase
         $this->assertIsArray($images);
         $this->assertGreaterThanOrEqual(2, count($images));
     }
+
+    public function test_spatie_role_middleware_blocks_unauthorized_users(): void
+    {
+        $shopOwner = User::where('role', 'shop_owner')->first();
+
+        // Shop owner is blocked from admin dashboard by Spatie role:admin
+        $response = $this->actingAs($shopOwner)->getJson('/api/admin/dashboard');
+        $response->assertStatus(403);
+    }
 }

@@ -42,23 +42,9 @@ export default function ShopOrdersPage() {
   };
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-10">
-      {/* Editorial Header */}
-      <div className="pb-6 border-b border-slate-200 mb-8">
-        <div className="inline-flex items-center space-x-1.5 px-2.5 py-0.5 rounded-full bg-slate-100 text-slate-700 text-[11px] font-semibold border border-slate-200 mb-2">
-          <ShoppingBag className="w-3 h-3 text-slate-600" />
-          <span className="font-mono uppercase tracking-wider">Fulfillment & Sales</span>
-        </div>
-        <h1 className="text-2xl sm:text-3xl font-bold text-slate-900 tracking-tight">
-          Customer Orders
-        </h1>
-        <p className="text-xs text-slate-500 mt-1 max-w-2xl font-normal">
-          Review orders submitted exclusively through your storefront. Update fulfillment progress from pending to processing and completed.
-        </p>
-      </div>
-
-      {/* Orders List Container */}
-      <div className="bg-white rounded-2xl border border-slate-200 shadow-xs overflow-hidden">
+    <div className="space-y-6">
+      {/* BankDash Orders List Container */}
+      <div className="bg-white rounded-[25px] p-6 border-0 shadow-sm overflow-hidden">
         {isLoading ? (
           <div className="p-16 text-center text-slate-400">
             <div className="w-7 h-7 border-2 border-slate-800 border-t-transparent rounded-full animate-spin mx-auto mb-3" />

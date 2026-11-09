@@ -226,78 +226,54 @@ export default function CatalogBrowsePage() {
   );
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-10">
-      {/* Editorial Header */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between pb-6 border-b border-slate-200 mb-8 gap-4">
-        <div>
-          <div className="inline-flex items-center space-x-1.5 px-2.5 py-0.5 rounded-full bg-slate-100 text-slate-700 text-[11px] font-semibold border border-slate-200 mb-2">
-            <Layers className="w-3 h-3 text-slate-600" />
-            <span className="font-mono uppercase tracking-wider">Universal Shared Catalog</span>
+    <div className="space-y-6">
+      {/* BankDash Filter & Action Bar */}
+      <div className="bg-white rounded-[25px] p-6 border-0 shadow-sm flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+        <div className="flex flex-wrap items-center gap-4 w-full md:w-auto">
+          <div className="relative w-full sm:w-80">
+            <Search className="w-4 h-4 text-[#718EBF] absolute left-4 top-1/2 -translate-y-1/2 pointer-events-none" />
+            <input
+              type="text"
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              placeholder="Search shared catalog by title, SKU..."
+              className="w-full pl-11 pr-4 py-2.5 text-sm bg-[#F5F7FA] text-[#343C6A] placeholder-[#8BA3CB] rounded-full border-0 outline-none focus:ring-1 focus:ring-[#2D60FF]/40"
+            />
           </div>
-          <h1 className="text-2xl sm:text-3xl font-bold text-slate-900 tracking-tight">
-            Browse & Curate Catalog
-          </h1>
-          <p className="text-xs text-slate-500 mt-1 max-w-2xl font-normal">
-            Every product in this catalog can be added to your personal storefront. You can maintain standard catalog pricing or set custom retail pricing, custom descriptions, and your own thumbnails.
-          </p>
+
+          <div className="flex items-center gap-2">
+            <span className="text-xs text-[#718EBF]">Category:</span>
+            <select
+              value={selectedCategory}
+              onChange={(e) => setSelectedCategory(e.target.value)}
+              className="h-10 px-4 text-xs bg-[#F5F7FA] text-[#343C6A] rounded-xl border-0 outline-none font-medium cursor-pointer"
+            >
+              <option value="">All Categories</option>
+              {categories.map((cat) => (
+                <option key={cat} value={cat}>
+                  {cat}
+                </option>
+              ))}
+            </select>
+          </div>
         </div>
 
-        <div className="flex flex-wrap items-center gap-3">
+        <div className="flex items-center gap-3 w-full md:w-auto justify-between md:justify-end">
           <Link
             href="/shop-owner/products"
-            className="px-4 py-2.5 rounded-xl bg-white hover:bg-slate-50 text-slate-700 text-xs font-semibold border border-slate-200 transition-colors shadow-xs flex items-center space-x-1.5"
+            className="px-4 py-2.5 rounded-xl bg-[#F5F7FA] hover:bg-[#E7EDFF] text-[#343C6A] text-sm font-semibold transition-colors flex items-center gap-2"
           >
-            <Package className="w-4 h-4 text-slate-600" />
-            <span>Manage My Listings</span>
+            <Package className="w-4 h-4 text-[#718EBF]" />
+            <span>My Listings</span>
           </Link>
+
           <button
             onClick={handleOpenCreateModal}
-            className="px-4 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-slate-50 text-xs font-semibold transition-colors shadow-xs flex items-center space-x-1.5"
+            className="px-5 py-2.5 rounded-xl bg-[#2D60FF] hover:bg-[#1814F3] text-white text-sm font-semibold transition-all shadow-sm flex items-center gap-2 border-0 outline-none cursor-pointer"
           >
             <Plus className="w-4 h-4" />
             <span>Create Shared Product</span>
           </button>
-        </div>
-      </div>
-
-      {/* Filter Toolbar */}
-      <div className="bg-white p-4 rounded-2xl border border-slate-200 shadow-xs mb-8 flex flex-col md:flex-row gap-3 items-stretch md:items-center justify-between">
-        <div className="relative flex-1 max-w-md">
-          <Search className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
-          <input
-            type="text"
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-            placeholder="Search shared catalog by title, SKU, or keyword..."
-            className="w-full pl-10 pr-4 py-2 text-xs bg-slate-50 rounded-xl border border-slate-200 text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-1 focus:ring-blue-500 focus:bg-white transition-all"
-          />
-        </div>
-
-        <div className="flex flex-wrap items-center gap-2">
-          {/* Category Filter */}
-          <select
-            value={category}
-            onChange={(e) => setCategory(e.target.value)}
-            className="px-3 py-2 text-xs bg-slate-50 border border-slate-200 rounded-xl text-slate-700 focus:outline-none focus:ring-1 focus:ring-blue-500"
-          >
-            <option value="">All Categories ({catalogProducts.length})</option>
-            {categories.map((c) => (
-              <option key={c} value={c}>
-                {c}
-              </option>
-            ))}
-          </select>
-
-          {/* Status Filter */}
-          <select
-            value={statusFilter}
-            onChange={(e) => setStatusFilter(e.target.value)}
-            className="px-3 py-2 text-xs bg-slate-50 border border-slate-200 rounded-xl text-slate-700 focus:outline-none focus:ring-1 focus:ring-blue-500"
-          >
-            <option value="">All Listing Statuses</option>
-            <option value="in_shop">Already In My Shop</option>
-            <option value="available">Not Yet In My Shop</option>
-          </select>
         </div>
       </div>
 

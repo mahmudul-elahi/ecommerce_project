@@ -48,10 +48,10 @@ Route::prefix('customer')->group(function () {
 
 /*
 |--------------------------------------------------------------------------
-| Admin Routes
+| Admin Routes (Protected via Spatie role:admin)
 |--------------------------------------------------------------------------
 */
-Route::middleware(['auth:sanctum', 'admin'])->prefix('admin')->group(function () {
+Route::middleware(['auth:sanctum', 'role:admin'])->prefix('admin')->group(function () {
     Route::get('/dashboard', [AdminDashboardController::class, 'stats']);
 
     // Shop Management (CRUD)
@@ -69,10 +69,10 @@ Route::middleware(['auth:sanctum', 'admin'])->prefix('admin')->group(function ()
 
 /*
 |--------------------------------------------------------------------------
-| Shop Owner Routes
+| Shop Owner Routes (Protected via Spatie role:shop_owner|admin)
 |--------------------------------------------------------------------------
 */
-Route::middleware(['auth:sanctum', 'shop_owner'])->prefix('shop-owner')->group(function () {
+Route::middleware(['auth:sanctum', 'role:shop_owner|admin'])->prefix('shop-owner')->group(function () {
     // Shop Profile & Stats
     Route::get('/my-shop', [ShopOwnerShopController::class, 'myShop']);
     Route::match(['put', 'post'], '/my-shop', [ShopOwnerShopController::class, 'updateMyShop']);

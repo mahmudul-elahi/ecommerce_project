@@ -89,22 +89,19 @@ export default function ShopSettingsPage() {
 
   if (isLoading) {
     return (
-      <div className="max-w-4xl mx-auto px-4 py-20 flex items-center justify-center bg-slate-50">
-        <div className="w-8 h-8 border-2 border-slate-800 border-t-transparent rounded-full animate-spin" />
+      <div className="min-h-[60vh] flex items-center justify-center">
+        <div className="w-10 h-10 border-4 border-[#2D60FF] border-t-transparent rounded-full animate-spin" />
       </div>
     );
   }
 
   return (
-    <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8 bg-slate-50">
-      {/* Title */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between pb-6 border-b border-slate-200 mb-6 gap-3">
+    <div className="space-y-6">
+      {/* Top Action Bar */}
+      <div className="bg-white rounded-[25px] p-6 border-0 shadow-sm flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
         <div>
-          <h1 className="text-xl font-bold text-slate-900 tracking-tight flex items-center space-x-2">
-            <Store className="w-5 h-5 text-blue-700" />
-            <span>Storefront Settings & Identity</span>
-          </h1>
-          <p className="text-xs text-slate-500 mt-1">
+          <h2 className="text-xl font-bold text-[#343C6A] font-inter">Store Identity & Branding</h2>
+          <p className="text-xs text-[#718EBF] mt-0.5">
             Configure your independent merchant profile, public branding, and contact details.
           </p>
         </div>
@@ -113,47 +110,47 @@ export default function ShopSettingsPage() {
           <Link
             href={`/shop/${previewSlug}`}
             target="_blank"
-            className="px-3.5 py-1.5 rounded-xl bg-white border border-slate-200 text-xs font-semibold text-slate-800 hover:bg-slate-50 flex items-center space-x-1.5 transition-colors shadow-subtle self-start sm:self-auto"
+            className="px-4 py-2 rounded-xl bg-[#F5F7FA] hover:bg-[#E7EDFF] text-[#2D60FF] text-xs font-semibold flex items-center gap-1.5 transition-colors"
           >
             <span>Preview Public Storefront</span>
-            <ExternalLink className="w-3.5 h-3.5 text-slate-400" />
+            <ExternalLink className="w-3.5 h-3.5" />
           </Link>
         )}
       </div>
 
       {/* Live Branding Preview */}
-      <div className="mb-6 rounded-2xl overflow-hidden border border-slate-200 bg-white shadow-subtle">
-        <div className="relative h-32 bg-slate-100 overflow-hidden">
+      <div className="bg-white rounded-[25px] p-6 border-0 shadow-sm overflow-hidden space-y-4">
+        <div className="relative h-36 bg-[#F5F7FA] rounded-2xl overflow-hidden border border-[#E6EFF5]">
           {currentBanner ? (
             <img src={currentBanner} alt="Banner Preview" className="w-full h-full object-cover" />
           ) : (
-            <div className="w-full h-full flex items-center justify-center text-xs text-slate-400 font-mono">
+            <div className="w-full h-full flex items-center justify-center text-xs text-[#718EBF] font-mono">
               Banner Image Preview
             </div>
           )}
           <div className="absolute inset-0 bg-slate-900/10" />
-          <div className="absolute -bottom-4 left-6">
-            <div className="w-16 h-16 rounded-xl border-2 border-white shadow-craft bg-white overflow-hidden flex items-center justify-center">
+          <div className="absolute -bottom-2 left-6">
+            <div className="w-16 h-16 rounded-2xl border-2 border-white shadow-md bg-white overflow-hidden flex items-center justify-center">
               {currentLogo ? (
                 <img src={currentLogo} alt="Logo" className="w-full h-full object-cover" />
               ) : (
-                <Building2 className="w-6 h-6 text-slate-400" />
+                <Building2 className="w-6 h-6 text-[#718EBF]" />
               )}
             </div>
           </div>
         </div>
-        <div className="pt-6 pb-4 px-6 flex items-center justify-between">
+        <div className="pt-2 px-2 flex items-center justify-between">
           <div>
-            <div className="text-xs font-mono uppercase text-slate-400">Live Header Preview</div>
-            <div className="text-sm font-bold text-slate-900">{watch('name') || 'Your Store Name'}</div>
+            <div className="text-xs font-medium uppercase text-[#718EBF]">Live Header Preview</div>
+            <div className="text-sm font-bold text-[#343C6A]">{watch('name') || 'Your Store Name'}</div>
           </div>
-          <span className="text-[10px] font-mono uppercase px-2 py-0.5 rounded bg-slate-100 text-slate-600 border border-slate-200">
-            slug: /{previewSlug}
+          <span className="text-[10px] font-mono uppercase px-2.5 py-1 rounded-full bg-[#F5F7FA] text-[#2D60FF] font-semibold">
+            /{previewSlug}
           </span>
         </div>
       </div>
 
-      <div className="bg-white rounded-2xl border border-slate-200 shadow-craft p-6 sm:p-8">
+      <div className="bg-white rounded-[25px] border-0 shadow-sm p-6 sm:p-8">
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
           <div>
             <label className="block text-xs font-semibold text-slate-700 mb-1.5">

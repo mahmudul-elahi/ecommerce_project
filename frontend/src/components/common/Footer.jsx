@@ -2,10 +2,16 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 import { toast } from 'sonner';
 
 export default function Footer() {
+  const pathname = usePathname();
   const [email, setEmail] = useState('');
+
+  if (pathname?.startsWith('/admin') || pathname?.startsWith('/shop-owner')) {
+    return null;
+  }
 
   const handleSubscribe = (e) => {
     e.preventDefault();

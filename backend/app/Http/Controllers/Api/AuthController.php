@@ -68,6 +68,7 @@ class AuthController extends Controller
             'phone' => $validated['phone'] ?? null,
             'is_active' => true,
         ]);
+        $user->assignRole('shop_owner');
 
         // Automatically create their shop
         $baseSlug = Str::slug($validated['shop_name']);
