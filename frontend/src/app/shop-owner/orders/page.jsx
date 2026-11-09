@@ -109,7 +109,7 @@ export default function ShopOrdersPage() {
                         value={order.status}
                         onChange={(e) => handleStatusChange(order.id, e.target.value)}
                         disabled={updateStatusMutation.isPending}
-                        className={`text-xs font-mono uppercase px-3 py-1.5 rounded-none border-0 focus:outline-none focus:ring-1 focus:ring-[#B88E2F] ${
+                        className={`text-xs font-mono uppercase px-3 py-1.5 rounded-xl border-0 outline-none cursor-pointer transition-all ${
                           order.status === 'completed'
                             ? 'bg-[#FAF3EA] text-[#B88E2F]'
                             : order.status === 'processing'

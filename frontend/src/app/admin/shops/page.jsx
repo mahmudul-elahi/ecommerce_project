@@ -311,18 +311,18 @@ export default function ShopManagementPage() {
         title={editingShop ? `Edit Shop: ${editingShop.name}` : 'Create New Merchant Store'}
       >
         <form onSubmit={handleSubmit(onFormSubmit)} className="space-y-4">
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
             <div>
-              <label className="block text-xs font-semibold text-slate-700 mb-1">
-                Shop Name <span className="text-rose-500">*</span>
+              <label className="block text-xs font-semibold text-[#343C6A] mb-1.5">
+                Shop Name <span className="text-[#B88E2F]">*</span>
               </label>
               <input
                 type="text"
                 {...register('name')}
                 placeholder="e.g. Skyline Craft Studio"
-                className={`w-full px-3 py-2 text-xs bg-slate-50 rounded-none border-0 ${
-                  errors.name ? 'ring-1 ring-rose-400' : 'focus:ring-1 focus:ring-[#B88E2F]'
-                } focus:outline-none focus:bg-white`}
+                className={`w-full h-11 px-4 text-sm bg-[#F5F7FA] text-[#343C6A] placeholder-[#8BA3CB] rounded-xl border-0 outline-none transition-all ${
+                  errors.name ? 'ring-2 ring-rose-400 bg-rose-50/20' : 'focus:ring-2 focus:ring-[#B88E2F]/30 focus:bg-white'
+                }`}
               />
               {errors.name && (
                 <span className="text-[10px] text-rose-500 mt-1 block">{errors.name.message}</span>
@@ -330,12 +330,12 @@ export default function ShopManagementPage() {
             </div>
 
             <div>
-              <label className="block text-xs font-semibold text-slate-700 mb-1">
+              <label className="block text-xs font-semibold text-[#343C6A] mb-1.5">
                 Assigned Shop Owner
               </label>
               <select
                 {...register('user_id')}
-                className="w-full px-3 py-2 text-xs bg-slate-50 rounded-none border-0 focus:outline-none focus:ring-1 focus:ring-[#B88E2F]"
+                className="w-full h-11 px-4 text-sm bg-[#F5F7FA] text-[#343C6A] rounded-xl border-0 outline-none font-medium cursor-pointer focus:bg-white focus:ring-2 focus:ring-[#B88E2F]/30 transition-all"
               >
                 <option value="">Select an owner (optional)</option>
                 {owners.map((owner) => (
@@ -348,41 +348,41 @@ export default function ShopManagementPage() {
           </div>
 
           <div>
-            <label className="block text-xs font-semibold text-slate-700 mb-1">
+            <label className="block text-xs font-semibold text-[#343C6A] mb-1.5">
               Store Description
             </label>
             <textarea
               rows={3}
               {...register('description')}
               placeholder="Store background, mission, and specialty..."
-              className="w-full px-3 py-2 text-xs bg-slate-50 rounded-none border-0 focus:outline-none focus:ring-1 focus:ring-[#B88E2F]"
+              className="w-full p-3.5 text-sm bg-[#F5F7FA] text-[#343C6A] placeholder-[#8BA3CB] rounded-xl border-0 outline-none focus:bg-white focus:ring-2 focus:ring-[#B88E2F]/30 transition-all resize-none"
             />
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3.5">
             <div>
-              <label className="block text-xs font-semibold text-slate-700 mb-1">
+              <label className="block text-xs font-semibold text-[#343C6A] mb-1.5">
                 Contact Phone
               </label>
               <input
                 type="text"
                 {...register('phone')}
                 placeholder="+1 (555) 000-0000"
-                className="w-full px-3 py-2 text-xs bg-slate-50 rounded-none border-0 focus:outline-none focus:ring-1 focus:ring-[#B88E2F]"
+                className="w-full h-11 px-4 text-sm bg-[#F5F7FA] text-[#343C6A] placeholder-[#8BA3CB] rounded-xl border-0 outline-none focus:bg-white focus:ring-2 focus:ring-[#B88E2F]/30 transition-all"
               />
             </div>
 
             <div>
-              <label className="block text-xs font-semibold text-slate-700 mb-1">
+              <label className="block text-xs font-semibold text-[#343C6A] mb-1.5">
                 Contact Email
               </label>
               <input
                 type="email"
                 {...register('email')}
                 placeholder="store@domain.com"
-                className={`w-full px-3 py-2 text-xs bg-slate-50 rounded-none border-0 ${
-                  errors.email ? 'ring-1 ring-rose-400' : 'focus:ring-1 focus:ring-[#B88E2F]'
-                } focus:outline-none focus:bg-white`}
+                className={`w-full h-11 px-4 text-sm bg-[#F5F7FA] text-[#343C6A] placeholder-[#8BA3CB] rounded-xl border-0 outline-none transition-all ${
+                  errors.email ? 'ring-2 ring-rose-400 bg-rose-50/20' : 'focus:ring-2 focus:ring-[#B88E2F]/30 focus:bg-white'
+                }`}
               />
               {errors.email && (
                 <span className="text-[10px] text-rose-500 mt-1 block">{errors.email.message}</span>
@@ -390,12 +390,12 @@ export default function ShopManagementPage() {
             </div>
 
             <div>
-              <label className="block text-xs font-semibold text-slate-700 mb-1">
+              <label className="block text-xs font-semibold text-[#343C6A] mb-1.5">
                 Store Status
               </label>
               <select
                 {...register('status')}
-                className="w-full px-3 py-2 text-xs bg-slate-50 rounded-none border-0 focus:outline-none focus:ring-1 focus:ring-[#B88E2F]"
+                className="w-full h-11 px-4 text-sm bg-[#F5F7FA] text-[#343C6A] rounded-xl border-0 outline-none font-medium cursor-pointer focus:bg-white focus:ring-2 focus:ring-[#B88E2F]/30 transition-all"
               >
                 <option value="active">Active (Visible)</option>
                 <option value="inactive">Inactive</option>
@@ -405,55 +405,55 @@ export default function ShopManagementPage() {
           </div>
 
           <div>
-            <label className="block text-xs font-semibold text-slate-700 mb-1">
+            <label className="block text-xs font-semibold text-[#343C6A] mb-1.5">
               Physical Location / City
             </label>
             <input
               type="text"
               {...register('address')}
               placeholder="e.g. Austin, Texas"
-              className="w-full px-3 py-2 text-xs bg-slate-50 rounded-none border-0 focus:outline-none focus:ring-1 focus:ring-[#B88E2F]"
+              className="w-full h-11 px-4 text-sm bg-[#F5F7FA] text-[#343C6A] placeholder-[#8BA3CB] rounded-xl border-0 outline-none focus:bg-white focus:ring-2 focus:ring-[#B88E2F]/30 transition-all"
             />
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
             <div>
-              <label className="block text-xs font-semibold text-slate-700 mb-1">
+              <label className="block text-xs font-semibold text-[#343C6A] mb-1.5">
                 Logo URL
               </label>
               <input
                 type="url"
                 {...register('logo')}
                 placeholder="https://images.unsplash.com/..."
-                className="w-full px-3 py-2 text-xs bg-slate-50 rounded-none border-0 focus:outline-none focus:ring-1 focus:ring-[#B88E2F]"
+                className="w-full h-11 px-4 text-sm bg-[#F5F7FA] text-[#343C6A] placeholder-[#8BA3CB] rounded-xl border-0 outline-none focus:bg-white focus:ring-2 focus:ring-[#B88E2F]/30 transition-all"
               />
             </div>
 
             <div>
-              <label className="block text-xs font-semibold text-slate-700 mb-1">
+              <label className="block text-xs font-semibold text-[#343C6A] mb-1.5">
                 Banner URL
               </label>
               <input
                 type="url"
                 {...register('banner')}
                 placeholder="https://images.unsplash.com/..."
-                className="w-full px-3 py-2 text-xs bg-slate-50 rounded-none border-0 focus:outline-none focus:ring-1 focus:ring-[#B88E2F]"
+                className="w-full h-11 px-4 text-sm bg-[#F5F7FA] text-[#343C6A] placeholder-[#8BA3CB] rounded-xl border-0 outline-none focus:bg-white focus:ring-2 focus:ring-[#B88E2F]/30 transition-all"
               />
             </div>
           </div>
 
-          <div className="pt-4 border-t border-slate-100 flex items-center justify-end space-x-2">
+          <div className="pt-4 border-t border-[#F5F7FA] flex items-center justify-end space-x-3">
             <button
               type="button"
               onClick={() => setIsModalOpen(false)}
-              className="px-4 py-2 rounded-none text-xs font-medium text-slate-600 hover:bg-slate-100 border-0"
+              className="px-5 py-2.5 rounded-xl bg-[#F5F7FA] hover:bg-[#FAF3EA] text-xs font-semibold text-[#343C6A] hover:text-[#B88E2F] transition-colors border-0 cursor-pointer"
             >
               Cancel
             </button>
             <button
               type="submit"
               disabled={isSubmitting || saveMutation.isPending}
-              className="px-4 py-2 rounded-xl bg-[#B88E2F] hover:bg-[#967125] text-white text-xs font-semibold shadow-xs disabled:opacity-50"
+              className="px-5 py-2.5 rounded-xl bg-[#B88E2F] hover:bg-[#967125] text-white text-xs font-semibold shadow-sm disabled:opacity-50 transition-all border-0 outline-none cursor-pointer"
             >
               {isSubmitting || saveMutation.isPending
                 ? 'Saving...'

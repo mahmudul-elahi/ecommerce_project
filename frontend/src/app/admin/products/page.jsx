@@ -220,7 +220,7 @@ export default function ProductManagementPage() {
             <select
               value={selectedCategory}
               onChange={(e) => setSelectedCategory(e.target.value)}
-              className="h-10 px-4 text-xs bg-[#F5F7FA] text-[#343C6A] rounded-none border-0 outline-none font-medium cursor-pointer"
+              className="h-10 px-4 text-xs bg-[#F5F7FA] text-[#343C6A] rounded-xl border-0 outline-none font-medium cursor-pointer"
             >
               <option value="">All Categories</option>
               {dbCategories.map((cat) => (
@@ -372,43 +372,43 @@ export default function ProductManagementPage() {
       >
         <form onSubmit={handleSubmit(onFormSubmit)} className="space-y-4">
           <div>
-            <label className="block text-xs font-semibold text-slate-700 mb-1">
-              Product Title <span className="text-rose-500">*</span>
+            <label className="block text-xs font-semibold text-[#343C6A] mb-1.5">
+              Product Title <span className="text-[#B88E2F]">*</span>
             </label>
             <input
               type="text"
               {...register('name')}
-              className="w-full px-3 py-2 text-xs bg-slate-50 border-0 rounded-none text-slate-900 focus:outline-none focus:ring-1 focus:ring-[#B88E2F]"
+              className="w-full h-11 px-4 text-sm bg-[#F5F7FA] text-[#343C6A] placeholder-[#8BA3CB] rounded-xl border-0 outline-none focus:bg-white focus:ring-2 focus:ring-[#B88E2F]/30 transition-all"
               placeholder="e.g. Syltherine Cafe Chair"
             />
             {errors.name && (
-              <span className="text-[11px] text-rose-600 mt-1">{errors.name.message}</span>
+              <span className="text-[11px] text-rose-600 mt-1 block">{errors.name.message}</span>
             )}
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
             <div>
-              <label className="block text-xs font-semibold text-slate-700 mb-1">
-                Base Price (Rp) <span className="text-rose-500">*</span>
+              <label className="block text-xs font-semibold text-[#343C6A] mb-1.5">
+                Base Price (Rp) <span className="text-[#B88E2F]">*</span>
               </label>
               <input
                 type="number"
                 min="0"
                 {...register('base_price')}
-                className="w-full px-3 py-2 text-xs bg-slate-50 border-0 rounded-none text-slate-900 font-mono focus:outline-none focus:ring-1 focus:ring-[#B88E2F]"
+                className="w-full h-11 px-4 text-sm bg-[#F5F7FA] text-[#343C6A] font-mono placeholder-[#8BA3CB] rounded-xl border-0 outline-none focus:bg-white focus:ring-2 focus:ring-[#B88E2F]/30 transition-all"
                 placeholder="2500000"
               />
               {errors.base_price && (
-                <span className="text-[11px] text-rose-600 mt-1">{errors.base_price.message}</span>
+                <span className="text-[11px] text-rose-600 mt-1 block">{errors.base_price.message}</span>
               )}
             </div>
 
             <div>
-              <label className="block text-xs font-semibold text-slate-700 mb-1">SKU / Code</label>
+              <label className="block text-xs font-semibold text-[#343C6A] mb-1.5">SKU / Code</label>
               <input
                 type="text"
                 {...register('sku')}
-                className="w-full px-3 py-2 text-xs bg-slate-50 border-0 rounded-none text-slate-900 font-mono focus:outline-none focus:ring-1 focus:ring-[#B88E2F]"
+                className="w-full h-11 px-4 text-sm bg-[#F5F7FA] text-[#343C6A] font-mono placeholder-[#8BA3CB] rounded-xl border-0 outline-none focus:bg-white focus:ring-2 focus:ring-[#B88E2F]/30 transition-all"
                 placeholder="FUR-001"
               />
             </div>
@@ -416,12 +416,12 @@ export default function ProductManagementPage() {
 
           {/* Dynamic Category Dropdown from Database */}
           <div>
-            <label className="block text-xs font-semibold text-slate-700 mb-1">
+            <label className="block text-xs font-semibold text-[#343C6A] mb-1.5">
               Category (from Dynamic Categories Table)
             </label>
             <select
               {...register('category_id')}
-              className="w-full px-3 py-2 text-xs bg-slate-50 border-0 rounded-none text-slate-900 focus:outline-none focus:ring-1 focus:ring-[#B88E2F]"
+              className="w-full h-11 px-4 text-sm bg-[#F5F7FA] text-[#343C6A] rounded-xl border-0 outline-none font-medium cursor-pointer focus:bg-white focus:ring-2 focus:ring-[#B88E2F]/30 transition-all"
             >
               <option value="">-- Select Category --</option>
               {dbCategories.map((c) => (
@@ -434,20 +434,20 @@ export default function ProductManagementPage() {
 
           {/* Multiple Images Upload & Gallery Management */}
           <div>
-            <div className="flex items-center justify-between mb-1">
-              <label className="block text-xs font-semibold text-slate-700">
+            <div className="flex items-center justify-between mb-1.5">
+              <label className="block text-xs font-semibold text-[#343C6A]">
                 Product Images (Multiple angles/shots - optimized to WebP)
               </label>
-              <span className="text-[11px] text-slate-400">
+              <span className="text-[11px] text-[#718EBF]">
                 {existingImages.length + newImageFiles.length} image(s) selected
               </span>
             </div>
 
             {/* Existing Images preview */}
             {(existingImages.length > 0 || newImagePreviews.length > 0) && (
-              <div className="flex flex-wrap gap-2.5 mb-2.5 p-2 bg-slate-50 rounded-xl border border-slate-200">
+              <div className="flex flex-wrap gap-2.5 mb-2.5 p-3 bg-[#F5F7FA] rounded-xl border-0">
                 {existingImages.map((src, idx) => (
-                  <div key={`existing-${idx}`} className="relative w-16 h-16 rounded-lg overflow-hidden border border-slate-200 bg-white group">
+                  <div key={`existing-${idx}`} className="relative w-16 h-16 rounded-xl overflow-hidden bg-white shadow-xs group">
                     <img src={src} alt="" className="w-full h-full object-cover" />
                     {idx === 0 && (
                       <span className="absolute bottom-0 left-0 right-0 bg-[#B88E2F] text-white text-[8px] text-center font-bold">
@@ -457,7 +457,7 @@ export default function ProductManagementPage() {
                     <button
                       type="button"
                       onClick={() => removeExistingImage(idx)}
-                      className="absolute top-0.5 right-0.5 bg-rose-600 text-white rounded-full p-0.5 opacity-90 hover:opacity-100"
+                      className="absolute top-1 right-1 bg-rose-600 text-white rounded-full p-0.5 opacity-90 hover:opacity-100"
                     >
                       <X className="w-3 h-3" />
                     </button>
@@ -465,7 +465,7 @@ export default function ProductManagementPage() {
                 ))}
 
                 {newImagePreviews.map((src, idx) => (
-                  <div key={`new-${idx}`} className="relative w-16 h-16 rounded-lg overflow-hidden border border-[#ebd9c5] bg-white group">
+                  <div key={`new-${idx}`} className="relative w-16 h-16 rounded-xl overflow-hidden bg-white shadow-xs group">
                     <img src={src} alt="" className="w-full h-full object-cover" />
                     <span className="absolute bottom-0 left-0 right-0 bg-[#B88E2F] text-white text-[8px] text-center font-bold">
                       NEW
@@ -473,7 +473,7 @@ export default function ProductManagementPage() {
                     <button
                       type="button"
                       onClick={() => removeNewFile(idx)}
-                      className="absolute top-0.5 right-0.5 bg-rose-600 text-white rounded-full p-0.5 opacity-90 hover:opacity-100"
+                      className="absolute top-1 right-1 bg-rose-600 text-white rounded-full p-0.5 opacity-90 hover:opacity-100"
                     >
                       <X className="w-3 h-3" />
                     </button>
@@ -483,10 +483,10 @@ export default function ProductManagementPage() {
             )}
 
             {/* File Upload Trigger */}
-            <label className="border-2 border-dashed border-slate-300 hover:border-[#B88E2F] rounded-xl p-4 flex flex-col items-center justify-center cursor-pointer transition-colors bg-white">
-              <Upload className="w-6 h-6 text-slate-400 mb-1" />
-              <span className="text-xs font-semibold text-slate-700">Click or drop multiple images here</span>
-              <span className="text-[10px] text-slate-400 mt-0.5">Supports PNG, JPG, WebP. Laravel 13 automatically optimizes each image.</span>
+            <label className="border-2 border-dashed border-[#DFEAF2] hover:border-[#B88E2F] rounded-2xl p-4 flex flex-col items-center justify-center cursor-pointer transition-colors bg-[#F5F7FA] hover:bg-[#FAF3EA]/50">
+              <Upload className="w-6 h-6 text-[#718EBF] mb-1" />
+              <span className="text-xs font-semibold text-[#343C6A]">Click or drop multiple images here</span>
+              <span className="text-[10px] text-[#718EBF] mt-0.5">Supports PNG, JPG, WebP. Laravel 13 automatically optimizes each image.</span>
               <input
                 type="file"
                 multiple
@@ -498,11 +498,11 @@ export default function ProductManagementPage() {
           </div>
 
           <div>
-            <label className="block text-xs font-semibold text-slate-700 mb-1">Product Description</label>
+            <label className="block text-xs font-semibold text-[#343C6A] mb-1.5">Product Description</label>
             <textarea
               rows={3}
               {...register('description')}
-              className="w-full px-3 py-2 text-xs bg-slate-50 border-0 rounded-none text-slate-900 focus:outline-none focus:ring-1 focus:ring-[#B88E2F]"
+              className="w-full p-3.5 text-sm bg-[#F5F7FA] text-[#343C6A] placeholder-[#8BA3CB] rounded-xl border-0 outline-none focus:bg-white focus:ring-2 focus:ring-[#B88E2F]/30 transition-all resize-none"
               placeholder="Specifications, materials, dimensions, and craft details..."
             />
           </div>
@@ -512,25 +512,25 @@ export default function ProductManagementPage() {
               type="checkbox"
               id="admin_prod_active"
               {...register('is_active')}
-              className="rounded-none border-0 text-slate-900 focus:ring-[#B88E2F]"
+              className="rounded-md border-0 text-[#B88E2F] focus:ring-[#B88E2F]"
             />
-            <label htmlFor="admin_prod_active" className="text-xs font-semibold text-slate-800 cursor-pointer">
+            <label htmlFor="admin_prod_active" className="text-xs font-semibold text-[#343C6A] cursor-pointer">
               Active in Shared Catalog
             </label>
           </div>
 
-          <div className="pt-3 border-t border-slate-200 flex justify-end space-x-2">
+          <div className="pt-4 border-t border-[#F5F7FA] flex justify-end space-x-3">
             <button
               type="button"
               onClick={() => setIsModalOpen(false)}
-              className="px-3.5 py-2 rounded-none bg-slate-100 hover:bg-slate-200 text-xs font-semibold text-slate-700 border-0"
+              className="px-5 py-2.5 rounded-xl bg-[#F5F7FA] hover:bg-[#FAF3EA] text-xs font-semibold text-[#343C6A] hover:text-[#B88E2F] transition-colors border-0 cursor-pointer"
             >
               Cancel
             </button>
             <button
               type="submit"
               disabled={saveMutation.isPending}
-              className="px-4 py-2 rounded-none bg-[#B88E2F] hover:bg-[#967125] disabled:opacity-60 text-white text-xs font-semibold shadow-none border-0 outline-none cursor-pointer"
+              className="px-5 py-2.5 rounded-xl bg-[#B88E2F] hover:bg-[#967125] disabled:opacity-60 text-white text-xs font-semibold shadow-sm transition-all border-0 outline-none cursor-pointer"
             >
               {saveMutation.isPending ? 'Saving...' : editingProduct ? 'Save Changes' : 'Create Master Product'}
             </button>

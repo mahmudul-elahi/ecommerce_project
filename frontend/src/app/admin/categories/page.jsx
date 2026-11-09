@@ -282,38 +282,38 @@ export default function CategoryManagementPage() {
       >
         <form onSubmit={handleSubmit(onFormSubmit)} className="space-y-4">
           <div>
-            <label className="block text-xs font-semibold text-slate-700 mb-1">
-              Category Name <span className="text-rose-500">*</span>
+            <label className="block text-xs font-semibold text-[#343C6A] mb-1.5">
+              Category Name <span className="text-[#B88E2F]">*</span>
             </label>
             <input
               type="text"
               {...register('name')}
-              className="w-full px-3 py-2 text-xs bg-slate-50 border-0 rounded-none text-slate-900 focus:outline-none focus:ring-1 focus:ring-[#B88E2F]"
+              className="w-full h-11 px-4 text-sm bg-[#F5F7FA] text-[#343C6A] placeholder-[#8BA3CB] rounded-xl border-0 outline-none focus:bg-white focus:ring-2 focus:ring-[#B88E2F]/30 transition-all"
               placeholder="e.g. Dining, Living, Bedroom, Outdoor..."
             />
             {errors.name && (
-              <span className="text-[11px] text-rose-600 mt-1">{errors.name.message}</span>
+              <span className="text-[11px] text-rose-600 mt-1 block">{errors.name.message}</span>
             )}
           </div>
 
           <div>
-            <label className="block text-xs font-semibold text-slate-700 mb-1">Description</label>
+            <label className="block text-xs font-semibold text-[#343C6A] mb-1.5">Description</label>
             <textarea
               rows={2}
               {...register('description')}
-              className="w-full px-3 py-2 text-xs bg-slate-50 border-0 rounded-none text-slate-900 focus:outline-none focus:ring-1 focus:ring-[#B88E2F]"
+              className="w-full p-3.5 text-sm bg-[#F5F7FA] text-[#343C6A] placeholder-[#8BA3CB] rounded-xl border-0 outline-none focus:bg-white focus:ring-2 focus:ring-[#B88E2F]/30 transition-all resize-none"
               placeholder="Curated collections for modern homes..."
             />
           </div>
 
           {/* Image Upload with Laravel 13 Optimization */}
           <div>
-            <label className="block text-xs font-semibold text-slate-700 mb-1">
+            <label className="block text-xs font-semibold text-[#343C6A] mb-1.5">
               Category Image (Optimized to WebP automatically)
             </label>
             <div className="flex items-center gap-3">
               {imagePreview && (
-                <div className="w-16 h-16 rounded-none overflow-hidden bg-slate-100 flex-shrink-0 shadow-xs">
+                <div className="w-16 h-16 rounded-xl overflow-hidden bg-slate-100 flex-shrink-0 shadow-xs">
                   <img src={imagePreview} alt="Preview" className="w-full h-full object-cover" />
                 </div>
               )}
@@ -322,9 +322,9 @@ export default function CategoryManagementPage() {
                   type="file"
                   accept="image/*"
                   onChange={handleFileChange}
-                  className="w-full text-xs text-slate-500 file:mr-2 file:py-1.5 file:px-3 file:rounded-none file:border-0 file:text-xs file:font-semibold file:bg-[#FAF3EA] file:text-[#B88E2F] hover:file:bg-[#F4E8D3] cursor-pointer"
+                  className="w-full text-xs text-slate-500 file:mr-2 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-[#FAF3EA] file:text-[#B88E2F] hover:file:bg-[#F4E8D3] cursor-pointer"
                 />
-                <p className="text-[10px] text-slate-400 mt-1">
+                <p className="text-[10px] text-[#718EBF] mt-1">
                   Laravel 13 automatically optimizes and converts uploaded images to WebP.
                 </p>
               </div>
@@ -336,25 +336,25 @@ export default function CategoryManagementPage() {
               type="checkbox"
               id="cat_active"
               {...register('is_active')}
-              className="rounded-none border-0 text-slate-900 focus:ring-[#B88E2F]"
+              className="rounded-md border-0 text-[#B88E2F] focus:ring-[#B88E2F]"
             />
-            <label htmlFor="cat_active" className="text-xs font-semibold text-slate-800 cursor-pointer">
+            <label htmlFor="cat_active" className="text-xs font-semibold text-[#343C6A] cursor-pointer">
               Active & Visible on Customer Storefront
             </label>
           </div>
 
-          <div className="pt-3 border-t border-slate-200 flex justify-end space-x-2">
+          <div className="pt-4 border-t border-[#F5F7FA] flex justify-end space-x-3">
             <button
               type="button"
               onClick={() => setIsModalOpen(false)}
-              className="px-3.5 py-2 rounded-none bg-slate-100 hover:bg-slate-200 text-xs font-semibold text-slate-700 border-0"
+              className="px-5 py-2.5 rounded-xl bg-[#F5F7FA] hover:bg-[#FAF3EA] text-xs font-semibold text-[#343C6A] hover:text-[#B88E2F] transition-colors border-0 cursor-pointer"
             >
               Cancel
             </button>
             <button
               type="submit"
               disabled={saveMutation.isPending}
-              className="px-4 py-2 rounded-none bg-[#B88E2F] hover:bg-[#967125] disabled:opacity-60 text-white text-xs font-semibold shadow-none border-0 outline-none cursor-pointer"
+              className="px-5 py-2.5 rounded-xl bg-[#B88E2F] hover:bg-[#967125] disabled:opacity-60 text-white text-xs font-semibold shadow-sm transition-all border-0 outline-none cursor-pointer"
             >
               {saveMutation.isPending ? 'Saving...' : editingCategory ? 'Save Changes' : 'Create Category'}
             </button>

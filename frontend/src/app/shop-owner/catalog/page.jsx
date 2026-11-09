@@ -246,7 +246,7 @@ export default function CatalogBrowsePage() {
             <select
               value={category}
               onChange={(e) => setCategory(e.target.value)}
-              className="h-10 px-4 text-xs bg-[#F5F7FA] text-[#343C6A] rounded-none border-0 outline-none font-medium cursor-pointer"
+              className="h-10 px-4 text-xs bg-[#F5F7FA] text-[#343C6A] rounded-xl border-0 outline-none font-medium cursor-pointer"
             >
               <option value="">All Categories</option>
               {dbCategories.map((cat) => (
@@ -261,7 +261,7 @@ export default function CatalogBrowsePage() {
         <div className="flex items-center gap-3 w-full md:w-auto justify-between md:justify-end">
           <Link
             href="/shop-owner/products"
-            className="px-4 py-2.5 rounded-none bg-[#F5F7FA] hover:bg-[#FAF3EA] text-[#343C6A] text-sm font-semibold transition-colors flex items-center gap-2"
+            className="px-4 py-2.5 rounded-xl bg-[#F5F7FA] hover:bg-[#FAF3EA] text-[#343C6A] text-sm font-semibold transition-colors flex items-center gap-2"
           >
             <Package className="w-4 h-4 text-[#718EBF]" />
             <span>My Listings</span>
@@ -269,7 +269,7 @@ export default function CatalogBrowsePage() {
 
           <button
             onClick={handleOpenCreateModal}
-            className="px-5 py-2.5 rounded-none bg-[#B88E2F] hover:bg-[#967125] text-white text-sm font-semibold transition-all shadow-none flex items-center gap-2 border-0 outline-none cursor-pointer"
+            className="px-5 py-2.5 rounded-xl bg-[#B88E2F] hover:bg-[#967125] text-white text-sm font-semibold transition-all shadow-sm flex items-center gap-2 border-0 outline-none cursor-pointer"
           >
             <Plus className="w-4 h-4" />
             <span>Create Shared Product</span>
@@ -333,7 +333,7 @@ export default function CatalogBrowsePage() {
 
                     {/* Status badge */}
                     {alreadyInShop && (
-                      <span className="absolute top-3 right-3 px-2 py-0.5 rounded-none bg-[#B88E2F] text-white text-[10px] font-mono uppercase shadow-none flex items-center space-x-1">
+                      <span className="absolute top-3 right-3 px-2 py-0.5 rounded-md bg-[#B88E2F] text-white text-[10px] font-mono uppercase shadow-xs flex items-center space-x-1">
                         <Check className="w-3 h-3" />
                         <span>In Store</span>
                       </span>
@@ -386,15 +386,15 @@ export default function CatalogBrowsePage() {
                   {alreadyInShop ? (
                     <Link
                       href="/shop-owner/products"
-                      className="w-full py-2.5 px-3 rounded-none bg-slate-100 hover:bg-slate-200 text-slate-800 text-xs font-semibold flex items-center justify-center space-x-1.5 transition-colors border-0"
+                      className="w-full py-2.5 px-3 rounded-xl bg-[#F5F7FA] hover:bg-[#FAF3EA] text-[#343C6A] hover:text-[#B88E2F] text-xs font-semibold flex items-center justify-center space-x-1.5 transition-colors border-0"
                     >
-                      <CheckCircle2 className="w-3.5 h-3.5 text-slate-700" />
+                      <CheckCircle2 className="w-3.5 h-3.5 text-[#B88E2F]" />
                       <span>Customized in Store</span>
                     </Link>
                   ) : (
                     <button
                       onClick={() => handleOpenAddModal(product)}
-                      className="w-full py-2.5 px-3 rounded-none bg-[#B88E2F] hover:bg-[#967125] text-white text-xs font-semibold flex items-center justify-center space-x-1.5 transition-colors shadow-none border-0 outline-none cursor-pointer"
+                      className="w-full py-2.5 px-3 rounded-xl bg-[#B88E2F] hover:bg-[#967125] text-white text-xs font-semibold flex items-center justify-center space-x-1.5 transition-colors shadow-xs border-0 outline-none cursor-pointer"
                     >
                       <Plus className="w-3.5 h-3.5" />
                       <span>Add to My Store</span>
@@ -439,21 +439,23 @@ export default function CatalogBrowsePage() {
                   step="0.01"
                   {...registerAdd('custom_price')}
                   placeholder={`Default: $${productToAdd.base_price}`}
-                  className="w-full px-3 py-2 text-xs bg-slate-50 rounded-none border-0 focus:outline-none focus:ring-1 focus:ring-[#B88E2F]"
+                  className="w-full h-11 px-4 text-sm bg-[#F5F7FA] text-[#343C6A] placeholder-[#8BA3CB] rounded-xl border-0 outline-none focus:bg-white focus:ring-2 focus:ring-[#B88E2F]/30 transition-all font-mono"
                 />
-                <span className="text-[10px] text-slate-500 mt-1 block">
+                <span className="text-[10px] text-[#718EBF] mt-1 block">
                   Leave blank to use catalog base (${Number(productToAdd.base_price).toFixed(2)})
                 </span>
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-slate-700 mb-1">
+                <label className="block text-xs font-semibold text-[#343C6A] mb-1.5">
                   Initial Store Stock
                 </label>
                 <input
                   type="number"
                   {...registerAdd('stock')}
-                  className="w-full px-3 py-2 text-xs bg-slate-50 rounded-none border-0 focus:outline-none focus:ring-1 focus:ring-[#B88E2F]"
+                  className={`w-full h-11 px-4 text-sm bg-[#F5F7FA] text-[#343C6A] placeholder-[#8BA3CB] rounded-xl border-0 outline-none transition-all font-mono ${
+                    errorsAdd.stock ? 'ring-2 ring-rose-400 bg-rose-50/20' : 'focus:ring-2 focus:ring-[#B88E2F]/30 focus:bg-white'
+                  }`}
                 />
                 {errorsAdd.stock && (
                   <span className="text-[10px] text-rose-500 mt-1 block">{errorsAdd.stock.message}</span>
@@ -462,53 +464,53 @@ export default function CatalogBrowsePage() {
             </div>
 
             <div>
-              <label className="block text-xs font-semibold text-slate-700 mb-1">
+              <label className="block text-xs font-semibold text-[#343C6A] mb-1.5">
                 Custom Title (Optional)
               </label>
               <input
                 type="text"
                 {...registerAdd('custom_title')}
                 placeholder={`Leave blank to keep "${productToAdd.name}"`}
-                className="w-full px-3 py-2 text-xs bg-slate-50 rounded-none border-0 focus:outline-none focus:ring-1 focus:ring-[#B88E2F]"
+                className="w-full h-11 px-4 text-sm bg-[#F5F7FA] text-[#343C6A] placeholder-[#8BA3CB] rounded-xl border-0 outline-none focus:bg-white focus:ring-2 focus:ring-[#B88E2F]/30 transition-all"
               />
             </div>
 
             <div>
-              <label className="block text-xs font-semibold text-slate-700 mb-1">
+              <label className="block text-xs font-semibold text-[#343C6A] mb-1.5">
                 Custom Description (Optional)
               </label>
               <textarea
                 rows={3}
                 {...registerAdd('custom_description')}
                 placeholder="Shop-specific promotional copy or warranty notes..."
-                className="w-full px-3 py-2 text-xs bg-slate-50 rounded-none border-0 focus:outline-none focus:ring-1 focus:ring-[#B88E2F]"
+                className="w-full p-3.5 text-sm bg-[#F5F7FA] text-[#343C6A] placeholder-[#8BA3CB] rounded-xl border-0 outline-none focus:bg-white focus:ring-2 focus:ring-[#B88E2F]/30 transition-all resize-none"
               />
             </div>
 
             <div>
-              <label className="block text-xs font-semibold text-slate-700 mb-1">
+              <label className="block text-xs font-semibold text-[#343C6A] mb-1.5">
                 Custom Storefront Thumbnail URL (Optional)
               </label>
               <input
                 type="url"
                 {...registerAdd('custom_thumbnail')}
                 placeholder="https://example.com/custom-photo.jpg"
-                className="w-full px-3 py-2 text-xs bg-slate-50 rounded-none border-0 focus:outline-none focus:ring-1 focus:ring-[#B88E2F]"
+                className="w-full h-11 px-4 text-sm bg-[#F5F7FA] text-[#343C6A] placeholder-[#8BA3CB] rounded-xl border-0 outline-none focus:bg-white focus:ring-2 focus:ring-[#B88E2F]/30 transition-all"
               />
             </div>
 
-            <div className="pt-4 border-t border-slate-100 flex items-center justify-end space-x-2">
+            <div className="pt-4 border-t border-[#F5F7FA] flex items-center justify-end space-x-3">
               <button
                 type="button"
                 onClick={() => setIsAddModalOpen(false)}
-                className="px-4 py-2 rounded-none text-xs font-medium text-slate-600 hover:bg-slate-100 border-0"
+                className="px-5 py-2.5 rounded-xl bg-[#F5F7FA] hover:bg-[#FAF3EA] text-xs font-semibold text-[#343C6A] hover:text-[#B88E2F] transition-colors border-0 cursor-pointer"
               >
                 Cancel
               </button>
               <button
                 type="submit"
                 disabled={isSubmittingAdd || addToShopMutation.isPending}
-                className="px-4 py-2 rounded-none bg-[#B88E2F] hover:bg-[#967125] text-white text-xs font-semibold shadow-none disabled:opacity-50 border-0 outline-none cursor-pointer"
+                className="px-5 py-2.5 rounded-xl bg-[#B88E2F] hover:bg-[#967125] text-white text-xs font-semibold shadow-sm disabled:opacity-50 transition-all border-0 outline-none cursor-pointer"
               >
                 {isSubmittingAdd || addToShopMutation.isPending ? 'Adding to Store...' : 'Confirm & Add to Store'}
               </button>
@@ -524,25 +526,25 @@ export default function CatalogBrowsePage() {
         title="Create New Shared Product"
       >
         <form onSubmit={handleSubmitCreate(onCreateSubmit)} className="space-y-4">
-          <div className="bg-[#FAF3EA] rounded-none p-3 text-sm text-[#343C6A] flex items-start space-x-2 border-0">
+          <div className="bg-[#FAF3EA] rounded-2xl p-3.5 text-sm text-[#343C6A] flex items-start space-x-2.5 border-0">
             <Sparkles className="w-4 h-4 text-[#B88E2F] flex-shrink-0 mt-0.5" />
             <div>
               <span className="font-semibold">One product, more places to sell:</span> New products are added to the catalog for other shop owners to discover and are listed in your shop right away.
             </div>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
             <div>
-              <label className="block text-xs font-semibold text-slate-700 mb-1">
-                Product Name <span className="text-rose-500">*</span>
+              <label className="block text-xs font-semibold text-[#343C6A] mb-1.5">
+                Product Name <span className="text-[#B88E2F]">*</span>
               </label>
               <input
                 type="text"
                 {...registerCreate('name')}
                 placeholder="e.g. Minimalist Ceramic Cup"
-                className={`w-full px-3 py-2 text-xs bg-slate-50 rounded-none border-0 ${
-                  errorsCreate.name ? 'ring-1 ring-rose-400' : 'focus:ring-1 focus:ring-[#B88E2F]'
-                } focus:outline-none focus:bg-white`}
+                className={`w-full h-11 px-4 text-sm bg-[#F5F7FA] text-[#343C6A] placeholder-[#8BA3CB] rounded-xl border-0 outline-none transition-all ${
+                  errorsCreate.name ? 'ring-2 ring-rose-400 bg-rose-50/20' : 'focus:ring-2 focus:ring-[#B88E2F]/30 focus:bg-white'
+                }`}
               />
               {errorsCreate.name && (
                 <span className="text-[10px] text-rose-500 mt-1 block">{errorsCreate.name.message}</span>
@@ -550,16 +552,16 @@ export default function CatalogBrowsePage() {
             </div>
 
             <div>
-              <label className="block text-xs font-semibold text-slate-700 mb-1">
-                Stock Keeping Unit (SKU) <span className="text-rose-500">*</span>
+              <label className="block text-xs font-semibold text-[#343C6A] mb-1.5">
+                Stock Keeping Unit (SKU) <span className="text-[#B88E2F]">*</span>
               </label>
               <input
                 type="text"
                 {...registerCreate('sku')}
                 placeholder="e.g. CERAMIC-001"
-                className={`w-full px-3 py-2 text-xs bg-slate-50 rounded-none border-0 ${
-                  errorsCreate.sku ? 'ring-1 ring-rose-400' : 'focus:ring-1 focus:ring-[#B88E2F]'
-                } focus:outline-none focus:bg-white`}
+                className={`w-full h-11 px-4 text-sm bg-[#F5F7FA] text-[#343C6A] placeholder-[#8BA3CB] rounded-xl border-0 outline-none transition-all ${
+                  errorsCreate.sku ? 'ring-2 ring-rose-400 bg-rose-50/20' : 'focus:ring-2 focus:ring-[#B88E2F]/30 focus:bg-white'
+                }`}
               />
               {errorsCreate.sku && (
                 <span className="text-[10px] text-rose-500 mt-1 block">{errorsCreate.sku.message}</span>
@@ -567,14 +569,14 @@ export default function CatalogBrowsePage() {
             </div>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
             <div>
-              <label className="block text-xs font-semibold text-slate-700 mb-1">
-                Category (from Database Categories) <span className="text-rose-500">*</span>
+              <label className="block text-xs font-semibold text-[#343C6A] mb-1.5">
+                Category (from Database Categories) <span className="text-[#B88E2F]">*</span>
               </label>
               <select
                 {...registerCreate('category_id')}
-                className="w-full px-3 py-2 text-xs bg-slate-50 rounded-none border-0 focus:ring-1 focus:ring-[#B88E2F] outline-none"
+                className="w-full h-11 px-4 text-sm bg-[#F5F7FA] text-[#343C6A] rounded-xl border-0 outline-none font-medium cursor-pointer focus:bg-white focus:ring-2 focus:ring-[#B88E2F]/30 transition-all"
               >
                 <option value="">-- Select Category --</option>
                 {dbCategories.map((c) => (
@@ -586,17 +588,17 @@ export default function CatalogBrowsePage() {
             </div>
 
             <div>
-              <label className="block text-xs font-semibold text-slate-700 mb-1">
-                Base Price (Rp) <span className="text-rose-500">*</span>
+              <label className="block text-xs font-semibold text-[#343C6A] mb-1.5">
+                Base Price (Rp) <span className="text-[#B88E2F]">*</span>
               </label>
               <input
                 type="number"
                 min="0"
                 {...registerCreate('base_price')}
                 placeholder="2500000"
-                className={`w-full px-3 py-2 text-xs bg-slate-50 rounded-none border-0 ${
-                  errorsCreate.base_price ? 'ring-1 ring-rose-400' : 'focus:ring-1 focus:ring-[#B88E2F]'
-                } focus:outline-none focus:bg-white font-mono`}
+                className={`w-full h-11 px-4 text-sm bg-[#F5F7FA] text-[#343C6A] placeholder-[#8BA3CB] rounded-xl border-0 outline-none transition-all font-mono ${
+                  errorsCreate.base_price ? 'ring-2 ring-rose-400 bg-rose-50/20' : 'focus:ring-2 focus:ring-[#B88E2F]/30 focus:bg-white'
+                }`}
               />
               {errorsCreate.base_price && (
                 <span className="text-[10px] text-rose-500 mt-1 block">{errorsCreate.base_price.message}</span>
@@ -604,9 +606,9 @@ export default function CatalogBrowsePage() {
             </div>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
             <div>
-              <label className="block text-xs font-semibold text-slate-700 mb-1">
+              <label className="block text-xs font-semibold text-[#343C6A] mb-1.5">
                 Your Storefront Retail Price (Rp)
               </label>
               <input
@@ -614,38 +616,38 @@ export default function CatalogBrowsePage() {
                 min="0"
                 {...registerCreate('custom_price')}
                 placeholder="Optional (defaults to base price)"
-                className="w-full px-3 py-2 text-xs bg-slate-50 rounded-none border-0 focus:ring-1 focus:ring-[#B88E2F] outline-none font-mono"
+                className="w-full h-11 px-4 text-sm bg-[#F5F7FA] text-[#343C6A] placeholder-[#8BA3CB] rounded-xl border-0 outline-none focus:bg-white focus:ring-2 focus:ring-[#B88E2F]/30 transition-all font-mono"
               />
             </div>
 
             <div>
-              <label className="block text-xs font-semibold text-slate-700 mb-1">
+              <label className="block text-xs font-semibold text-[#343C6A] mb-1.5">
                 Initial Stock
               </label>
               <input
                 type="number"
                 min="0"
                 {...registerCreate('stock')}
-                className="w-full px-3 py-2 text-xs bg-slate-50 rounded-none border-0 focus:ring-1 focus:ring-[#B88E2F] outline-none font-mono"
+                className="w-full h-11 px-4 text-sm bg-[#F5F7FA] text-[#343C6A] placeholder-[#8BA3CB] rounded-xl border-0 outline-none focus:bg-white focus:ring-2 focus:ring-[#B88E2F]/30 transition-all font-mono"
               />
             </div>
           </div>
 
           {/* Multiple Product Images Upload with Laravel 13 optimization */}
           <div>
-            <div className="flex items-center justify-between mb-1">
-              <label className="block text-xs font-semibold text-slate-700">
+            <div className="flex items-center justify-between mb-1.5">
+              <label className="block text-xs font-semibold text-[#343C6A]">
                 Product Images (Multiple angles/shots - optimized to WebP)
               </label>
-              <span className="text-[11px] text-slate-400">
+              <span className="text-[11px] text-[#718EBF]">
                 {createImageFiles.length} image(s) selected
               </span>
             </div>
 
             {createImagePreviews.length > 0 && (
-              <div className="flex flex-wrap gap-2.5 mb-2.5 p-2 bg-slate-50 rounded-none border-0">
+              <div className="flex flex-wrap gap-2.5 mb-2.5 p-3 bg-[#F5F7FA] rounded-xl border-0">
                 {createImagePreviews.map((src, idx) => (
-                  <div key={idx} className="relative w-16 h-16 rounded-none overflow-hidden bg-white shadow-xs">
+                  <div key={idx} className="relative w-16 h-16 rounded-xl overflow-hidden bg-white shadow-xs group">
                     <img src={src} alt="" className="w-full h-full object-cover" />
                     {idx === 0 && (
                       <span className="absolute bottom-0 left-0 right-0 bg-[#B88E2F] text-white text-[8px] text-center font-bold">
@@ -655,7 +657,7 @@ export default function CatalogBrowsePage() {
                     <button
                       type="button"
                       onClick={() => removeCreateFile(idx)}
-                      className="absolute top-0.5 right-0.5 bg-rose-600 text-white rounded-full p-0.5 opacity-90 hover:opacity-100"
+                      className="absolute top-1 right-1 bg-rose-600 text-white rounded-full p-0.5 opacity-90 hover:opacity-100"
                     >
                       <X className="w-3 h-3" />
                     </button>
@@ -664,10 +666,10 @@ export default function CatalogBrowsePage() {
               </div>
             )}
 
-            <label className="border-2 border-dashed border-slate-300 hover:border-[#B88E2F] rounded-none p-4 flex flex-col items-center justify-center cursor-pointer transition-colors bg-slate-50">
-              <Upload className="w-5 h-5 text-slate-400 mb-1" />
-              <span className="text-xs font-semibold text-slate-700">Click to select product images</span>
-              <span className="text-[10px] text-slate-400 mt-0.5">PNG, JPG, WebP. Laravel 13 automatically optimizes each photo.</span>
+            <label className="border-2 border-dashed border-[#DFEAF2] hover:border-[#B88E2F] rounded-2xl p-4 flex flex-col items-center justify-center cursor-pointer transition-colors bg-[#F5F7FA] hover:bg-[#FAF3EA]/50">
+              <Upload className="w-5 h-5 text-[#718EBF] mb-1" />
+              <span className="text-xs font-semibold text-[#343C6A]">Click to select product images</span>
+              <span className="text-[10px] text-[#718EBF] mt-0.5">PNG, JPG, WebP. Laravel 13 automatically optimizes each photo.</span>
               <input
                 type="file"
                 multiple
@@ -679,29 +681,29 @@ export default function CatalogBrowsePage() {
           </div>
 
           <div>
-            <label className="block text-xs font-semibold text-slate-700 mb-1">
+            <label className="block text-xs font-semibold text-[#343C6A] mb-1.5">
               Product Description
             </label>
             <textarea
               rows={3}
               {...registerCreate('description')}
               placeholder="Detailed description for the shared catalog..."
-              className="w-full px-3 py-2 text-xs bg-slate-50 rounded-none border-0 focus:ring-1 focus:ring-[#B88E2F] outline-none"
+              className="w-full p-3.5 text-sm bg-[#F5F7FA] text-[#343C6A] placeholder-[#8BA3CB] rounded-xl border-0 outline-none focus:bg-white focus:ring-2 focus:ring-[#B88E2F]/30 transition-all resize-none"
             />
           </div>
 
-          <div className="pt-4 border-t border-slate-100 flex items-center justify-end space-x-2">
+          <div className="pt-4 border-t border-[#F5F7FA] flex items-center justify-end space-x-3">
             <button
               type="button"
               onClick={() => setIsCreateModalOpen(false)}
-              className="px-4 py-2 rounded-none text-xs font-medium text-slate-600 hover:bg-slate-100 border-0"
+              className="px-5 py-2.5 rounded-xl bg-[#F5F7FA] hover:bg-[#FAF3EA] text-xs font-semibold text-[#343C6A] hover:text-[#B88E2F] transition-colors border-0 cursor-pointer"
             >
               Cancel
             </button>
             <button
               type="submit"
               disabled={isSubmittingCreate || createSharedProductMutation.isPending}
-              className="px-4 py-2 rounded-none bg-[#B88E2F] hover:bg-[#967125] text-white text-xs font-semibold shadow-none disabled:opacity-50 border-0 outline-none cursor-pointer"
+              className="px-5 py-2.5 rounded-xl bg-[#B88E2F] hover:bg-[#967125] text-white text-xs font-semibold shadow-sm disabled:opacity-50 transition-all border-0 outline-none cursor-pointer"
             >
               {isSubmittingCreate || createSharedProductMutation.isPending
                 ? 'Creating Product...'

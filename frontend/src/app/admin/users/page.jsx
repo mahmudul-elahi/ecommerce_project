@@ -314,18 +314,18 @@ export default function UserManagementPage() {
         title={editingUser ? `Edit Account: ${editingUser.name}` : 'Provision New Shop Owner Account'}
       >
         <form onSubmit={handleSubmit(onFormSubmit)} className="space-y-4">
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
             <div>
-              <label className="block text-xs font-semibold text-slate-700 mb-1">
-                Full Name <span className="text-rose-500">*</span>
+              <label className="block text-xs font-semibold text-[#343C6A] mb-1.5">
+                Full Name <span className="text-[#B88E2F]">*</span>
               </label>
               <input
                 type="text"
                 {...register('name')}
                 placeholder="e.g. Eleanor Vance"
-                className={`w-full px-3 py-2 text-xs bg-slate-50 rounded-none border-0 ${
-                  errors.name ? 'ring-1 ring-rose-400' : 'focus:ring-1 focus:ring-[#B88E2F]'
-                } focus:outline-none focus:bg-white`}
+                className={`w-full h-11 px-4 text-sm bg-[#F5F7FA] text-[#343C6A] placeholder-[#8BA3CB] rounded-xl border-0 outline-none transition-all ${
+                  errors.name ? 'ring-2 ring-rose-400 bg-rose-50/20' : 'focus:ring-2 focus:ring-[#B88E2F]/30 focus:bg-white'
+                }`}
               />
               {errors.name && (
                 <span className="text-[10px] text-rose-500 mt-1 block">{errors.name.message}</span>
@@ -333,16 +333,16 @@ export default function UserManagementPage() {
             </div>
 
             <div>
-              <label className="block text-xs font-semibold text-slate-700 mb-1">
-                Email Address <span className="text-rose-500">*</span>
+              <label className="block text-xs font-semibold text-[#343C6A] mb-1.5">
+                Email Address <span className="text-[#B88E2F]">*</span>
               </label>
               <input
                 type="email"
                 {...register('email')}
                 placeholder="eleanor@domain.com"
-                className={`w-full px-3 py-2 text-xs bg-slate-50 rounded-none border-0 ${
-                  errors.email ? 'ring-1 ring-rose-400' : 'focus:ring-1 focus:ring-[#B88E2F]'
-                } focus:outline-none focus:bg-white`}
+                className={`w-full h-11 px-4 text-sm bg-[#F5F7FA] text-[#343C6A] placeholder-[#8BA3CB] rounded-xl border-0 outline-none transition-all ${
+                  errors.email ? 'ring-2 ring-rose-400 bg-rose-50/20' : 'focus:ring-2 focus:ring-[#B88E2F]/30 focus:bg-white'
+                }`}
               />
               {errors.email && (
                 <span className="text-[10px] text-rose-500 mt-1 block">{errors.email.message}</span>
@@ -350,40 +350,40 @@ export default function UserManagementPage() {
             </div>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
             <div>
-              <label className="block text-xs font-semibold text-slate-700 mb-1">
+              <label className="block text-xs font-semibold text-[#343C6A] mb-1.5">
                 Password {editingUser && '(Leave blank to keep current)'}
               </label>
               <input
                 type="password"
                 {...register('password')}
                 placeholder="••••••••"
-                className="w-full px-3 py-2 text-xs bg-slate-50 rounded-none border-0 focus:outline-none focus:ring-1 focus:ring-[#B88E2F]"
+                className="w-full h-11 px-4 text-sm bg-[#F5F7FA] text-[#343C6A] placeholder-[#8BA3CB] rounded-xl border-0 outline-none focus:bg-white focus:ring-2 focus:ring-[#B88E2F]/30 transition-all"
               />
             </div>
 
             <div>
-              <label className="block text-xs font-semibold text-slate-700 mb-1">
+              <label className="block text-xs font-semibold text-[#343C6A] mb-1.5">
                 Contact Phone
               </label>
               <input
                 type="text"
                 {...register('phone')}
                 placeholder="+1 (555) 000-0000"
-                className="w-full px-3 py-2 text-xs bg-slate-50 rounded-none border-0 focus:outline-none focus:ring-1 focus:ring-[#B88E2F]"
+                className="w-full h-11 px-4 text-sm bg-[#F5F7FA] text-[#343C6A] placeholder-[#8BA3CB] rounded-xl border-0 outline-none focus:bg-white focus:ring-2 focus:ring-[#B88E2F]/30 transition-all"
               />
             </div>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
             <div>
-              <label className="block text-xs font-semibold text-slate-700 mb-1">
+              <label className="block text-xs font-semibold text-[#343C6A] mb-1.5">
                 System Role
               </label>
               <select
                 {...register('role')}
-                className="w-full px-3 py-2 text-xs bg-slate-50 rounded-none border-0 focus:outline-none focus:ring-1 focus:ring-[#B88E2F]"
+                className="w-full h-11 px-4 text-sm bg-[#F5F7FA] text-[#343C6A] rounded-xl border-0 outline-none font-medium cursor-pointer focus:bg-white focus:ring-2 focus:ring-[#B88E2F]/30 transition-all"
               >
                 <option value="shop_owner">Shop Owner</option>
                 <option value="admin">Platform Administrator</option>
@@ -391,12 +391,12 @@ export default function UserManagementPage() {
             </div>
 
             <div>
-              <label className="block text-xs font-semibold text-slate-700 mb-1">
+              <label className="block text-xs font-semibold text-[#343C6A] mb-1.5">
                 Assign Existing Shop
               </label>
               <select
                 {...register('shop_id')}
-                className="w-full px-3 py-2 text-xs bg-slate-50 rounded-none border-0 focus:outline-none focus:ring-1 focus:ring-[#B88E2F]"
+                className="w-full h-11 px-4 text-sm bg-[#F5F7FA] text-[#343C6A] rounded-xl border-0 outline-none font-medium cursor-pointer focus:bg-white focus:ring-2 focus:ring-[#B88E2F]/30 transition-all"
               >
                 <option value="">No existing shop (or create new below)</option>
                 {shops.map((s) => (
@@ -410,16 +410,16 @@ export default function UserManagementPage() {
 
           {!editingUser && (
             <div>
-              <label className="block text-xs font-semibold text-slate-700 mb-1">
+              <label className="block text-xs font-semibold text-[#343C6A] mb-1.5">
                 Or Create Initial Store for this Merchant
               </label>
               <input
                 type="text"
                 {...register('shop_name')}
                 placeholder="e.g. Eleanor's Curated Living"
-                className="w-full px-3 py-2 text-xs bg-slate-50 rounded-none border-0 focus:outline-none focus:ring-1 focus:ring-[#B88E2F]"
+                className="w-full h-11 px-4 text-sm bg-[#F5F7FA] text-[#343C6A] placeholder-[#8BA3CB] rounded-xl border-0 outline-none focus:bg-white focus:ring-2 focus:ring-[#B88E2F]/30 transition-all"
               />
-              <span className="text-[10px] text-slate-500 mt-1 block">
+              <span className="text-[10px] text-[#718EBF] mt-1 block">
                 If specified, a brand new storefront will be automatically created and assigned.
               </span>
             </div>
@@ -430,25 +430,25 @@ export default function UserManagementPage() {
               type="checkbox"
               id="is_active_user"
               {...register('is_active')}
-              className="rounded-none border-0 text-slate-900 focus:ring-[#B88E2F]"
+              className="rounded-md border-0 text-[#B88E2F] focus:ring-[#B88E2F]"
             />
-            <label htmlFor="is_active_user" className="text-xs font-medium text-slate-700">
+            <label htmlFor="is_active_user" className="text-xs font-semibold text-[#343C6A] cursor-pointer">
               Account Active & Permitted to Sign In
             </label>
           </div>
 
-          <div className="pt-4 border-t border-slate-100 flex items-center justify-end space-x-2">
+          <div className="pt-4 border-t border-[#F5F7FA] flex items-center justify-end space-x-3">
             <button
               type="button"
               onClick={() => setIsModalOpen(false)}
-              className="px-4 py-2 rounded-none text-xs font-medium text-slate-600 hover:bg-slate-100 border-0"
+              className="px-5 py-2.5 rounded-xl bg-[#F5F7FA] hover:bg-[#FAF3EA] text-xs font-semibold text-[#343C6A] hover:text-[#B88E2F] transition-colors border-0 cursor-pointer"
             >
               Cancel
             </button>
             <button
               type="submit"
               disabled={isSubmitting || saveMutation.isPending}
-              className="px-4 py-2 rounded-xl bg-[#B88E2F] hover:bg-[#967125] text-white text-xs font-semibold shadow-xs disabled:opacity-50"
+              className="px-5 py-2.5 rounded-xl bg-[#B88E2F] hover:bg-[#967125] text-white text-xs font-semibold shadow-sm disabled:opacity-50 transition-all border-0 outline-none cursor-pointer"
             >
               {isSubmitting || saveMutation.isPending
                 ? 'Saving...'
