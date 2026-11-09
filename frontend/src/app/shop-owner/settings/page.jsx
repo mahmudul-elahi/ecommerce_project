@@ -150,34 +150,84 @@ export default function ShopSettingsPage() {
       </div>
 
       {/* Live Branding Preview */}
-      <div className="bg-white rounded-[25px] p-6 border-0 shadow-sm overflow-hidden space-y-4">
-        <div className="relative h-36 bg-[#F5F7FA] rounded-2xl overflow-hidden border border-[#E6EFF5]">
+      <div className="bg-white rounded-[25px] p-6 border-0 shadow-sm space-y-3">
+        <div className="flex items-center justify-between px-1">
+          <div className="flex items-center gap-2">
+            <span className="w-2 h-2 rounded-full bg-[#B88E2F] animate-pulse" />
+            <span className="text-xs font-bold uppercase tracking-wider text-[#718EBF]">
+              Live Storefront Header Preview
+            </span>
+          </div>
+          {previewSlug && (
+            <span className="text-xs font-mono uppercase px-3 py-1 rounded-full bg-[#FAF3EA] text-[#B88E2F] font-semibold border border-[#E8DEC8]/60">
+              /{previewSlug}
+            </span>
+          )}
+        </div>
+
+        <div className="relative h-48 sm:h-56 w-full rounded-2xl overflow-hidden border border-[#E6EFF5] bg-[#F5F7FA] shadow-xs">
           {currentBanner ? (
-            <img src={currentBanner} alt="Banner Preview" className="w-full h-full object-cover" />
+            <img
+              src={currentBanner}
+              alt="Banner Preview"
+              className="w-full h-full object-cover filter brightness-[0.88]"
+            />
           ) : (
-            <div className="w-full h-full flex items-center justify-center text-xs text-[#718EBF] font-mono">
-              Banner Image Preview
+            <div className="w-full h-full bg-gradient-to-br from-[#FAF3EA] via-[#F4EDE2] to-[#EAE0D0] flex flex-col items-center justify-center text-[#718EBF]">
+              <Store className="w-10 h-10 text-[#B88E2F]/40 mb-2" />
+              <span className="text-xs font-medium text-[#8BA3CB]">No banner uploaded · Default warm aesthetic applied</span>
             </div>
           )}
-          <div className="absolute inset-0 bg-slate-900/10" />
-          <div className="absolute -bottom-2 left-6">
-            <div className="w-16 h-16 rounded-2xl border-2 border-white shadow-md bg-white overflow-hidden flex items-center justify-center">
-              {currentLogo ? (
-                <img src={currentLogo} alt="Logo" className="w-full h-full object-cover" />
-              ) : (
-                <Building2 className="w-6 h-6 text-[#718EBF]" />
+
+          {/* Dark gradient overlay for text readability (matches MerchantHeader) */}
+          <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/35 to-transparent pointer-events-none" />
+
+          {/* Content inside the banner */}
+          <div className="absolute bottom-5 left-5 right-5 flex flex-col sm:flex-row sm:items-end justify-between gap-4 text-white z-10">
+            <div className="flex items-center gap-4 min-w-0">
+              <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-2xl bg-white p-2 shadow-xl border border-white/60 flex-shrink-0 flex items-center justify-center overflow-hidden">
+                {currentLogo ? (
+                  <img
+                    src={currentLogo}
+                    alt="Logo"
+                    className="w-full h-full object-contain"
+                  />
+                ) : (
+                  <Building2 className="w-8 h-8 text-[#B88E2F]" />
+                )}
+              </div>
+              <div className="min-w-0">
+                <h3 className="text-xl sm:text-2xl font-bold text-white drop-shadow-md truncate">
+                  {watch('name') || 'Your Store Name'}
+                </h3>
+                <p className="text-xs sm:text-sm text-slate-200 line-clamp-1 max-w-md mt-0.5 drop-shadow">
+                  {watch('description') || 'Welcome to our independent boutique storefront.'}
+                </p>
+              </div>
+            </div>
+
+            {/* Dynamic chips for contact info */}
+            <div className="flex flex-wrap items-center gap-2 text-xs font-medium">
+              {watch('address') && (
+                <div className="flex items-center gap-1.5 bg-black/40 backdrop-blur-md px-3 py-1.5 rounded-lg text-slate-200 border border-white/10">
+                  <MapPin className="w-3.5 h-3.5 text-[#B88E2F]" />
+                  <span className="truncate max-w-[180px]">{watch('address')}</span>
+                </div>
+              )}
+              {watch('phone') && (
+                <div className="flex items-center gap-1.5 bg-black/40 backdrop-blur-md px-3 py-1.5 rounded-lg text-slate-200 border border-white/10">
+                  <Phone className="w-3.5 h-3.5 text-[#B88E2F]" />
+                  <span>{watch('phone')}</span>
+                </div>
+              )}
+              {watch('email') && (
+                <div className="flex items-center gap-1.5 bg-black/40 backdrop-blur-md px-3 py-1.5 rounded-lg text-slate-200 border border-white/10">
+                  <Mail className="w-3.5 h-3.5 text-[#B88E2F]" />
+                  <span className="truncate max-w-[180px]">{watch('email')}</span>
+                </div>
               )}
             </div>
           </div>
-        </div>
-        <div className="pt-2 px-2 flex items-center justify-between">
-          <div>
-            <div className="text-xs font-medium uppercase text-[#718EBF]">Live Header Preview</div>
-            <div className="text-sm font-bold text-[#343C6A]">{watch('name') || 'Your Store Name'}</div>
-          </div>
-          <span className="text-[10px] font-mono uppercase px-2.5 py-1 rounded-full bg-[#FAF3EA] text-[#B88E2F] font-semibold">
-            /{previewSlug}
-          </span>
         </div>
       </div>
 
