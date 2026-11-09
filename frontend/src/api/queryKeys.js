@@ -9,6 +9,11 @@ export const queryKeys = {
     detail: (slug) => ['shop', slug],
     products: (slug, filters = {}) => ['shop-products', slug, filters],
   },
+  customerProducts: {
+    all: ['customer-products'],
+    list: (filters = {}) => ['customer-products', filters],
+    detail: (id) => ['customer-product', id],
+  },
   catalog: {
     all: ['shared-catalog'],
     list: (filters = {}) => ['shared-catalog', filters],

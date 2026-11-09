@@ -1,4 +1,7 @@
 import './globals.css';
+import { Poppins } from 'next/font/google';
+
+const poppins = Poppins({ subsets: ['latin'], weight: ['400', '500', '600', '700'], variable: '--font-storefront', display: 'swap' });
 import { AuthProvider } from '../context/AuthContext';
 import { CartProvider } from '../context/CartContext';
 import { ToastProvider } from '../context/ToastContext';
@@ -15,7 +18,7 @@ export const metadata = {
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="en" className="h-full scroll-smooth">
+    <html lang="en" className={`${poppins.variable} h-full scroll-smooth`}>
       <body className="min-h-screen flex flex-col bg-slate-50 text-slate-800 antialiased font-sans selection:bg-blue-100 selection:text-blue-950">
         <QueryProvider>
           <AuthProvider>

@@ -39,6 +39,8 @@ Route::prefix('customer')->group(function () {
     Route::get('/shops/{slugOrId}', [StorefrontController::class, 'shopDetail']);
     Route::get('/shops/{slugOrId}/products', [StorefrontController::class, 'shopProducts']);
     Route::get('/shops/{slugOrId}/products/{shopProductId}', [StorefrontController::class, 'shopProductDetail']);
+    Route::get('/products', [StorefrontController::class, 'allAssignedProducts']);
+    Route::get('/products/{shopProductId}', [StorefrontController::class, 'singleProductDetail']);
     Route::post('/checkout', [StorefrontController::class, 'checkout']);
 });
 

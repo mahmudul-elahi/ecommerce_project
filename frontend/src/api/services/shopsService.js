@@ -34,6 +34,22 @@ export const shopsService = {
   },
 
   /**
+   * Fetch customer-visible products across all shops (with filters, pagination)
+   */
+  async getAllProducts(params = {}) {
+    const res = await api.get('/customer/products', { params });
+    return res.data;
+  },
+
+  /**
+   * Fetch a single product detail across any active shop
+   */
+  async getSingleProductDetail(shopProductId) {
+    const res = await api.get(`/customer/products/${shopProductId}`);
+    return res.data;
+  },
+
+  /**
    * Customer checkout
    */
   async checkout(payload) {

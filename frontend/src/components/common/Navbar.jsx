@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
+import StorefrontNavbar from './StorefrontNavbar';
 import Link from 'next/link';
 import { useRouter, usePathname } from 'next/navigation';
 import {
@@ -57,6 +58,8 @@ export default function Navbar() {
   };
 
   const isActive = (path) => pathname === path;
+
+  if (!pathname.startsWith('/admin') && !pathname.startsWith('/shop-owner')) return <StorefrontNavbar />;
 
   return (
     <header className="sticky top-0 z-40 bg-white border-b border-slate-200 shadow-sm">

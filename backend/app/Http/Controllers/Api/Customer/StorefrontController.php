@@ -39,6 +39,155 @@ class StorefrontController extends Controller
     }
 
     /**
+     * List all customer-visible products across all active shops.
+     * Only products assigned to active shops are returned.
+     * Products not assigned to any shop are NEVER returned.
+     */
+    public function allAssignedProducts(Request $request)
+    {
+        $query = ShopProduct::with(['product', 'shop'])
+            ->where('is_active', true)
+            ->whereHas('shop', function ($sq) {
+                $sq->where('status', 'active');
+            })
+            ->whereHas('product', function ($pq) {
+                $pq->where('is_active', true);
+            });
+
+        if ($search = $request->query('search')) {
+            $query->where(function ($q) use ($search) {
+                $q->where('custom_title', 'like', "%{$search}%")
+                    ->orWhere('custom_description', 'like', "%{$search}%")
+                    ->orWhereHas('product', function ($pq) use ($search) {
+                        $pq->where('name', 'like', "%{$search}%")
+                            ->orWhere('category', 'like', "%{$search}%")
+                            ->orWhere('sku', 'like', "%{$search}%");
+                    })
+                    ->orWhereHas('shop', function ($sq) use ($search) {
+                        $sq->where('name', 'like', "%{$search}%");
+                    });
+            });
+        }
+
+        if ($category = $request->query('category')) {
+            if ($category !== 'All' && $category !== 'all') {
+                $query->whereHas('product', function ($pq) use ($category) {
+                    $pq->where('category', $category);
+                });
+            }
+        }
+
+        if ($shopId = $request->query('shop_id')) {
+            $query->where('shop_id', $shopId);
+        }
+
+        if ($sort = $request->query('sort')) {
+            if ($sort === 'price_asc' || $sort === 'price-low') {
+                $query->orderBy(DB::raw('COALESCE(custom_price, (SELECT base_price FROM products WHERE products.id = shop_products.product_id))'), 'asc');
+            } elseif ($sort === 'price_desc' || $sort === 'price-high') {
+                $query->orderBy(DB::raw('COALESCE(custom_price, (SELECT base_price FROM products WHERE products.id = shop_products.product_id))'), 'desc');
+            } elseif ($sort === 'name') {
+                $query->orderBy(DB::raw('COALESCE(custom_title, (SELECT name FROM products WHERE products.id = shop_products.product_id))'), 'asc');
+            } else {
+                $query->latest();
+            }
+        } else {
+            $query->latest();
+        }
+
+        $perPage = min((int) $request->query('per_page', 16), 100);
+        $shopProducts = $query->paginate($perPage);
+
+        $shopProducts->getCollection()->transform(function ($item) {
+            $basePrice = (float) $item->product->base_price;
+            $effPrice = (float) $item->effective_price;
+            $discountPct = ($basePrice > $effPrice && $basePrice > 0)
+                ? '-'.round((1 - ($effPrice / $basePrice)) * 100).'%'
+                : null;
+
+            return [
+                'id' => $item->id,
+                'shop_product_id' => $item->id,
+                'shop_id' => $item->shop_id,
+                'shop_name' => $item->shop->name,
+                'shop_slug' => $item->shop->slug,
+                'product_id' => $item->product_id,
+                'name' => $item->effective_title,
+                'subtitle' => $item->product->name !== $item->effective_title ? $item->product->name : ($item->product->category ?? 'Furniture & Living'),
+                'description' => $item->effective_description,
+                'price' => $effPrice,
+                'original_base_price' => $basePrice,
+                'has_custom_price' => ($item->custom_price !== null),
+                'discount' => $discountPct,
+                'badge' => $discountPct ?: ($item->created_at->diffInDays(now()) < 14 ? 'New' : null),
+                'badgeType' => $discountPct ? 'discount' : 'new',
+                'thumbnail' => $item->effective_thumbnail_url,
+                'category' => $item->product->category,
+                'sku' => $item->product->sku,
+                'stock' => $item->stock,
+                'in_stock' => $item->stock > 0,
+                'is_customized' => $item->is_customized,
+            ];
+        });
+
+        return response()->json($shopProducts);
+    }
+
+    /**
+     * Get single product detail by shop_product_id across any active shop.
+     */
+    public function singleProductDetail($shopProductId)
+    {
+        $item = ShopProduct::with(['product', 'shop'])
+            ->where('id', $shopProductId)
+            ->where('is_active', true)
+            ->whereHas('shop', function ($sq) {
+                $sq->where('status', 'active');
+            })
+            ->whereHas('product', function ($pq) {
+                $pq->where('is_active', true);
+            })
+            ->firstOrFail();
+
+        $basePrice = (float) $item->product->base_price;
+        $effPrice = (float) $item->effective_price;
+        $discountPct = ($basePrice > $effPrice && $basePrice > 0)
+            ? '-'.round((1 - ($effPrice / $basePrice)) * 100).'%'
+            : null;
+
+        return response()->json([
+            'id' => $item->id,
+            'shop_product_id' => $item->id,
+            'shop' => [
+                'id' => $item->shop->id,
+                'name' => $item->shop->name,
+                'slug' => $item->shop->slug,
+                'logo_url' => $item->shop->logo_url,
+                'banner_url' => $item->shop->banner_url,
+                'phone' => $item->shop->phone,
+                'email' => $item->shop->email,
+                'address' => $item->shop->address,
+            ],
+            'product_id' => $item->product_id,
+            'name' => $item->effective_title,
+            'subtitle' => $item->product->name,
+            'description' => $item->effective_description,
+            'price' => $effPrice,
+            'original_base_price' => $basePrice,
+            'has_custom_price' => ($item->custom_price !== null),
+            'discount' => $discountPct,
+            'badge' => $discountPct ?: 'New',
+            'badgeType' => $discountPct ? 'discount' : 'new',
+            'thumbnail' => $item->effective_thumbnail_url,
+            'category' => $item->product->category,
+            'sku' => $item->product->sku,
+            'stock' => $item->stock,
+            'in_stock' => $item->stock > 0,
+            'is_customized' => $item->is_customized,
+        ]);
+    }
+
+    /**
      * Get a specific shop profile.
      */
     public function shopDetail($slugOrId)

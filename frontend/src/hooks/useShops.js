@@ -43,6 +43,36 @@ export function useShopProductsQuery(slugOrId, filters = {}) {
 }
 
 /**
+ * Query hook to fetch customer-visible products across all shops
+ */
+export function useAllProductsQuery(filters = {}) {
+  const { search, category, sort, page, per_page, shop_id } = filters;
+  return useQuery({
+    queryKey: queryKeys.customerProducts.list({ search, category, sort, page, per_page, shop_id }),
+    queryFn: () =>
+      shopsService.getAllProducts({
+        search: search || undefined,
+        category: category || undefined,
+        sort: sort || undefined,
+        page: page || undefined,
+        per_page: per_page || undefined,
+        shop_id: shop_id || undefined,
+      }),
+  });
+}
+
+/**
+ * Query hook to fetch a single customer-visible product detail
+ */
+export function useSingleProductQuery(shopProductId) {
+  return useQuery({
+    queryKey: queryKeys.customerProducts.detail(shopProductId),
+    queryFn: () => shopsService.getSingleProductDetail(shopProductId),
+    enabled: !!shopProductId,
+  });
+}
+
+/**
  * Mutation hook for customer checkout
  */
 export function useCheckoutMutation(options = {}) {

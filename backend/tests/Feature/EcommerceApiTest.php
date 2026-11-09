@@ -227,4 +227,28 @@ class EcommerceApiTest extends TestCase
             'shop_id' => $shop->id,
         ]);
     }
+
+    public function test_customer_can_browse_assigned_products_and_view_single_product_detail(): void
+    {
+        // 1. Browse all products across active shops
+        $response = $this->getJson('/api/customer/products');
+        $response->assertStatus(200)
+            ->assertJsonStructure(['data' => [['id', 'shop_product_id', 'shop_id', 'name', 'price', 'thumbnail']]]);
+
+        $firstItem = $response->json('data.0');
+        $this->assertNotNull($firstItem);
+        $shopProductId = $firstItem['shop_product_id'];
+
+        // 2. View single product detail
+        $detailResponse = $this->getJson("/api/customer/products/{$shopProductId}");
+        $detailResponse->assertStatus(200)
+            ->assertJsonPath('shop_product_id', $shopProductId)
+            ->assertJsonStructure(['name', 'price', 'shop' => ['id', 'name', 'slug']]);
+
+        // 3. Unassigned product is NEVER present in the customer products endpoint
+        $unassigned = Product::where('sku', 'CAT-UNASSIGNED-999')->first();
+        $this->assertNotNull($unassigned);
+        $allCustomerProductIds = collect($response->json('data'))->pluck('product_id')->toArray();
+        $this->assertNotContains($unassigned->id, $allCustomerProductIds);
+    }
 }

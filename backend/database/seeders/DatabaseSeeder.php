@@ -57,6 +57,15 @@ class DatabaseSeeder extends Seeder
             'is_active' => true,
         ]);
 
+        $owner4 = User::create([
+            'name' => 'Furniro Design Studio',
+            'email' => 'furniro@ecommerce.com',
+            'password' => Hash::make('password'),
+            'role' => 'shop_owner',
+            'phone' => '+(84) 546-6789',
+            'is_active' => true,
+        ]);
+
         // 3. Create Shops
         $shop1 = Shop::create([
             'user_id' => $owner1->id,
@@ -94,6 +103,19 @@ class DatabaseSeeder extends Seeder
             'email' => 'care@nordicliving.co',
             'phone' => '+1 (555) 456-7890',
             'address' => '88 Fjord Way, Seattle, WA',
+            'status' => 'active',
+        ]);
+
+        $shop4 = Shop::create([
+            'user_id' => $owner4->id,
+            'name' => 'Furniro Flagship Store',
+            'slug' => 'furniro',
+            'description' => 'Thoughtful interior collections, artisanal wooden furniture, and designer accents for modern spaces.',
+            'logo' => '/images/furniro/imgMeubelHouseLogos05.png',
+            'banner' => '/images/furniro/pageBanner.png',
+            'email' => 'hello@furniro.store',
+            'phone' => '+(84) 546-6789',
+            'address' => '400 University Drive Suite 200 Coral Gables, FL 33134 USA',
             'status' => 'active',
         ]);
 
@@ -336,6 +358,116 @@ class DatabaseSeeder extends Seeder
             'stock' => 25,
             'is_active' => true,
         ]);
+
+        // E) Furniro Signature Interior Collection (Created by Furniro Design Studio / Admin)
+        $furniroItems = [
+            [
+                'name' => 'Syltherine',
+                'sku' => 'FUR-SYL-001',
+                'category' => 'Dining',
+                'description' => 'Stylish cafe chair crafted from premium oak with minimalist curves and durable ergonomic frame.',
+                'base_price' => 3500000,
+                'custom_price' => 2500000, // -30%
+                'thumbnail' => '/images/furniro/imgSyltherine.png',
+                'stock' => 35,
+            ],
+            [
+                'name' => 'Leviosa',
+                'sku' => 'FUR-LEV-002',
+                'category' => 'Living',
+                'description' => 'Stylish cafe chair with contemporary backrest and smooth natural finish.',
+                'base_price' => 2500000,
+                'custom_price' => null,
+                'thumbnail' => '/images/furniro/imgLeviosa.png',
+                'stock' => 50,
+            ],
+            [
+                'name' => 'Lolito',
+                'sku' => 'FUR-LOL-003',
+                'category' => 'Living',
+                'description' => 'Luxury big sofa upholstered in water-repellent performance fabric with deep feather-down cushions.',
+                'base_price' => 14000000,
+                'custom_price' => 7000000, // -50%
+                'thumbnail' => '/images/furniro/imgLolito.png',
+                'stock' => 12,
+            ],
+            [
+                'name' => 'Respira',
+                'sku' => 'FUR-RES-004',
+                'category' => 'Dining',
+                'description' => 'Outdoor bar table and stool set built with weather-resistant teak and powder-coated steel.',
+                'base_price' => 500000,
+                'custom_price' => null,
+                'thumbnail' => '/images/furniro/imgRespira.png',
+                'stock' => 45,
+            ],
+            [
+                'name' => 'Grifo',
+                'sku' => 'FUR-GRI-005',
+                'category' => 'Bedroom',
+                'description' => 'Night lamp with warm ambient diffused illumination, touch-dimming base, and brass accents.',
+                'base_price' => 1500000,
+                'custom_price' => null,
+                'thumbnail' => '/images/furniro/imgGrifo.png',
+                'stock' => 60,
+            ],
+            [
+                'name' => 'Muggo',
+                'sku' => 'FUR-MUG-006',
+                'category' => 'Dining',
+                'description' => 'Small artisan ceramic mug with matte handcrafted glaze and comfortable wide grip.',
+                'base_price' => 150000,
+                'custom_price' => null,
+                'thumbnail' => '/images/furniro/imgMuggo.png',
+                'stock' => 150,
+            ],
+            [
+                'name' => 'Pingky',
+                'sku' => 'FUR-PIN-007',
+                'category' => 'Bedroom',
+                'description' => 'Cute bed set made of 100% breathable organic bamboo linen in soft muted rose.',
+                'base_price' => 14000000,
+                'custom_price' => 7000000, // -50%
+                'thumbnail' => '/images/furniro/imgPingky.png',
+                'stock' => 18,
+            ],
+            [
+                'name' => 'Potty',
+                'sku' => 'FUR-POT-008',
+                'category' => 'Living',
+                'description' => 'Minimalist flower pot engineered from lightweight composite stone with built-in drainage reservoir.',
+                'base_price' => 500000,
+                'custom_price' => null,
+                'thumbnail' => '/images/furniro/imgPotty.png',
+                'stock' => 80,
+            ],
+        ];
+
+        foreach ($furniroItems as $item) {
+            $catProd = Product::create([
+                'created_by' => $owner4->id,
+                'name' => $item['name'],
+                'slug' => Str::slug($item['name']),
+                'sku' => $item['sku'],
+                'category' => $item['category'],
+                'description' => $item['description'],
+                'base_price' => $item['base_price'],
+                'thumbnail' => $item['thumbnail'],
+                'is_active' => true,
+            ]);
+
+            // Assign to Furniro Flagship Shop
+            ShopProduct::create([
+                'shop_id' => $shop4->id,
+                'product_id' => $catProd->id,
+                'custom_price' => $item['custom_price'],
+                'custom_title' => $item['name'],
+                'custom_description' => $item['description'],
+                'custom_thumbnail' => $item['thumbnail'],
+                'stock' => $item['stock'],
+                'is_active' => true,
+            ]);
+        }
 
         // 6. Create Demo Orders for realism
         $order1 = Order::create([

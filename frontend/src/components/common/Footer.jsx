@@ -1,32 +1,91 @@
-import React from 'react';
-import { Store } from 'lucide-react';
+'use client';
+
+import { useState } from 'react';
+import Link from 'next/link';
+import { toast } from 'sonner';
 
 export default function Footer() {
+  const [email, setEmail] = useState('');
+
+  const handleSubscribe = (e) => {
+    e.preventDefault();
+    if (!email || !email.includes('@')) {
+      toast.error('Please enter a valid email address');
+      return;
+    }
+    toast.success('Thank you for subscribing!', {
+      description: 'You will receive our latest interior updates and offers.',
+    });
+    setEmail('');
+  };
+
   return (
-    <footer className="bg-white border-t border-slate-200 mt-auto py-8 text-slate-600">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
-          <div className="flex items-center space-x-3">
-            <div className="w-8 h-8 rounded-lg bg-blue-600 text-white flex items-center justify-center">
-              <Store className="w-4 h-4" />
-            </div>
-            <div>
-              <div className="font-bold text-slate-900 text-sm tracking-tight">
-                OmniShop
-              </div>
-              <p className="text-xs text-slate-500">
-                A little marketplace for independent shops.
-              </p>
-            </div>
-          </div>
-
-          <div className="text-sm text-slate-500">Discover a shop. Find something you love. Shop small.</div>
+    <footer className="storefront-footer">
+      <div className="footer-columns">
+        <div className="footer-col-brand">
+          <Link className="footer-brand" href="/">
+            Funiro.
+          </Link>
+          <address className="footer-address">
+            400 University Drive Suite 200 Coral Gables,
+            <br />
+            FL 33134 USA
+          </address>
         </div>
 
-        <div className="mt-8 pt-6 border-t border-slate-100 flex flex-col sm:flex-row items-center justify-between text-[11px] text-slate-400 gap-2">
-          <div>© 2026 OmniShop</div>
-          <div>Made for good finds and the people who make them.</div>
+        <div className="footer-col-links">
+          <h4 className="footer-col-title">Links</h4>
+          <ul className="footer-link-list">
+            <li>
+              <Link href="/">Home</Link>
+            </li>
+            <li>
+              <Link href="/shop">Shop</Link>
+            </li>
+            <li>
+              <Link href="/#about">About</Link>
+            </li>
+            <li>
+              <Link href="/contact">Contact</Link>
+            </li>
+          </ul>
         </div>
+
+        <div className="footer-col-help">
+          <h4 className="footer-col-title">Help</h4>
+          <ul className="footer-link-list">
+            <li>
+              <Link href="/#faq">Payment Options</Link>
+            </li>
+            <li>
+              <Link href="/#returns">Returns</Link>
+            </li>
+            <li>
+              <Link href="/#privacy">Privacy Policies</Link>
+            </li>
+          </ul>
+        </div>
+
+        <div className="footer-col-newsletter">
+          <h4 className="footer-col-title">Newsletter</h4>
+          <form onSubmit={handleSubscribe} className="footer-newsletter-form">
+            <input
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder="Enter Your Email Address"
+              className="footer-email-input"
+              aria-label="Your email address"
+            />
+            <button type="submit" className="footer-subscribe-btn">
+              SUBSCRIBE
+            </button>
+          </form>
+        </div>
+      </div>
+
+      <div className="footer-bottom">
+        <p className="footer-copyright">2023 furino. All rights reverved</p>
       </div>
     </footer>
   );
