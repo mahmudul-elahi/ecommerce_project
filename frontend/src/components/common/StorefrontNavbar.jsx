@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { Menu, X, LogOut, Heart } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import { useCart } from '../../context/CartContext';
+import { useWishlist } from '../../context/WishlistContext';
 import { toast } from 'sonner';
 
 const asset = (name) => `/images/furniro/${name}.svg`;
@@ -13,13 +14,8 @@ export default function StorefrontNavbar() {
   const [open, setOpen] = useState(false);
   const { user, isAdmin, isShopOwner, logout } = useAuth();
   const { totalCount, setIsCartOpen } = useCart();
+  const { totalWishlistCount, setIsWishlistOpen } = useWishlist();
   const account = isAdmin ? '/admin/dashboard' : isShopOwner ? '/shop-owner/dashboard' : '/login';
-
-  const handleWishlistClick = () => {
-    toast.info('Wishlist', {
-      description: 'Your favorite items are saved in this session.',
-    });
-  };
 
   return (
     <header className="storefront-header">
@@ -63,11 +59,14 @@ export default function StorefrontNavbar() {
 
         <button
           type="button"
-          onClick={handleWishlistClick}
-          aria-label="Wishlist"
-          className="action-icon-link"
+          onClick={() => setIsWishlistOpen(true)}
+          aria-label={`Open wishlist, ${totalWishlistCount} items`}
+          className="action-icon-link relative"
         >
           <img src={asset('iconNavHeart')} alt="Wishlist" />
+          {totalWishlistCount > 0 && (
+            <span className="cart-count !bg-rose-500 !text-white">{totalWishlistCount}</span>
+          )}
         </button>
 
         <button

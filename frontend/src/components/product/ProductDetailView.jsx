@@ -3,14 +3,18 @@
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { Star, Share2 } from 'lucide-react';
+import { Star, Share2, Heart } from 'lucide-react';
 import { useCart } from '../../context/CartContext';
+import { useWishlist } from '../../context/WishlistContext';
 import ProductCard from './ProductCard';
 import { toast } from 'sonner';
 
 export default function ProductDetailView({ product, relatedProducts = [] }) {
   const { addToCart } = useCart();
+  const { isFavorite, toggleWishlist } = useWishlist();
   const router = useRouter();
+
+  const favorited = isFavorite(product.shop_product_id || product.id);
 
   // Combine all product images: images array, images_urls, and thumbnail, deduplicated
   const rawImages = [
@@ -61,11 +65,28 @@ export default function ProductDetailView({ product, relatedProducts = [] }) {
     });
   };
 
-  const handleCompare = () => {
-    toast.info('Comparison', {
-      description: `${product.name} opened in comparison.`,
-    });
-    router.push('/comparison');
+  const handleToggleWishlist = () => {
+    const item = {
+      id: product.id,
+      shop_product_id: product.shop_product_id || product.id,
+      product_id: product.product_id || product.id,
+      name: product.name,
+      price: product.price,
+      thumbnail: selectedImg || product.thumbnail,
+      stock: product.stock ?? 10,
+      shop: product.shop || {
+        id: product.shop_id || 1,
+        name: product.shop_name || 'Furniro Flagship',
+        slug: product.shop_slug || 'furniro',
+      },
+    };
+
+    const added = toggleWishlist(item);
+    if (added) {
+      toast.success(`Saved "${product.name}" to favorites!`);
+    } else {
+      toast.info(`Removed "${product.name}" from favorites.`);
+    }
   };
 
   return (
@@ -207,10 +228,15 @@ export default function ProductDetailView({ product, relatedProducts = [] }) {
 
               <button
                 type="button"
-                onClick={handleCompare}
-                className="btn-compare"
+                onClick={handleToggleWishlist}
+                className={`flex items-center justify-center gap-2 px-6 py-3.5 rounded-[15px] border text-base font-medium transition-all cursor-pointer ${
+                  favorited
+                    ? 'border-rose-500 bg-rose-50 text-rose-600 shadow-xs'
+                    : 'border-black text-black hover:bg-black hover:text-white'
+                }`}
               >
-                + Compare
+                <Heart className={`w-5 h-5 ${favorited ? 'fill-rose-500 text-rose-500' : ''}`} />
+                <span>{favorited ? 'In Favorites' : 'Add to Wishlist'}</span>
               </button>
             </div>
 

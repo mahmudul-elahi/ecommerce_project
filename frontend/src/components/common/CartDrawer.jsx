@@ -133,23 +133,16 @@ export default function CartDrawer() {
                 <Link
                   href="/cart"
                   onClick={() => setIsCartOpen(false)}
-                  className="flex-1 text-center py-2 px-3 rounded-[50px] border border-black text-xs font-normal text-black hover:bg-black hover:text-white transition-colors"
+                  className="flex-1 text-center py-2.5 px-4 rounded-[50px] border border-black text-xs font-medium text-black hover:bg-black hover:text-white transition-colors"
                 >
-                  Cart
+                  View Cart
                 </Link>
                 <Link
                   href="/checkout"
                   onClick={() => setIsCartOpen(false)}
-                  className="flex-1 text-center py-2 px-3 rounded-[50px] border border-black text-xs font-normal text-black hover:bg-black hover:text-white transition-colors"
+                  className="flex-1 text-center py-2.5 px-4 rounded-[50px] bg-[#B88E2F] text-white border border-[#B88E2F] text-xs font-medium hover:bg-[#967125] transition-colors"
                 >
                   Checkout
-                </Link>
-                <Link
-                  href="/comparison"
-                  onClick={() => setIsCartOpen(false)}
-                  className="flex-1 text-center py-2 px-3 rounded-[50px] border border-black text-xs font-normal text-black hover:bg-black hover:text-white transition-colors"
-                >
-                  Comparison
                 </Link>
               </div>
             </div>

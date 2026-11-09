@@ -809,8 +809,6 @@
 .qty-picker-num { font-size: 16px; font-weight: 500; min-width: 16px; text-align: center; }
 .btn-add-to-cart { border: 1px solid black; border-radius: 15px; padding: 14px 44px; font-size: 18px; background: transparent; color: black; cursor: pointer; transition: all 0.2s; }
 .btn-add-to-cart:hover { background: black; color: white; }
-.btn-compare { border: 1px solid black; border-radius: 15px; padding: 14px 44px; font-size: 18px; background: transparent; color: black; cursor: pointer; transition: all 0.2s; }
-.btn-compare:hover { background: black; color: white; }
 .product-meta-divider { height: 1px; background: #d9d9d9; margin-top: 36px; margin-bottom: 36px; }
 .product-meta-info { display: flex; flex-direction: column; gap: 12px; }
 .meta-row { display: flex; align-items: center; font-size: 16px; color: #9f9f9f; }
