@@ -66,21 +66,10 @@ export default function LoginPage() {
       <div className="w-full max-w-xl bg-white p-8 sm:p-12 shadow-sm border-0 rounded-none">
         {/* Brand Header */}
         <div className="text-center mb-8">
-          <Link href="/" className="inline-flex items-center gap-2 mb-3">
-            <span className="storefront-logo-mark">
-              <img
-                src="/images/furniro/imgMeubelHouseLogos05.png"
-                alt="Furniro Logo"
-              />
-            </span>
-            <span className="font-bold text-3xl tracking-tight text-black font-montserrat">
-              Furniro
-            </span>
-          </Link>
-          <h1 className="text-2xl font-bold tracking-tight text-[#333333] font-montserrat mt-2">
+          <h1 className="text-3xl font-bold tracking-tight text-[#333333] font-montserrat">
             Log In
           </h1>
-          <p className="text-xs text-[#898989] mt-1.5">
+          <p className="text-xs text-[#898989] mt-2">
             Welcome back! Please enter your account credentials.
           </p>
         </div>
