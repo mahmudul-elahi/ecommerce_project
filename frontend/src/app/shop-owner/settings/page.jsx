@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -10,6 +10,7 @@ import { toast } from 'sonner';
 import { Store, Save, ExternalLink, AlertCircle, Image, Globe, Mail, Phone, MapPin, Building2 } from 'lucide-react';
 import { useMyShopQuery, useUpdateMyShopMutation } from '../../../hooks/useShopOwner';
 import { useAuth } from '../../../context/AuthContext';
+import DashFileUpload from '../../../components/dashboard/DashFileUpload';
 
 const shopSettingsSchema = z.object({
   name: z.string().min(2, 'Store name must be at least 2 characters'),
@@ -17,12 +18,15 @@ const shopSettingsSchema = z.object({
   phone: z.string().optional(),
   email: z.string().email('Please enter a valid email address').optional().or(z.literal('')),
   address: z.string().optional(),
-  logo: z.string().optional(),
-  banner: z.string().optional(),
 });
 
 export default function ShopSettingsPage() {
   const { updateUserShop } = useAuth();
+
+  const [logoFile, setLogoFile] = useState(null);
+  const [bannerFile, setBannerFile] = useState(null);
+  const [logoCleared, setLogoCleared] = useState(false);
+  const [bannerCleared, setBannerCleared] = useState(false);
 
   const {
     register,
@@ -38,8 +42,6 @@ export default function ShopSettingsPage() {
       phone: '',
       email: '',
       address: '',
-      logo: '',
-      banner: '',
     },
   });
 
@@ -57,9 +59,11 @@ export default function ShopSettingsPage() {
         phone: shopData.phone || '',
         email: shopData.email || '',
         address: shopData.address || '',
-        logo: shopData.logo_url || '',
-        banner: shopData.banner_url || '',
       });
+      setLogoFile(null);
+      setBannerFile(null);
+      setLogoCleared(false);
+      setBannerCleared(false);
     }
   }, [shopData, reset]);
 
@@ -79,13 +83,40 @@ export default function ShopSettingsPage() {
     },
   });
 
-  const onSubmit = (formData) => {
+  const onSubmit = (data) => {
+    const formData = new FormData();
+    formData.append('name', data.name);
+    if (data.description) formData.append('description', data.description);
+    if (data.phone) formData.append('phone', data.phone);
+    if (data.email) formData.append('email', data.email);
+    if (data.address) formData.append('address', data.address);
+
+    if (logoFile) {
+      formData.append('logo', logoFile);
+    } else if (logoCleared) {
+      formData.append('logo', '');
+    }
+
+    if (bannerFile) {
+      formData.append('banner', bannerFile);
+    } else if (bannerCleared) {
+      formData.append('banner', '');
+    }
+
     mutation.mutate(formData);
   };
 
   const previewSlug = shopData?.slug;
-  const currentBanner = watch('banner') || shopData?.banner_url;
-  const currentLogo = watch('logo') || shopData?.logo_url;
+  const currentBanner = bannerCleared
+    ? null
+    : bannerFile
+    ? URL.createObjectURL(bannerFile)
+    : shopData?.banner_url;
+  const currentLogo = logoCleared
+    ? null
+    : logoFile
+    ? URL.createObjectURL(logoFile)
+    : shopData?.logo_url;
 
   if (isLoading) {
     return (
@@ -231,32 +262,36 @@ export default function ShopSettingsPage() {
             </div>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
-            <div>
-              <label className="block text-xs font-semibold text-[#343C6A] mb-1.5">Logo Image URL</label>
-              <div className="relative">
-                <Image className="w-4 h-4 text-[#718EBF] absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
-                <input
-                  type="text"
-                  {...register('logo')}
-                  className="w-full h-11 pl-10 pr-4 text-sm bg-[#F5F7FA] text-[#343C6A] placeholder-[#8BA3CB] rounded-xl border-0 outline-none focus:bg-white focus:ring-2 focus:ring-[#B88E2F]/30 transition-all"
-                  placeholder="https://images.unsplash.com/..."
-                />
-              </div>
-            </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 pt-2">
+            <DashFileUpload
+              label="Store Logo"
+              helperText="PNG, JPG, WebP. Recommended 500x500px square."
+              currentUrl={logoCleared ? null : (logoFile ? URL.createObjectURL(logoFile) : shopData?.logo_url)}
+              onFileSelect={(file) => {
+                setLogoFile(file);
+                setLogoCleared(false);
+              }}
+              onRemove={() => {
+                setLogoFile(null);
+                setLogoCleared(true);
+              }}
+              aspect="square"
+            />
 
-            <div>
-              <label className="block text-xs font-semibold text-[#343C6A] mb-1.5">Banner Image URL</label>
-              <div className="relative">
-                <Image className="w-4 h-4 text-[#718EBF] absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
-                <input
-                  type="text"
-                  {...register('banner')}
-                  className="w-full h-11 pl-10 pr-4 text-sm bg-[#F5F7FA] text-[#343C6A] placeholder-[#8BA3CB] rounded-xl border-0 outline-none focus:bg-white focus:ring-2 focus:ring-[#B88E2F]/30 transition-all"
-                  placeholder="https://images.unsplash.com/..."
-                />
-              </div>
-            </div>
+            <DashFileUpload
+              label="Storefront Banner"
+              helperText="PNG, JPG, WebP. Recommended 1920x600px widescreen."
+              currentUrl={bannerCleared ? null : (bannerFile ? URL.createObjectURL(bannerFile) : shopData?.banner_url)}
+              onFileSelect={(file) => {
+                setBannerFile(file);
+                setBannerCleared(false);
+              }}
+              onRemove={() => {
+                setBannerFile(null);
+                setBannerCleared(true);
+              }}
+              aspect="banner"
+            />
           </div>
 
           <div className="pt-4 border-t border-[#F5F7FA] flex justify-end">

@@ -22,6 +22,7 @@ import {
   XCircle,
 } from 'lucide-react';
 import Modal from '../../../components/common/Modal';
+import DashFileUpload from '../../../components/dashboard/DashFileUpload';
 import { useDebounce } from '../../../hooks/useDebounce';
 import {
   useAdminShopsQuery,
@@ -49,6 +50,10 @@ export default function ShopManagementPage() {
   // Modal states
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingShop, setEditingShop] = useState(null);
+  const [logoFile, setLogoFile] = useState(null);
+  const [bannerFile, setBannerFile] = useState(null);
+  const [logoCleared, setLogoCleared] = useState(false);
+  const [bannerCleared, setBannerCleared] = useState(false);
 
   // TanStack Query: Shops & Owners via custom hooks
   const {
@@ -106,6 +111,10 @@ export default function ShopManagementPage() {
 
   const handleOpenCreateModal = () => {
     setEditingShop(null);
+    setLogoFile(null);
+    setBannerFile(null);
+    setLogoCleared(false);
+    setBannerCleared(false);
     reset({
       name: '',
       user_id: '',
@@ -122,6 +131,10 @@ export default function ShopManagementPage() {
 
   const handleOpenEditModal = (shop) => {
     setEditingShop(shop);
+    setLogoFile(null);
+    setBannerFile(null);
+    setLogoCleared(false);
+    setBannerCleared(false);
     reset({
       name: shop.name || '',
       user_id: shop.user_id ? String(shop.user_id) : '',
@@ -144,18 +157,28 @@ export default function ShopManagementPage() {
   };
 
   const onFormSubmit = (data) => {
-    const payload = {
-      name: data.name,
-      user_id: data.user_id ? parseInt(data.user_id, 10) : null,
-      description: data.description || null,
-      phone: data.phone || null,
-      email: data.email || null,
-      address: data.address || null,
-      status: data.status,
-      logo: data.logo || null,
-      banner: data.banner || null,
-    };
-    saveMutation.mutate({ id: editingShop?.id, payload });
+    const formData = new FormData();
+    formData.append('name', data.name);
+    if (data.user_id) formData.append('user_id', data.user_id);
+    if (data.description) formData.append('description', data.description);
+    if (data.phone) formData.append('phone', data.phone);
+    if (data.email) formData.append('email', data.email);
+    if (data.address) formData.append('address', data.address);
+    formData.append('status', data.status);
+
+    if (logoFile) {
+      formData.append('logo', logoFile);
+    } else if (logoCleared) {
+      formData.append('remove_logo', '1');
+    }
+
+    if (bannerFile) {
+      formData.append('banner', bannerFile);
+    } else if (bannerCleared) {
+      formData.append('remove_banner', '1');
+    }
+
+    saveMutation.mutate({ id: editingShop?.id, payload: formData });
   };
 
   return (
@@ -416,30 +439,36 @@ export default function ShopManagementPage() {
             />
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
-            <div>
-              <label className="block text-xs font-semibold text-[#343C6A] mb-1.5">
-                Logo URL
-              </label>
-              <input
-                type="url"
-                {...register('logo')}
-                placeholder="https://images.unsplash.com/..."
-                className="w-full h-11 px-4 text-sm bg-[#F5F7FA] text-[#343C6A] placeholder-[#8BA3CB] rounded-xl border-0 outline-none focus:bg-white focus:ring-2 focus:ring-[#B88E2F]/30 transition-all"
-              />
-            </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <DashFileUpload
+              label="Shop Logo"
+              aspect="square"
+              currentUrl={logoCleared ? null : (logoFile ? URL.createObjectURL(logoFile) : editingShop?.logo_url)}
+              onFileSelect={(file) => {
+                setLogoFile(file);
+                setLogoCleared(false);
+              }}
+              onRemove={() => {
+                setLogoFile(null);
+                setLogoCleared(true);
+              }}
+              helperText="Square image up to 10MB"
+            />
 
-            <div>
-              <label className="block text-xs font-semibold text-[#343C6A] mb-1.5">
-                Banner URL
-              </label>
-              <input
-                type="url"
-                {...register('banner')}
-                placeholder="https://images.unsplash.com/..."
-                className="w-full h-11 px-4 text-sm bg-[#F5F7FA] text-[#343C6A] placeholder-[#8BA3CB] rounded-xl border-0 outline-none focus:bg-white focus:ring-2 focus:ring-[#B88E2F]/30 transition-all"
-              />
-            </div>
+            <DashFileUpload
+              label="Shop Banner"
+              aspect="banner"
+              currentUrl={bannerCleared ? null : (bannerFile ? URL.createObjectURL(bannerFile) : editingShop?.banner_url)}
+              onFileSelect={(file) => {
+                setBannerFile(file);
+                setBannerCleared(false);
+              }}
+              onRemove={() => {
+                setBannerFile(null);
+                setBannerCleared(true);
+              }}
+              helperText="Wide cover up to 10MB"
+            />
           </div>
 
           <div className="pt-4 border-t border-[#F5F7FA] flex items-center justify-end space-x-3">

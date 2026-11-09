@@ -21,7 +21,10 @@ export const shopOwnerService = {
    * Update shop profile settings
    */
   async updateMyShop(payload) {
-    const res = await api.put('/shop-owner/my-shop', payload);
+    const isFormData = payload instanceof FormData;
+    const res = await api.post('/shop-owner/my-shop', payload, {
+      headers: isFormData ? { 'Content-Type': 'multipart/form-data' } : undefined,
+    });
     return res.data;
   },
 

@@ -21,7 +21,10 @@ export const adminService = {
    * Create a new store
    */
   async createShop(payload) {
-    const res = await api.post('/admin/shops', payload);
+    const isFormData = payload instanceof FormData;
+    const res = await api.post('/admin/shops', payload, {
+      headers: isFormData ? { 'Content-Type': 'multipart/form-data' } : undefined,
+    });
     return res.data;
   },
 
@@ -29,7 +32,12 @@ export const adminService = {
    * Update an existing store
    */
   async updateShop(id, payload) {
-    const res = await api.put(`/admin/shops/${id}`, payload);
+    const isFormData = payload instanceof FormData;
+    const res = isFormData
+      ? await api.post(`/admin/shops/${id}`, payload, {
+          headers: { 'Content-Type': 'multipart/form-data' },
+        })
+      : await api.put(`/admin/shops/${id}`, payload);
     return res.data;
   },
 

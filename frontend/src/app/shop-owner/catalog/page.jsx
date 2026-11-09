@@ -32,6 +32,7 @@ import {
   useCreateCatalogProductMutation,
 } from '../../../hooks/useCatalog';
 import Modal from '../../../components/common/Modal';
+import DashFileUpload from '../../../components/dashboard/DashFileUpload';
 
 // Schema for adding existing catalog product to own shop
 const addToShopSchema = z.object({
@@ -71,6 +72,7 @@ export default function CatalogBrowsePage() {
   // Modals
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [productToAdd, setProductToAdd] = useState(null);
+  const [addThumbnailFile, setAddThumbnailFile] = useState(null);
 
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
 
@@ -188,6 +190,7 @@ export default function CatalogBrowsePage() {
 
   const handleOpenAddModal = (product) => {
     setProductToAdd(product);
+    setAddThumbnailFile(null);
     resetAdd({
       custom_price: '',
       custom_title: '',
@@ -200,7 +203,16 @@ export default function CatalogBrowsePage() {
 
   const onAddSubmit = (data) => {
     if (!productToAdd) return;
-    addToShopMutation.mutate({ productId: productToAdd.id, data });
+    const formData = new FormData();
+    formData.append('product_id', productToAdd.id);
+    if (data.custom_price) formData.append('custom_price', data.custom_price);
+    if (data.custom_title) formData.append('custom_title', data.custom_title);
+    if (data.custom_description) formData.append('custom_description', data.custom_description);
+    if (data.stock !== undefined && data.stock !== '') formData.append('stock', data.stock);
+    if (addThumbnailFile) {
+      formData.append('custom_thumbnail', addThumbnailFile);
+    }
+    addToShopMutation.mutate(formData);
   };
 
   const onCreateSubmit = (data) => {
@@ -488,14 +500,13 @@ export default function CatalogBrowsePage() {
             </div>
 
             <div>
-              <label className="block text-xs font-semibold text-[#343C6A] mb-1.5">
-                Custom Storefront Thumbnail URL (Optional)
-              </label>
-              <input
-                type="url"
-                {...registerAdd('custom_thumbnail')}
-                placeholder="https://example.com/custom-photo.jpg"
-                className="w-full h-11 px-4 text-sm bg-[#F5F7FA] text-[#343C6A] placeholder-[#8BA3CB] rounded-xl border-0 outline-none focus:bg-white focus:ring-2 focus:ring-[#B88E2F]/30 transition-all"
+              <DashFileUpload
+                label="Custom Storefront Thumbnail (Optional)"
+                aspect="square"
+                currentUrl={addThumbnailFile ? URL.createObjectURL(addThumbnailFile) : null}
+                onFileSelect={(file) => setAddThumbnailFile(file)}
+                onRemove={() => setAddThumbnailFile(null)}
+                helperText="Upload a custom photo for your storefront or leave empty to use master image"
               />
             </div>
 

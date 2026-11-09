@@ -20,6 +20,7 @@ import {
   AlertCircle,
 } from 'lucide-react';
 import Modal from '../../../components/common/Modal';
+import DashFileUpload from '../../../components/dashboard/DashFileUpload';
 import {
   useAdminCategoriesQuery,
   useSaveAdminCategoryMutation,
@@ -306,30 +307,21 @@ export default function CategoryManagementPage() {
             />
           </div>
 
-          {/* Image Upload with Laravel 13 Optimization */}
-          <div>
-            <label className="block text-xs font-semibold text-[#343C6A] mb-1.5">
-              Category Image (Optimized to WebP automatically)
-            </label>
-            <div className="flex items-center gap-3">
-              {imagePreview && (
-                <div className="w-16 h-16 rounded-xl overflow-hidden bg-slate-100 flex-shrink-0 shadow-xs">
-                  <img src={imagePreview} alt="Preview" className="w-full h-full object-cover" />
-                </div>
-              )}
-              <div className="flex-1">
-                <input
-                  type="file"
-                  accept="image/*"
-                  onChange={handleFileChange}
-                  className="w-full text-xs text-slate-500 file:mr-2 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-[#FAF3EA] file:text-[#B88E2F] hover:file:bg-[#F4E8D3] cursor-pointer"
-                />
-                <p className="text-[10px] text-[#718EBF] mt-1">
-                  Laravel 13 automatically optimizes and converts uploaded images to WebP.
-                </p>
-              </div>
-            </div>
-          </div>
+          {/* Image Upload with DashFileUpload */}
+          <DashFileUpload
+            label="Category Image"
+            aspect="square"
+            currentUrl={imagePreview}
+            onFileSelect={(file) => {
+              setImageFile(file);
+              setImagePreview(URL.createObjectURL(file));
+            }}
+            onRemove={() => {
+              setImageFile(null);
+              setImagePreview(null);
+            }}
+            helperText="Square category image (PNG, JPG, WebP) - max 10MB"
+          />
 
           <div className="flex items-center space-x-2 pt-1">
             <input

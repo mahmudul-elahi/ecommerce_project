@@ -13,7 +13,17 @@ export const catalogService = {
    * Add a product from shared catalog to shop
    */
   async addToShop(payload) {
-    const res = await api.post('/shop-owner/catalog/add-to-shop', payload);
+    let body = payload;
+    let isFormData = payload instanceof FormData;
+    if (!isFormData && payload?.productId) {
+      body = {
+        product_id: payload.productId,
+        ...(payload.data || {}),
+      };
+    }
+    const res = await api.post('/shop-owner/catalog/add-to-shop', body, {
+      headers: isFormData ? { 'Content-Type': 'multipart/form-data' } : undefined,
+    });
     return res.data;
   },
 

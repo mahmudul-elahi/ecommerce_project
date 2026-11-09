@@ -55,6 +55,7 @@ Route::middleware(['auth:sanctum', 'role:admin'])->prefix('admin')->group(functi
     Route::get('/dashboard', [AdminDashboardController::class, 'stats']);
 
     // Shop Management (CRUD)
+    Route::post('shops/{shop}', [AdminShopController::class, 'update']);
     Route::apiResource('shops', AdminShopController::class);
 
     // Product Catalog Management (CRUD)

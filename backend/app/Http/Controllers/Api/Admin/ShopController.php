@@ -112,13 +112,17 @@ class ShopController extends Controller
             $validated['slug'] = $slug;
         }
 
-        if ($request->hasFile('logo') || $request->input('logo')) {
+        if ($request->boolean('remove_logo')) {
+            $validated['logo'] = null;
+        } elseif ($request->hasFile('logo') || $request->input('logo')) {
             $validated['logo'] = $this->handleFileUpload($request->file('logo') ?? $request->input('logo'), 'shops/logos');
         } else {
             unset($validated['logo']);
         }
 
-        if ($request->hasFile('banner') || $request->input('banner')) {
+        if ($request->boolean('remove_banner')) {
+            $validated['banner'] = null;
+        } elseif ($request->hasFile('banner') || $request->input('banner')) {
             $validated['banner'] = $this->handleFileUpload($request->file('banner') ?? $request->input('banner'), 'shops/banners');
         } else {
             unset($validated['banner']);
