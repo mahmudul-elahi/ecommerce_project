@@ -218,13 +218,14 @@ export default function ProductManagementPage() {
           <div className="flex items-center gap-2">
             <span className="text-xs text-[#718EBF]">Category:</span>
             <select
-              value={categoryFilter}
-              onChange={(e) => setCategoryFilter(e.target.value)}
-              className="h-10 px-4 text-xs bg-[#F5F7FA] text-[#343C6A] rounded-xl border-0 outline-none font-medium cursor-pointer"
+              value={selectedCategory}
+              onChange={(e) => setSelectedCategory(e.target.value)}
+              className="h-10 px-4 text-xs bg-[#F5F7FA] text-[#343C6A] rounded-none border-0 outline-none font-medium cursor-pointer"
             >
-              {allCategoryOptions.map((cat) => (
-                <option key={cat} value={cat}>
-                  {cat}
+              <option value="">All Categories</option>
+              {dbCategories.map((cat) => (
+                <option key={cat.id} value={cat.name}>
+                  {cat.name}
                 </option>
               ))}
             </select>
@@ -233,7 +234,7 @@ export default function ProductManagementPage() {
 
         <div className="flex items-center gap-4 w-full md:w-auto justify-between md:justify-end">
           <span className="text-xs text-[#718EBF]">
-            Showing <strong className="text-[#343C6A]">{filteredProducts.length}</strong> items
+            Showing <strong className="text-[#343C6A]">{products.length}</strong> items
           </span>
 
           <button
