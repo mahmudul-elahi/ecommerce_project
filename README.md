@@ -2,6 +2,8 @@
 
 A production-ready multi-merchant e-commerce management system designed according to the **Small E-commerce Management Technical Assessment** specifications, paired with the modern **Furniro UI Kit & Design System** and **BankDash Management Console**.
 
+* **GitHub Repository:** [https://github.com/mahmudul-elahi/example_project](https://github.com/mahmudul-elahi/example_project)
+
 ---
 
 ## 🚀 Key Functional Architecture
