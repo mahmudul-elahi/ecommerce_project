@@ -244,14 +244,14 @@ export default function CatalogBrowsePage() {
           <div className="flex items-center gap-2">
             <span className="text-xs text-[#718EBF]">Category:</span>
             <select
-              value={selectedCategory}
-              onChange={(e) => setSelectedCategory(e.target.value)}
-              className="h-10 px-4 text-xs bg-[#F5F7FA] text-[#343C6A] rounded-xl border-0 outline-none font-medium cursor-pointer"
+              value={category}
+              onChange={(e) => setCategory(e.target.value)}
+              className="h-10 px-4 text-xs bg-[#F5F7FA] text-[#343C6A] rounded-none border-0 outline-none font-medium cursor-pointer"
             >
               <option value="">All Categories</option>
-              {categories.map((cat) => (
-                <option key={cat} value={cat}>
-                  {cat}
+              {dbCategories.map((cat) => (
+                <option key={cat.id} value={cat.name}>
+                  {cat.name}
                 </option>
               ))}
             </select>
