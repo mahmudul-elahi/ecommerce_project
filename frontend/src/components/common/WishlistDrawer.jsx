@@ -134,7 +134,7 @@ export default function WishlistDrawer() {
                         <img
                           src={item.thumbnail}
                           alt={item.name}
-                          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                          className="w-full h-full object-cover"
                         />
                       ) : (
                         <ShoppingBag className="w-7 h-7 text-[#B88E2F]" />

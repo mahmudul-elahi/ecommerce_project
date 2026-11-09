@@ -136,7 +136,7 @@ export default function DashFileUpload({
           onClick={() => fileInputRef.current?.click()}
           className={`border-2 border-dashed rounded-2xl p-5 flex flex-col items-center justify-center cursor-pointer transition-all ${
             isDragging
-              ? 'border-[#B88E2F] bg-[#FAF3EA]/70 scale-[1.01]'
+              ? 'border-[#B88E2F] bg-[#FAF3EA]/70'
               : 'border-[#DFEAF2] hover:border-[#B88E2F] bg-[#F5F7FA] hover:bg-[#FAF3EA]/40'
           }`}
         >

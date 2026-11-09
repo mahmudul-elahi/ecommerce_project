@@ -80,7 +80,7 @@ export default function ProductFilterBar({
             <img
               src="/images/furniro/iconFilter.svg"
               alt=""
-              className="w-5 h-5 transition-transform group-hover:scale-110"
+              className="w-5 h-5"
             />
             <span className="font-medium text-lg">Filter</span>
             {activeFiltersCount > 0 && (

@@ -16,15 +16,15 @@ export default function DashButton({
 }) {
   const variantStyles = {
     primary:
-      'bg-[#B88E2F] hover:bg-[#967125] text-white shadow-sm shadow-[#B88E2F]/20 active:scale-[0.99]',
+      'bg-[#B88E2F] hover:bg-[#967125] text-white shadow-sm shadow-[#B88E2F]/20',
     secondary:
-      'bg-[#F5F7FA] hover:bg-[#FAF3EA] text-[#343C6A] hover:text-[#B88E2F] active:scale-[0.99]',
+      'bg-[#F5F7FA] hover:bg-[#FAF3EA] text-[#343C6A] hover:text-[#B88E2F]',
     danger:
-      'bg-rose-50 hover:bg-rose-100 text-rose-600 hover:text-rose-700 active:scale-[0.99]',
+      'bg-rose-50 hover:bg-rose-100 text-rose-600 hover:text-rose-700',
     outline:
-      'bg-white hover:bg-[#F5F7FA] text-[#343C6A] border border-[#E6EFF5] hover:border-[#B88E2F]/40 active:scale-[0.99]',
+      'bg-white hover:bg-[#F5F7FA] text-[#343C6A] border border-[#E6EFF5] hover:border-[#B88E2F]/40',
     ghost:
-      'text-[#718EBF] hover:text-[#343C6A] hover:bg-[#F5F7FA] active:scale-[0.99]',
+      'text-[#718EBF] hover:text-[#343C6A] hover:bg-[#F5F7FA]',
   };
 
   const sizeStyles = {

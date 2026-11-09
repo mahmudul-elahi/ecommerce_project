@@ -84,7 +84,7 @@ export default function BankDashLayout({ children, title = 'Overview', role = 'a
           {/* Logo Brand Header */}
           <div className="h-[84px] px-8 flex items-center justify-between border-b border-[#F5F7FA]">
             <Link href="/" className="flex items-center gap-3 group">
-              <div className="w-10 h-10 rounded-xl bg-[#FAF3EA] border border-[#ebd9c5] flex items-center justify-center p-1.5 shadow-sm group-hover:scale-105 transition-transform">
+              <div className="w-10 h-10 rounded-xl bg-[#FAF3EA] border border-[#ebd9c5] flex items-center justify-center p-1.5 shadow-sm">
                 <img
                   src="/images/furniro/imgMeubelHouseLogos05.png"
                   alt="Furniro Logo"
@@ -129,7 +129,7 @@ export default function BankDashLayout({ children, title = 'Overview', role = 'a
                     <span className="absolute left-0 top-1/2 -translate-y-1/2 w-1.5 h-10 bg-[#B88E2F] rounded-r-md" />
                   )}
                   <Icon
-                    className={`w-5 h-5 transition-transform group-hover:scale-105 ${
+                    className={`w-5 h-5 ${
                       active ? 'text-[#B88E2F]' : 'text-[#718EBF] group-hover:text-[#343C6A]'
                     }`}
                   />

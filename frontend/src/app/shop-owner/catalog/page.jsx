@@ -332,7 +332,7 @@ export default function CatalogBrowsePage() {
                     <img
                       src={product.thumbnail_url || 'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=500'}
                       alt={product.name}
-                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                      className="w-full h-full object-cover"
                       onError={(e) => {
                         e.target.src = 'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=500';
                       }}

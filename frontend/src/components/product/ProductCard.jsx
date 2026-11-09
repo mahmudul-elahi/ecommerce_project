@@ -120,7 +120,7 @@ export default function ProductCard({ product }) {
           aria-label={favorited ? 'Remove from favorites' : 'Add to favorites'}
           className={`absolute top-3 right-3 z-10 w-8 h-8 rounded-full flex items-center justify-center transition-all ${
             favorited
-              ? 'bg-white text-rose-500 shadow-md opacity-100 scale-100'
+              ? 'bg-white text-rose-500 shadow-md opacity-100'
               : 'bg-white/80 text-slate-500 hover:text-rose-500 hover:bg-white shadow-xs opacity-0 group-hover:opacity-100 max-sm:opacity-90'
           }`}
         >
