@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { Share2, Heart } from 'lucide-react';
+import { Share2, Heart, ShoppingBag } from 'lucide-react';
 import { useCart } from '../../context/CartContext';
 import { useWishlist } from '../../context/WishlistContext';
 import { formatPrice } from '../../utils/formatters';
@@ -126,8 +126,16 @@ export default function ProductDetailView({ product, relatedProducts = [] }) {
                   className="main-product-img"
                 />
               ) : (
-                <div className="w-full h-full bg-[#f4f5f7] flex items-center justify-center text-slate-400 font-medium">
-                  {product.name}
+                <div className="w-full h-full min-h-[420px] bg-[#FAF3EA]/60 border border-[#E8DEC8]/50 rounded-[10px] flex flex-col items-center justify-center p-8 text-center select-none">
+                  <div className="w-16 h-16 rounded-full bg-white shadow-xs flex items-center justify-center text-[#B88E2F] mb-4">
+                    <ShoppingBag className="w-8 h-8 text-[#B88E2F]" />
+                  </div>
+                  <span className="text-xs uppercase tracking-wider text-[#B88E2F] font-semibold mb-1">
+                    {product.category || 'Woodora'}
+                  </span>
+                  <span className="text-xl font-bold text-[#242424]">
+                    {product.name}
+                  </span>
                 </div>
               )}
             </div>

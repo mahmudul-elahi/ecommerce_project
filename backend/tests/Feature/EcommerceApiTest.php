@@ -298,6 +298,9 @@ class EcommerceApiTest extends TestCase
     public function test_product_detail_returns_multiple_images(): void
     {
         $syltherine = Product::where('sku', 'FUR-SYL-001')->first();
+        $syltherine->update([
+            'images' => ['https://example.com/img1.jpg', 'https://example.com/img2.jpg'],
+        ]);
         $shopProduct = ShopProduct::where('product_id', $syltherine->id)->first();
 
         $response = $this->getJson("/api/customer/products/{$shopProduct->id}");

@@ -16,33 +16,27 @@ const merchantCategories = [
   { id: 'artisan', label: 'Artisan & Boutiques' },
 ];
 
-const categoryInspirationImages = {
-  bedroom: '/images/furniro/imgRectangle24.png',
-  dining: '/images/furniro/imgRectangle25.png',
-  living: '/images/furniro/imgRectangle26.png',
-};
-
 const defaultRooms = [
   {
     id: 'bedroom',
     name: 'Bedroom',
     slug: 'bedroom',
     description: 'Peaceful bed sets, ambient night lamps, and bedroom storage.',
-    image: '/images/furniro/imgRectangle24.png',
+    image: null,
   },
   {
     id: 'dining',
     name: 'Dining',
     slug: 'dining',
     description: 'Curated dining tables, artisanal chairs, and dining sets.',
-    image: '/images/furniro/imgRectangle25.png',
+    image: null,
   },
   {
     id: 'living',
     name: 'Living',
     slug: 'living',
     description: 'Handcrafted sofas, lounge chairs, and cozy living essentials.',
-    image: '/images/furniro/imgRectangle26.png',
+    image: null,
   },
 ];
 
@@ -106,19 +100,10 @@ export default function HomePage() {
       return 0;
     });
 
-    const fallbackImgs = [
-      '/images/furniro/imgRectangle24.png',
-      '/images/furniro/imgRectangle25.png',
-      '/images/furniro/imgRectangle26.png',
-    ];
-
     return sorted.map((cat, idx) => {
       const slug = (cat.slug || cat.name || '').toLowerCase();
-      const roomImg =
-        categoryInspirationImages[slug] ||
-        (cat.image && !cat.image.includes('imgImage')
-          ? cat.image
-          : fallbackImgs[idx % fallbackImgs.length]);
+      // Strictly dynamic: no static image fallbacks
+      const roomImg = cat.image || null;
 
       return {
         id: cat.id || slug,
@@ -195,8 +180,19 @@ export default function HomePage() {
                         loading="lazy"
                       />
                     ) : (
-                      <div className="w-full h-full bg-[#f4f5f7] flex items-center justify-center text-slate-400 font-medium p-4">
-                        <span>{cat.name}</span>
+                      <div className="w-full h-full bg-gradient-to-b from-[#FAF3EA] to-[#F4F5F7] border border-[#E8DEC8]/60 flex flex-col items-center justify-center p-6 text-center transition-all duration-300 group-hover:border-[#B88E2F]/40 group-hover:shadow-md">
+                        <div className="w-16 h-16 rounded-full bg-white shadow-xs flex items-center justify-center mb-4 text-[#B88E2F] group-hover:scale-105 transition-transform duration-200">
+                          <span className="font-serif text-2xl font-bold">{cat.name?.charAt(0)}</span>
+                        </div>
+                        <span className="text-xl font-bold text-[#333333] tracking-wide mb-1">
+                          {cat.name}
+                        </span>
+                        <span className="text-xs text-[#898989] max-w-[200px] line-clamp-2">
+                          {cat.description || 'Explore curated collection'}
+                        </span>
+                        <span className="mt-4 inline-flex items-center text-xs font-semibold text-[#B88E2F] uppercase tracking-wider group-hover:translate-x-1 transition-transform">
+                          Browse Collection &rarr;
+                        </span>
                       </div>
                     )}
                   </div>
@@ -283,11 +279,35 @@ export default function HomePage() {
                 className={`inspiration-slide ${isActive ? 'is-active' : ''}`}
                 aria-hidden={!isActive}
               >
-                <img
-                  src={slide.image}
-                  alt={slide.name}
-                  loading={idx === 0 ? 'eager' : 'lazy'}
-                />
+                {slide.image ? (
+                  <img
+                    src={slide.image}
+                    alt={slide.name}
+                    loading={idx === 0 ? 'eager' : 'lazy'}
+                  />
+                ) : (
+                  <div className="w-full h-full bg-gradient-to-br from-[#FAF3EA] via-[#F4EDE2] to-[#EAE0D0] flex flex-col justify-between p-8 md:p-12 border border-[#E0D5C1]/60 select-none">
+                    <div className="flex items-center justify-between">
+                      <span className="text-xs uppercase tracking-widest text-[#B88E2F] font-bold bg-white/90 backdrop-blur-xs px-3 py-1.5 rounded-xs shadow-xs">
+                        Woodora Interior · 0{idx + 1}
+                      </span>
+                      <span className="text-xs text-[#898989] font-medium">Curated Living</span>
+                    </div>
+
+                    <div className="my-auto py-6">
+                      <h4 className="text-3xl md:text-5xl font-bold text-[#3A3A3A] tracking-tight mb-3">
+                        {slide.name}
+                      </h4>
+                      <p className="text-sm md:text-base text-[#616161] max-w-[340px] leading-relaxed">
+                        {slide.description}
+                      </p>
+                    </div>
+
+                    <div className="text-xs text-[#898989] tracking-wider uppercase font-medium">
+                      Thoughtful designs for every room
+                    </div>
+                  </div>
+                )}
                 <div className="room-caption-wrapper">
                   <div className="room-caption">
                     <p>
@@ -305,7 +325,7 @@ export default function HomePage() {
                     href={`/shop?category=${encodeURIComponent(slide.name)}`}
                     aria-label={`Explore ${slide.name} category`}
                   >
-                    <img src="/images/furniro/imgRight16Px.svg" alt="" />
+                    <ChevronRight className="w-5 h-5 text-white" />
                   </Link>
                 </div>
               </div>
@@ -332,11 +352,23 @@ export default function HomePage() {
                   }}
                   aria-label={`Next room inspiration: ${slide.name}`}
                 >
-                  <img
-                    src={slide.image}
-                    alt={slide.name}
-                    loading="lazy"
-                  />
+                  {slide.image ? (
+                    <img
+                      src={slide.image}
+                      alt={slide.name}
+                      loading="lazy"
+                    />
+                  ) : (
+                    <div className="w-full h-full bg-gradient-to-br from-[#F4EDE2] to-[#E5D7C2] flex flex-col items-center justify-center p-6 text-center select-none">
+                      <span className="text-xs uppercase tracking-widest text-[#B88E2F] font-bold mb-2">
+                        Next Category
+                      </span>
+                      <h4 className="text-2xl font-bold text-[#3A3A3A] mb-1">
+                        {slide.name}
+                      </h4>
+                      <span className="text-xs text-[#898989]">Click to view</span>
+                    </div>
+                  )}
                   <div className="next-badge">
                     <span>Next:</span> {slide.name}
                   </div>
