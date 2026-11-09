@@ -21,7 +21,10 @@ export const catalogService = {
    * Create a new product in shared catalog & add to shop
    */
   async createAndShare(payload) {
-    const res = await api.post('/shop-owner/catalog/create', payload);
+    const isFormData = payload instanceof FormData;
+    const res = await api.post('/shop-owner/catalog/create', payload, {
+      headers: isFormData ? { 'Content-Type': 'multipart/form-data' } : undefined,
+    });
     return res.data;
   },
 };

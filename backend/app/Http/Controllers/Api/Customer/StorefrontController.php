@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api\Customer;
 
 use App\Http\Controllers\Controller;
+use App\Models\Category;
 use App\Models\Order;
 use App\Models\OrderItem;
 use App\Models\Shop;
@@ -39,11 +40,39 @@ class StorefrontController extends Controller
     }
 
     /**
-     * List distinct categories that have active customer-visible products.
-     * Derived purely dynamically from products in the database.
+     * List distinct categories from dynamic categories table.
      */
     public function categories()
     {
+        $categories = Category::where('is_active', true)
+            ->withCount(['products' => function ($pq) {
+                $pq->where('is_active', true)
+                    ->whereHas('shopProducts', function ($sq) {
+                        $sq->where('is_active', true)
+                            ->whereHas('shop', function ($s) {
+                                $s->where('status', 'active');
+                            });
+                    });
+            }])
+            ->orderBy('id', 'asc')
+            ->get()
+            ->map(function ($cat) {
+                return [
+                    'id' => $cat->id,
+                    'name' => $cat->name,
+                    'slug' => $cat->slug,
+                    'description' => $cat->description,
+                    'image' => $cat->image_url,
+                    'products_count' => $cat->products_count,
+                ];
+            });
+
+        // If categories table is populated, return it directly
+        if ($categories->isNotEmpty()) {
+            return response()->json($categories);
+        }
+
+        // Fallback if no categories table entries yet: derive from shop products
         $categoryProducts = ShopProduct::where('is_active', true)
             ->whereHas('shop', function ($sq) {
                 $sq->where('status', 'active');
@@ -54,7 +83,7 @@ class StorefrontController extends Controller
             ->with('product')
             ->get();
 
-        $categories = $categoryProducts
+        $fallbackCategories = $categoryProducts
             ->groupBy(function ($item) {
                 return trim($item->product->category);
             })
@@ -63,19 +92,20 @@ class StorefrontController extends Controller
             })
             ->map(function ($items, $categoryName) {
                 $first = $items->first();
-                // Image derived dynamically from the product's thumbnail in database
                 $image = $first ? $first->effective_thumbnail_url : null;
 
                 return [
+                    'id' => null,
                     'name' => $categoryName,
                     'slug' => Str::slug($categoryName),
+                    'description' => null,
                     'products_count' => $items->count(),
                     'image' => $image,
                 ];
             })
             ->values();
 
-        return response()->json($categories);
+        return response()->json($fallbackCategories);
     }
 
     /**
@@ -85,7 +115,7 @@ class StorefrontController extends Controller
      */
     public function allAssignedProducts(Request $request)
     {
-        $query = ShopProduct::with(['product', 'shop'])
+        $query = ShopProduct::with(['product.categoryRelation', 'shop'])
             ->where('is_active', true)
             ->whereHas('shop', function ($sq) {
                 $sq->where('status', 'active');
@@ -101,7 +131,10 @@ class StorefrontController extends Controller
                     ->orWhereHas('product', function ($pq) use ($search) {
                         $pq->where('name', 'like', "%{$search}%")
                             ->orWhere('category', 'like', "%{$search}%")
-                            ->orWhere('sku', 'like', "%{$search}%");
+                            ->orWhere('sku', 'like', "%{$search}%")
+                            ->orWhereHas('categoryRelation', function ($cr) use ($search) {
+                                $cr->where('name', 'like', "%{$search}%");
+                            });
                     })
                     ->orWhereHas('shop', function ($sq) use ($search) {
                         $sq->where('name', 'like', "%{$search}%");
@@ -112,9 +145,20 @@ class StorefrontController extends Controller
         if ($category = $request->query('category')) {
             if ($category !== 'All' && $category !== 'all') {
                 $query->whereHas('product', function ($pq) use ($category) {
-                    $pq->where('category', $category);
+                    $pq->where(function ($q) use ($category) {
+                        $q->where('category', $category)
+                            ->orWhereHas('categoryRelation', function ($cr) use ($category) {
+                                $cr->where('name', $category)->orWhere('slug', $category);
+                            });
+                    });
                 });
             }
+        }
+
+        if ($categoryId = $request->query('category_id')) {
+            $query->whereHas('product', function ($pq) use ($categoryId) {
+                $pq->where('category_id', $categoryId);
+            });
         }
 
         if ($shopId = $request->query('shop_id')) {
@@ -162,7 +206,9 @@ class StorefrontController extends Controller
                 'badge' => $discountPct ?: ($item->created_at->diffInDays(now()) < 14 ? 'New' : null),
                 'badgeType' => $discountPct ? 'discount' : 'new',
                 'thumbnail' => $item->effective_thumbnail_url,
-                'category' => $item->product->category,
+                'images' => $item->effective_images_urls,
+                'category_id' => $item->product->category_id,
+                'category' => $item->product->categoryRelation ? $item->product->categoryRelation->name : $item->product->category,
                 'sku' => $item->product->sku,
                 'stock' => $item->stock,
                 'in_stock' => $item->stock > 0,
@@ -178,7 +224,7 @@ class StorefrontController extends Controller
      */
     public function singleProductDetail($shopProductId)
     {
-        $item = ShopProduct::with(['product', 'shop'])
+        $item = ShopProduct::with(['product.categoryRelation', 'shop'])
             ->where('id', $shopProductId)
             ->where('is_active', true)
             ->whereHas('shop', function ($sq) {
@@ -219,7 +265,9 @@ class StorefrontController extends Controller
             'badge' => $discountPct ?: 'New',
             'badgeType' => $discountPct ? 'discount' : 'new',
             'thumbnail' => $item->effective_thumbnail_url,
-            'category' => $item->product->category,
+            'images' => $item->effective_images_urls,
+            'category_id' => $item->product->category_id,
+            'category' => $item->product->categoryRelation ? $item->product->categoryRelation->name : $item->product->category,
             'sku' => $item->product->sku,
             'stock' => $item->stock,
             'in_stock' => $item->stock > 0,
@@ -262,7 +310,7 @@ class StorefrontController extends Controller
             })
             ->firstOrFail();
 
-        $query = ShopProduct::with(['product', 'shop'])
+        $query = ShopProduct::with(['product.categoryRelation', 'shop'])
             ->where('shop_id', $shop->id)
             ->where('is_active', true)
             ->whereHas('product', function ($pq) {
@@ -276,14 +324,28 @@ class StorefrontController extends Controller
                     ->orWhereHas('product', function ($pq) use ($search) {
                         $pq->where('name', 'like', "%{$search}%")
                             ->orWhere('category', 'like', "%{$search}%")
-                            ->orWhere('sku', 'like', "%{$search}%");
+                            ->orWhere('sku', 'like', "%{$search}%")
+                            ->orWhereHas('categoryRelation', function ($cr) use ($search) {
+                                $cr->where('name', 'like', "%{$search}%");
+                            });
                     });
             });
         }
 
         if ($category = $request->query('category')) {
             $query->whereHas('product', function ($pq) use ($category) {
-                $pq->where('category', $category);
+                $pq->where(function ($q) use ($category) {
+                    $q->where('category', $category)
+                        ->orWhereHas('categoryRelation', function ($cr) use ($category) {
+                            $cr->where('name', $category)->orWhere('slug', $category);
+                        });
+                });
+            });
+        }
+
+        if ($categoryId = $request->query('category_id')) {
+            $query->whereHas('product', function ($pq) use ($categoryId) {
+                $pq->where('category_id', $categoryId);
             });
         }
 
@@ -316,7 +378,9 @@ class StorefrontController extends Controller
                 'original_base_price' => (float) $item->product->base_price,
                 'has_custom_price' => ($item->custom_price !== null),
                 'thumbnail' => $item->effective_thumbnail_url,
-                'category' => $item->product->category,
+                'images' => $item->effective_images_urls,
+                'category_id' => $item->product->category_id,
+                'category' => $item->product->categoryRelation ? $item->product->categoryRelation->name : $item->product->category,
                 'sku' => $item->product->sku,
                 'stock' => $item->stock,
                 'in_stock' => $item->stock > 0,
@@ -339,7 +403,7 @@ class StorefrontController extends Controller
             })
             ->firstOrFail();
 
-        $item = ShopProduct::with(['product', 'shop'])
+        $item = ShopProduct::with(['product.categoryRelation', 'shop'])
             ->where('shop_id', $shop->id)
             ->where('id', $shopProductId)
             ->where('is_active', true)
@@ -365,7 +429,9 @@ class StorefrontController extends Controller
             'original_base_price' => (float) $item->product->base_price,
             'has_custom_price' => ($item->custom_price !== null),
             'thumbnail' => $item->effective_thumbnail_url,
-            'category' => $item->product->category,
+            'images' => $item->effective_images_urls,
+            'category_id' => $item->product->category_id,
+            'category' => $item->product->categoryRelation ? $item->product->categoryRelation->name : $item->product->category,
             'sku' => $item->product->sku,
             'stock' => $item->stock,
             'in_stock' => $item->stock > 0,
@@ -410,47 +476,40 @@ class StorefrontController extends Controller
 
                 $itemsData[] = [
                     'shop_product' => $shopProduct,
-                    'price' => $price,
                     'quantity' => $quantity,
+                    'price' => $price,
                     'subtotal' => $subtotal,
                 ];
-
-                // Decrement stock if stock > 0
-                if ($shopProduct->stock >= $quantity) {
-                    $shopProduct->decrement('stock', $quantity);
-                }
             }
-
-            $orderNumber = 'ORD-'.strtoupper(Str::random(8));
 
             $order = Order::create([
                 'shop_id' => $shop->id,
-                'order_number' => $orderNumber,
+                'order_number' => 'ORD-'.strtoupper(Str::random(10)),
                 'customer_name' => $validated['customer_name'],
                 'customer_email' => $validated['customer_email'] ?? null,
                 'customer_phone' => $validated['customer_phone'],
                 'shipping_address' => $validated['shipping_address'],
-                'notes' => $validated['notes'] ?? null,
                 'total_amount' => $totalAmount,
                 'status' => 'pending',
+                'notes' => $validated['notes'] ?? null,
             ]);
 
-            foreach ($itemsData as $data) {
+            foreach ($itemsData as $row) {
                 OrderItem::create([
                     'order_id' => $order->id,
-                    'shop_product_id' => $data['shop_product']->id,
-                    'product_name' => $data['shop_product']->effective_title,
-                    'product_price' => $data['price'],
-                    'quantity' => $data['quantity'],
-                    'subtotal' => $data['subtotal'],
+                    'shop_product_id' => $row['shop_product']->id,
+                    'product_name' => $row['shop_product']->effective_title,
+                    'product_price' => $row['price'],
+                    'quantity' => $row['quantity'],
+                    'subtotal' => $row['subtotal'],
                 ]);
+
+                $row['shop_product']->decrement('stock', $row['quantity']);
             }
 
-            $order->load(['items', 'shop']);
-
             return response()->json([
-                'message' => 'Order placed successfully!',
-                'order' => $order,
+                'message' => 'Order created successfully!',
+                'order' => $order->load('items'),
             ], 201);
         });
     }

@@ -3,9 +3,11 @@
 namespace App\Http\Controllers\Api\ShopOwner;
 
 use App\Http\Controllers\Controller;
+use App\Models\Category;
 use App\Models\Product;
 use App\Models\Shop;
 use App\Models\ShopProduct;
+use App\Services\ImageService;
 use App\Traits\HandlesFileUploads;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
@@ -42,7 +44,7 @@ class CatalogController extends Controller
         $shop = $this->getAuthenticatedShop($request);
         $user = $request->user();
 
-        $query = Product::with('creator')->where('is_active', true);
+        $query = Product::with(['creator', 'categoryRelation'])->where('is_active', true);
 
         if ($search = $request->query('search')) {
             $query->where(function ($q) use ($search) {
@@ -55,6 +57,10 @@ class CatalogController extends Controller
 
         if ($category = $request->query('category')) {
             $query->where('category', $category);
+        }
+
+        if ($categoryId = $request->query('category_id')) {
+            $query->where('category_id', $categoryId);
         }
 
         // Get IDs of products already added to this shop
@@ -88,6 +94,7 @@ class CatalogController extends Controller
     /**
      * Shop owner creates a new product.
      * It is saved into the shared catalog AND automatically added to their own shop.
+     * All uploaded images are optimized to WebP using Laravel 13 Image facade.
      */
     public function store(Request $request)
     {
@@ -97,15 +104,18 @@ class CatalogController extends Controller
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'sku' => 'nullable|string|max:100',
+            'category_id' => 'nullable|integer|exists:categories,id',
             'category' => 'nullable|string|max:100',
             'description' => 'nullable|string',
             'base_price' => 'required|numeric|min:0',
             'thumbnail' => 'nullable',
+            'images' => 'nullable',
             // Optional custom values for shop listing immediately
             'custom_price' => 'nullable|numeric|min:0',
             'custom_title' => 'nullable|string|max:255',
             'custom_description' => 'nullable|string',
             'custom_thumbnail' => 'nullable',
+            'custom_images' => 'nullable',
             'stock' => 'nullable|integer|min:0',
         ]);
 
@@ -116,9 +126,35 @@ class CatalogController extends Controller
             $slug = $baseSlug.'-'.$counter++;
         }
 
+        // Link category
+        if ($request->filled('category_id')) {
+            $cat = Category::find($request->input('category_id'));
+            if ($cat) {
+                $validated['category'] = $cat->name;
+            }
+        } elseif ($request->filled('category')) {
+            $cat = Category::firstOrCreate(['name' => trim($request->input('category'))]);
+            $validated['category_id'] = $cat->id;
+            $validated['category'] = $cat->name;
+        }
+
+        // Process multiple catalog images with Laravel 13 optimization
+        $catalogImages = [];
+        if ($request->hasFile('images') || $request->has('images')) {
+            $rawImages = $request->file('images') ?? $request->input('images');
+            $rawArray = is_array($rawImages) ? $rawImages : [$rawImages];
+            $catalogImages = ImageService::processMultiple($rawArray, 'products');
+        }
+
+        // Process single catalog thumbnail
         $thumbnailPath = null;
         if ($request->hasFile('thumbnail') || $request->input('thumbnail')) {
-            $thumbnailPath = $this->handleFileUpload($request->file('thumbnail') ?? $request->input('thumbnail'), 'products');
+            $thumbnailPath = ImageService::optimizeAndStore(
+                $request->file('thumbnail') ?? $request->input('thumbnail'),
+                'products'
+            );
+        } elseif (!empty($catalogImages)) {
+            $thumbnailPath = $catalogImages[0];
         }
 
         // 1. Create product in shared catalog
@@ -127,17 +163,32 @@ class CatalogController extends Controller
             'name' => $validated['name'],
             'slug' => $slug,
             'sku' => $validated['sku'] ?? null,
+            'category_id' => $validated['category_id'] ?? null,
             'category' => $validated['category'] ?? null,
             'description' => $validated['description'] ?? null,
             'base_price' => $validated['base_price'],
             'thumbnail' => $thumbnailPath,
+            'images' => !empty($catalogImages) ? $catalogImages : ($thumbnailPath ? [$thumbnailPath] : []),
             'is_active' => true,
         ]);
 
-        // 2. Custom thumbnail for shop if provided separately
+        // Process custom shop images with Laravel 13 optimization
+        $customImages = [];
+        if ($request->hasFile('custom_images') || $request->has('custom_images')) {
+            $rawCustImages = $request->file('custom_images') ?? $request->input('custom_images');
+            $rawCustArray = is_array($rawCustImages) ? $rawCustImages : [$rawCustImages];
+            $customImages = ImageService::processMultiple($rawCustArray, 'shop-products');
+        }
+
+        // Process custom thumbnail
         $customThumbnailPath = null;
         if ($request->hasFile('custom_thumbnail') || $request->input('custom_thumbnail')) {
-            $customThumbnailPath = $this->handleFileUpload($request->file('custom_thumbnail') ?? $request->input('custom_thumbnail'), 'shop-products');
+            $customThumbnailPath = ImageService::optimizeAndStore(
+                $request->file('custom_thumbnail') ?? $request->input('custom_thumbnail'),
+                'shop-products'
+            );
+        } elseif (!empty($customImages)) {
+            $customThumbnailPath = $customImages[0];
         }
 
         // 3. Automatically add to their own shop
@@ -148,11 +199,12 @@ class CatalogController extends Controller
             'custom_title' => $validated['custom_title'] ?? null,
             'custom_description' => $validated['custom_description'] ?? null,
             'custom_thumbnail' => $customThumbnailPath,
+            'custom_images' => !empty($customImages) ? $customImages : null,
             'stock' => $validated['stock'] ?? 100,
             'is_active' => true,
         ]);
 
-        $shopProduct->load('product');
+        $shopProduct->load(['product.categoryRelation', 'shop']);
 
         return response()->json([
             'message' => 'Product created and added to shared catalog and your shop',
@@ -174,6 +226,7 @@ class CatalogController extends Controller
             'custom_title' => 'nullable|string|max:255',
             'custom_description' => 'nullable|string',
             'custom_thumbnail' => 'nullable',
+            'custom_images' => 'nullable',
             'stock' => 'nullable|integer|min:0',
         ]);
 
@@ -189,9 +242,21 @@ class CatalogController extends Controller
             ], 200);
         }
 
+        $customImages = [];
+        if ($request->hasFile('custom_images') || $request->has('custom_images')) {
+            $rawCustImages = $request->file('custom_images') ?? $request->input('custom_images');
+            $rawCustArray = is_array($rawCustImages) ? $rawCustImages : [$rawCustImages];
+            $customImages = ImageService::processMultiple($rawCustArray, 'shop-products');
+        }
+
         $customThumbnailPath = null;
         if ($request->hasFile('custom_thumbnail') || $request->input('custom_thumbnail')) {
-            $customThumbnailPath = $this->handleFileUpload($request->file('custom_thumbnail') ?? $request->input('custom_thumbnail'), 'shop-products');
+            $customThumbnailPath = ImageService::optimizeAndStore(
+                $request->file('custom_thumbnail') ?? $request->input('custom_thumbnail'),
+                'shop-products'
+            );
+        } elseif (!empty($customImages)) {
+            $customThumbnailPath = $customImages[0];
         }
 
         $shopProduct = ShopProduct::create([
@@ -201,6 +266,7 @@ class CatalogController extends Controller
             'custom_title' => $validated['custom_title'] ?? null,
             'custom_description' => $validated['custom_description'] ?? null,
             'custom_thumbnail' => $customThumbnailPath,
+            'custom_images' => !empty($customImages) ? $customImages : null,
             'stock' => $validated['stock'] ?? 100,
             'is_active' => true,
         ]);

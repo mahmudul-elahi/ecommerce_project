@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { Star, Share2 } from 'lucide-react';
@@ -12,17 +12,32 @@ export default function ProductDetailView({ product, relatedProducts = [] }) {
   const { addToCart } = useCart();
   const router = useRouter();
 
-  const [selectedImg, setSelectedImg] = useState(product.thumbnail || null);
+  // Combine all product images: images array, images_urls, and thumbnail, deduplicated
+  const rawImages = [
+    ...(Array.isArray(product.images) ? product.images : []),
+    ...(Array.isArray(product.images_urls) ? product.images_urls : []),
+    product.thumbnail,
+  ].filter(Boolean);
+
+  const imagesList = Array.from(new Set(rawImages));
+
+  const [selectedImg, setSelectedImg] = useState(
+    imagesList[0] || product.thumbnail || null
+  );
   const [selectedSize, setSelectedSize] = useState('L');
   const [selectedColor, setSelectedColor] = useState('gold');
   const [quantity, setQuantity] = useState(1);
   const [activeTab, setActiveTab] = useState('description');
 
+  useEffect(() => {
+    if (imagesList.length > 0 && (!selectedImg || !imagesList.includes(selectedImg))) {
+      setSelectedImg(imagesList[0]);
+    }
+  }, [product.id, imagesList.join(',')]);
+
   const formatPrice = (val) => {
     return `Rp ${Number(val).toLocaleString('id-ID')}`;
   };
-
-  const thumbnails = [product.thumbnail].filter(Boolean);
 
   const handleAddToCart = () => {
     const shop = {
@@ -36,7 +51,7 @@ export default function ProductDetailView({ product, relatedProducts = [] }) {
       product_id: product.product_id || product.id,
       name: product.name,
       price: product.price,
-      thumbnail: product.thumbnail,
+      thumbnail: selectedImg || product.thumbnail,
       stock: product.stock ?? 10,
     };
 
@@ -72,14 +87,15 @@ export default function ProductDetailView({ product, relatedProducts = [] }) {
         <div className="product-hero-grid">
           {/* Gallery View */}
           <div className="product-gallery-layout">
-            {thumbnails.length > 1 && (
+            {imagesList.length > 0 && (
               <div className="thumb-column">
-                {thumbnails.map((src, i) => (
+                {imagesList.map((src, i) => (
                   <button
                     key={i}
                     type="button"
                     onClick={() => setSelectedImg(src)}
                     className={`gallery-thumb-btn ${selectedImg === src ? 'active' : ''}`}
+                    aria-label={`View image ${i + 1}`}
                   >
                     <img src={src} alt="" className="thumb-img" />
                   </button>
@@ -153,19 +169,20 @@ export default function ProductDetailView({ product, relatedProducts = [] }) {
                     onClick={() => setSelectedColor(c.id)}
                     className={`color-swatch ${selectedColor === c.id ? 'active' : ''}`}
                     style={{ backgroundColor: c.bg }}
-                    aria-label={`Select ${c.id} color`}
+                    aria-label={`Color option ${c.id}`}
                   />
                 ))}
               </div>
             </div>
 
-            {/* Actions Row */}
+            {/* Quantity and Actions */}
             <div className="product-purchase-row">
               <div className="qty-picker">
                 <button
                   type="button"
                   onClick={() => setQuantity((q) => Math.max(1, q - 1))}
                   className="qty-picker-btn"
+                  aria-label="Decrease quantity"
                 >
                   -
                 </button>
@@ -174,6 +191,7 @@ export default function ProductDetailView({ product, relatedProducts = [] }) {
                   type="button"
                   onClick={() => setQuantity((q) => q + 1)}
                   className="qty-picker-btn"
+                  aria-label="Increase quantity"
                 >
                   +
                 </button>
@@ -203,12 +221,12 @@ export default function ProductDetailView({ product, relatedProducts = [] }) {
               <div className="meta-row">
                 <span className="meta-key">SKU</span>
                 <span className="meta-sep">:</span>
-                <span className="meta-val">{product.sku || 'SS001'}</span>
+                <span className="meta-val">{product.sku || 'FUR-001'}</span>
               </div>
               <div className="meta-row">
                 <span className="meta-key">Category</span>
                 <span className="meta-sep">:</span>
-                <span className="meta-val">{product.category || 'Sofas'}</span>
+                <span className="meta-val">{product.category || 'Living'}</span>
               </div>
               <div className="meta-row">
                 <span className="meta-key">Store</span>
@@ -220,7 +238,7 @@ export default function ProductDetailView({ product, relatedProducts = [] }) {
               <div className="meta-row">
                 <span className="meta-key">Tags</span>
                 <span className="meta-sep">:</span>
-                <span className="meta-val">Sofa, Chair, Home, Shop</span>
+                <span className="meta-val">Furniture, Interior, Decor, Shop</span>
               </div>
               <div className="meta-row">
                 <span className="meta-key">Share</span>
@@ -271,20 +289,18 @@ export default function ProductDetailView({ product, relatedProducts = [] }) {
 
           <div className="tab-content-body">
             <p className="tab-para">
-              Embodying the raw, wayward spirit of rock ‘n’ roll, the Kilburn portable active stereo speaker takes the unmistakable look and sound of Marshall, unplugs the chords, and takes the show on the road.
-            </p>
-            <p className="tab-para">
-              Weighing in under 7 pounds, the Kilburn is a lightweight piece of vintage styled engineering. Setting the bar as one of the loudest speakers in its class, the Kilburn is a compact, stout-hearted hero with a well-balanced audio which boasts a clear midrange and extended highs for a sound that is both articulate and pronounced.
+              {product.description || 'Thoughtful interior piece crafted with natural materials and timeless aesthetics for modern spaces.'}
             </p>
 
-            <div className="tab-gallery-duo">
-              <div className="tab-duo-card">
-                <img src="/images/furniro/imgOutdoorSofa.png" alt="" />
+            {imagesList.length > 1 && (
+              <div className="tab-gallery-duo">
+                {imagesList.slice(1, 3).map((imgUrl, idx) => (
+                  <div key={idx} className="tab-duo-card">
+                    <img src={imgUrl} alt={product.name} />
+                  </div>
+                ))}
               </div>
-              <div className="tab-duo-card">
-                <img src="/images/furniro/imgAsgaardSofa.png" alt="" />
-              </div>
-            </div>
+            )}
           </div>
         </div>
       </section>

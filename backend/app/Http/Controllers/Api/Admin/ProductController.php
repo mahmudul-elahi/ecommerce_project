@@ -3,18 +3,17 @@
 namespace App\Http\Controllers\Api\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\Category;
 use App\Models\Product;
-use App\Traits\HandlesFileUploads;
+use App\Services\ImageService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 
 class ProductController extends Controller
 {
-    use HandlesFileUploads;
-
     public function index(Request $request)
     {
-        $query = Product::with('creator')
+        $query = Product::with(['creator', 'categoryRelation'])
             ->withCount('shopProducts as shops_count');
 
         if ($search = $request->query('search')) {
@@ -28,6 +27,10 @@ class ProductController extends Controller
 
         if ($category = $request->query('category')) {
             $query->where('category', $category);
+        }
+
+        if ($categoryId = $request->query('category_id')) {
+            $query->where('category_id', $categoryId);
         }
 
         if ($request->has('is_active') && $request->query('is_active') !== '') {
@@ -44,10 +47,12 @@ class ProductController extends Controller
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'sku' => 'nullable|string|max:100',
+            'category_id' => 'nullable|integer|exists:categories,id',
             'category' => 'nullable|string|max:100',
             'description' => 'nullable|string',
             'base_price' => 'required|numeric|min:0',
             'thumbnail' => 'nullable',
+            'images' => 'nullable',
             'is_active' => 'nullable|boolean',
         ]);
 
@@ -61,12 +66,35 @@ class ProductController extends Controller
         $validated['created_by'] = $request->user()->id;
         $validated['is_active'] = $request->input('is_active', true);
 
+        // Handle category linking
+        if ($request->filled('category_id')) {
+            $cat = Category::find($request->input('category_id'));
+            if ($cat) {
+                $validated['category'] = $cat->name;
+            }
+        } elseif ($request->filled('category')) {
+            $cat = Category::firstOrCreate(['name' => trim($request->input('category'))]);
+            $validated['category_id'] = $cat->id;
+            $validated['category'] = $cat->name;
+        }
+
+        // Handle multiple images with Laravel 13 optimization
+        if ($request->hasFile('images') || $request->has('images')) {
+            $rawImages = $request->file('images') ?? $request->input('images');
+            $rawArray = is_array($rawImages) ? $rawImages : [$rawImages];
+            $validated['images'] = ImageService::processMultiple($rawArray, 'products');
+            if (empty($validated['thumbnail']) && !empty($validated['images'])) {
+                $validated['thumbnail'] = $validated['images'][0];
+            }
+        }
+
+        // Handle single thumbnail with Laravel 13 optimization
         if ($request->hasFile('thumbnail') || $request->input('thumbnail')) {
-            $validated['thumbnail'] = $this->handleFileUpload($request->file('thumbnail') ?? $request->input('thumbnail'), 'products');
+            $validated['thumbnail'] = ImageService::optimizeAndStore($request->file('thumbnail') ?? $request->input('thumbnail'), 'products');
         }
 
         $product = Product::create($validated);
-        $product->load('creator');
+        $product->load(['creator', 'categoryRelation']);
 
         return response()->json([
             'message' => 'Product created in catalog successfully',
@@ -76,7 +104,7 @@ class ProductController extends Controller
 
     public function show($id)
     {
-        $product = Product::with(['creator', 'shops'])
+        $product = Product::with(['creator', 'shops', 'categoryRelation'])
             ->withCount('shopProducts as shops_count')
             ->findOrFail($id);
 
@@ -90,10 +118,12 @@ class ProductController extends Controller
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'sku' => 'nullable|string|max:100',
+            'category_id' => 'nullable|integer|exists:categories,id',
             'category' => 'nullable|string|max:100',
             'description' => 'nullable|string',
             'base_price' => 'required|numeric|min:0',
             'thumbnail' => 'nullable',
+            'images' => 'nullable',
             'is_active' => 'nullable|boolean',
         ]);
 
@@ -107,14 +137,37 @@ class ProductController extends Controller
             $validated['slug'] = $slug;
         }
 
+        // Handle category linking
+        if ($request->filled('category_id')) {
+            $cat = Category::find($request->input('category_id'));
+            if ($cat) {
+                $validated['category'] = $cat->name;
+            }
+        } elseif ($request->filled('category')) {
+            $cat = Category::firstOrCreate(['name' => trim($request->input('category'))]);
+            $validated['category_id'] = $cat->id;
+            $validated['category'] = $cat->name;
+        }
+
+        // Handle multiple images with Laravel 13 optimization
+        if ($request->hasFile('images') || $request->has('images')) {
+            $rawImages = $request->file('images') ?? $request->input('images');
+            $rawArray = is_array($rawImages) ? $rawImages : [$rawImages];
+            $validated['images'] = ImageService::processMultiple($rawArray, 'products');
+            if (empty($validated['thumbnail']) && !empty($validated['images'])) {
+                $validated['thumbnail'] = $validated['images'][0];
+            }
+        }
+
+        // Handle single thumbnail with Laravel 13 optimization
         if ($request->hasFile('thumbnail') || $request->input('thumbnail')) {
-            $validated['thumbnail'] = $this->handleFileUpload($request->file('thumbnail') ?? $request->input('thumbnail'), 'products');
+            $validated['thumbnail'] = ImageService::optimizeAndStore($request->file('thumbnail') ?? $request->input('thumbnail'), 'products');
         } else {
             unset($validated['thumbnail']);
         }
 
         $product->update($validated);
-        $product->load('creator');
+        $product->load(['creator', 'categoryRelation']);
 
         return response()->json([
             'message' => 'Product updated successfully',

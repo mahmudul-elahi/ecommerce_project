@@ -159,3 +159,46 @@ export function useDeleteAdminUserMutation(options = {}) {
     onError: options.onError,
   });
 }
+
+export function useAdminCategoriesQuery() {
+  return useQuery({
+    queryKey: queryKeys.admin.categories,
+    queryFn: () => adminService.getCategories(),
+  });
+}
+
+export function useSaveAdminCategoryMutation(options = {}) {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: ({ id, payload }) => {
+      return id ? adminService.updateCategory(id, payload) : adminService.createCategory(payload);
+    },
+    onSuccess: (data, variables, context) => {
+      queryClient.invalidateQueries({ queryKey: queryKeys.admin.categories });
+      queryClient.invalidateQueries({ queryKey: queryKeys.categories.all });
+      queryClient.invalidateQueries({ queryKey: queryKeys.admin.dashboard });
+      if (options.onSuccess) {
+        options.onSuccess(data, variables, context);
+      }
+    },
+    onError: options.onError,
+  });
+}
+
+export function useDeleteAdminCategoryMutation(options = {}) {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (id) => adminService.deleteCategory(id),
+    onSuccess: (data, variables, context) => {
+      queryClient.invalidateQueries({ queryKey: queryKeys.admin.categories });
+      queryClient.invalidateQueries({ queryKey: queryKeys.categories.all });
+      queryClient.invalidateQueries({ queryKey: queryKeys.admin.dashboard });
+      if (options.onSuccess) {
+        options.onSuccess(data, variables, context);
+      }
+    },
+    onError: options.onError,
+  });
+}

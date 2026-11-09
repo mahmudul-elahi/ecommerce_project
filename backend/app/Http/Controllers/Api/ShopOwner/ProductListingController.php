@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api\ShopOwner;
 use App\Http\Controllers\Controller;
 use App\Models\Shop;
 use App\Models\ShopProduct;
+use App\Services\ImageService;
 use App\Traits\HandlesFileUploads;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
@@ -40,7 +41,7 @@ class ProductListingController extends Controller
     {
         $shop = $this->getAuthenticatedShop($request);
 
-        $query = ShopProduct::with('product.creator')
+        $query = ShopProduct::with(['product.creator', 'product.categoryRelation'])
             ->where('shop_id', $shop->id);
 
         if ($search = $request->query('search')) {
@@ -68,7 +69,7 @@ class ProductListingController extends Controller
     {
         $shop = $this->getAuthenticatedShop($request);
 
-        $listing = ShopProduct::with('product.creator')
+        $listing = ShopProduct::with(['product.creator', 'product.categoryRelation'])
             ->where('shop_id', $shop->id)
             ->findOrFail($id);
 
@@ -88,6 +89,7 @@ class ProductListingController extends Controller
                 'custom_title' => null,
                 'custom_description' => null,
                 'custom_thumbnail' => null,
+                'custom_images' => null,
             ]);
             $listing->load('product');
 
@@ -102,7 +104,9 @@ class ProductListingController extends Controller
             'custom_title' => 'nullable|string|max:255',
             'custom_description' => 'nullable|string',
             'custom_thumbnail' => 'nullable',
+            'custom_images' => 'nullable',
             'clear_custom_thumbnail' => 'nullable|boolean',
+            'clear_custom_images' => 'nullable|boolean',
             'stock' => 'nullable|integer|min:0',
             'is_active' => 'nullable|boolean',
         ]);
@@ -126,10 +130,18 @@ class ProductListingController extends Controller
         if ($request->boolean('clear_custom_thumbnail')) {
             $updateData['custom_thumbnail'] = null;
         } elseif ($request->hasFile('custom_thumbnail') || $request->input('custom_thumbnail')) {
-            $updateData['custom_thumbnail'] = $this->handleFileUpload(
+            $updateData['custom_thumbnail'] = ImageService::optimizeAndStore(
                 $request->file('custom_thumbnail') ?? $request->input('custom_thumbnail'),
                 'shop-products'
             );
+        }
+
+        if ($request->boolean('clear_custom_images')) {
+            $updateData['custom_images'] = null;
+        } elseif ($request->hasFile('custom_images') || $request->has('custom_images')) {
+            $rawCustImages = $request->file('custom_images') ?? $request->input('custom_images');
+            $rawCustArray = is_array($rawCustImages) ? $rawCustImages : [$rawCustImages];
+            $updateData['custom_images'] = ImageService::processMultiple($rawCustArray, 'shop-products');
         }
 
         if (array_key_exists('stock', $validated)) {

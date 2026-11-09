@@ -21,6 +21,43 @@
     -webkit-appearance: none;
     margin: 0;
   }
+
+  /* Universal click / focus outline & border ring suppression */
+  *, *::before, *::after {
+    outline: none !important;
+  }
+
+  *:focus,
+  *:focus-visible,
+  *:focus-within,
+  *:active {
+    outline: none !important;
+    box-shadow: none !important;
+    -webkit-tap-highlight-color: transparent !important;
+  }
+
+  input, select, textarea, button, [role="button"], a {
+    -webkit-tap-highlight-color: transparent !important;
+  }
+
+  input:focus,
+  input:focus-visible,
+  input:active,
+  select:focus,
+  select:focus-visible,
+  select:active,
+  textarea:focus,
+  textarea:focus-visible,
+  textarea:active,
+  button:focus,
+  button:focus-visible,
+  button:active {
+    outline: none !important;
+    box-shadow: none !important;
+    --tw-ring-color: transparent !important;
+    --tw-ring-offset-shadow: 0 0 #0000 !important;
+    --tw-ring-shadow: 0 0 #0000 !important;
+  }
 }
 
 ::-webkit-scrollbar {
@@ -46,7 +83,6 @@
 .furniro-home, .storefront-header, .storefront-footer { font-family: var(--font-storefront), sans-serif; color: var(--store-ink); background: white; }
 .furniro-home h1, .furniro-home h2, .furniro-home h3 { color: inherit; }
 .furniro-home a, .furniro-home button, .storefront-header a, .storefront-header button { -webkit-tap-highlight-color: transparent; }
-.furniro-home :focus-visible, .storefront-header :focus-visible, .storefront-footer :focus-visible { outline: 3px solid var(--store-gold); outline-offset: 5px; }
 .furniro-home section[id], #shop-search { scroll-margin-top: 24px; }
 .storefront-header { min-height: 100px; padding: 24px clamp(24px, 3.75vw, 70px); display: flex; align-items: center; justify-content: space-between; gap: 30px; position: relative; z-index: 40; }
 .storefront-logo { display: flex; align-items: center; gap: 5px; font-size: 32px; font-weight: 700; letter-spacing: -1.2px; color: #000; }
@@ -456,8 +492,8 @@
 .form-row-dual { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
 .form-field { margin-bottom: 24px; }
 .form-field label { display: block; font-size: 16px; font-weight: 500; color: black; margin-bottom: 12px; }
-.furniro-input, .furniro-select, .furniro-textarea { width: 100%; border: 1px solid #9f9f9f; border-radius: 10px; padding: 16px 20px; font-size: 16px; color: black; background: white; outline: none; transition: border-color 0.2s; }
-.furniro-input:focus, .furniro-select:focus, .furniro-textarea:focus { border-color: var(--store-gold); }
+.furniro-input, .furniro-select, .furniro-textarea { width: 100%; border: 1px solid #9f9f9f; border-radius: 10px; padding: 16px 20px; font-size: 16px; color: black; background: white; outline: none; transition: none; }
+.furniro-input:focus, .furniro-select:focus, .furniro-textarea:focus { border-color: #9f9f9f; outline: none !important; box-shadow: none !important; }
 .checkout-summary-column { padding-top: 10px; }
 .order-summary-box { padding: 20px; }
 .summary-header-row { display: flex; align-items: center; justify-content: space-between; font-size: 24px; font-weight: 500; color: black; padding-bottom: 16px; }

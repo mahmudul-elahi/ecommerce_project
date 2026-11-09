@@ -37,6 +37,14 @@ export const shopOwnerService = {
    * Update customizations for a shop listing
    */
   async updateProduct(id, payload) {
+    const isFormData = payload instanceof FormData;
+    if (isFormData) {
+      payload.append('_method', 'PUT');
+      const res = await api.post(`/shop-owner/products/${id}`, payload, {
+        headers: { 'Content-Type': 'multipart/form-data' },
+      });
+      return res.data;
+    }
     const res = await api.put(`/shop-owner/products/${id}`, payload);
     return res.data;
   },

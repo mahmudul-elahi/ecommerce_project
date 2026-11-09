@@ -20,8 +20,12 @@ import {
   AlertCircle,
   HelpCircle,
   CheckCircle2,
+  Upload,
+  X,
+  Image as ImageIcon,
 } from 'lucide-react';
 import { useDebounce } from '../../../hooks/useDebounce';
+import { useCategoriesQuery } from '../../../hooks/useShops';
 import {
   useCatalogQuery,
   useAddToShopMutation,
@@ -42,7 +46,8 @@ const addToShopSchema = z.object({
 const createSharedProductSchema = z.object({
   name: z.string().min(2, 'Product name is required'),
   sku: z.string().min(2, 'SKU is required'),
-  category: z.string().min(1, 'Category is required'),
+  category_id: z.string().optional(),
+  category: z.string().optional(),
   base_price: z.string().min(1, 'Wholesale / base price is required'),
   thumbnail: z.string().optional(),
   description: z.string().optional(),
@@ -55,6 +60,13 @@ export default function CatalogBrowsePage() {
   const [category, setCategory] = useState('');
   const [statusFilter, setStatusFilter] = useState('');
   const debouncedSearch = useDebounce(search, 250);
+
+  // Dynamic Categories from database
+  const { data: dbCategories = [] } = useCategoriesQuery();
+
+  // Multiple Images State for Creation
+  const [createImageFiles, setCreateImageFiles] = useState([]);
+  const [createImagePreviews, setCreateImagePreviews] = useState([]);
 
   // Modals
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
@@ -127,8 +139,10 @@ export default function CatalogBrowsePage() {
     onSuccess: (res) => {
       setIsCreateModalOpen(false);
       resetCreate();
+      setCreateImageFiles([]);
+      setCreateImagePreviews([]);
       toast.success('Shared Product Created Successfully!', {
-        description: `Created "${res.product?.name}" in shared catalog and added to your shop.`,
+        description: `Created "${res.product?.name}" with optimized images in shared catalog and added to your shop.`,
       });
     },
     onError: (err) => {
@@ -137,6 +151,40 @@ export default function CatalogBrowsePage() {
       });
     },
   });
+
+  const handleOpenCreateModal = () => {
+    resetCreate({
+      name: '',
+      sku: '',
+      category_id: dbCategories[0]?.id ? String(dbCategories[0].id) : '',
+      category: dbCategories[0]?.name || '',
+      base_price: '',
+      custom_price: '',
+      stock: 100,
+      description: '',
+    });
+    setCreateImageFiles([]);
+    setCreateImagePreviews([]);
+    setIsCreateModalOpen(true);
+  };
+
+  const handleCreateFilesSelect = (e) => {
+    const files = Array.from(e.target.files || []);
+    if (!files.length) return;
+    setCreateImageFiles((prev) => [...prev, ...files]);
+    files.forEach((file) => {
+      const reader = new FileReader();
+      reader.onload = () => {
+        setCreateImagePreviews((prev) => [...prev, reader.result]);
+      };
+      reader.readAsDataURL(file);
+    });
+  };
+
+  const removeCreateFile = (index) => {
+    setCreateImageFiles((prev) => prev.filter((_, i) => i !== index));
+    setCreateImagePreviews((prev) => prev.filter((_, i) => i !== index));
+  };
 
   const handleOpenAddModal = (product) => {
     setProductToAdd(product);
@@ -156,7 +204,21 @@ export default function CatalogBrowsePage() {
   };
 
   const onCreateSubmit = (data) => {
-    createSharedProductMutation.mutate(data);
+    const formData = new FormData();
+    formData.append('name', data.name);
+    formData.append('sku', data.sku);
+    if (data.category_id) formData.append('category_id', data.category_id);
+    if (data.category) formData.append('category', data.category);
+    formData.append('base_price', data.base_price);
+    if (data.custom_price) formData.append('custom_price', data.custom_price);
+    formData.append('stock', data.stock);
+    if (data.description) formData.append('description', data.description);
+
+    createImageFiles.forEach((file) => {
+      formData.append('images[]', file);
+    });
+
+    createSharedProductMutation.mutate(formData);
   };
 
   const categories = Array.from(
@@ -189,10 +251,7 @@ export default function CatalogBrowsePage() {
             <span>Manage My Listings</span>
           </Link>
           <button
-            onClick={() => {
-              resetCreate();
-              setIsCreateModalOpen(true);
-            }}
+            onClick={handleOpenCreateModal}
             className="px-4 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-slate-50 text-xs font-semibold transition-colors shadow-xs flex items-center space-x-1.5"
           >
             <Plus className="w-4 h-4" />
@@ -535,33 +594,33 @@ export default function CatalogBrowsePage() {
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
               <label className="block text-xs font-semibold text-slate-700 mb-1">
-                Category <span className="text-rose-500">*</span>
+                Category (from Database Categories) <span className="text-rose-500">*</span>
               </label>
-              <input
-                type="text"
-                {...registerCreate('category')}
-                placeholder="e.g. Home & Living"
-                className={`w-full px-3 py-2 text-xs bg-white rounded-xl border ${
-                  errorsCreate.category ? 'border-rose-400' : 'border-slate-200'
-                } focus:outline-none focus:ring-1 focus:ring-blue-500`}
-              />
-              {errorsCreate.category && (
-                <span className="text-[10px] text-rose-500 mt-1 block">{errorsCreate.category.message}</span>
-              )}
+              <select
+                {...registerCreate('category_id')}
+                className="w-full px-3 py-2 text-xs bg-white rounded-xl border border-slate-200"
+              >
+                <option value="">-- Select Category --</option>
+                {dbCategories.map((c) => (
+                  <option key={c.id} value={c.id}>
+                    {c.name}
+                  </option>
+                ))}
+              </select>
             </div>
 
             <div>
               <label className="block text-xs font-semibold text-slate-700 mb-1">
-                Universal Base Price ($) <span className="text-rose-500">*</span>
+                Base Price (Rp) <span className="text-rose-500">*</span>
               </label>
               <input
                 type="number"
-                step="0.01"
+                min="0"
                 {...registerCreate('base_price')}
-                placeholder="25.00"
+                placeholder="2500000"
                 className={`w-full px-3 py-2 text-xs bg-white rounded-xl border ${
                   errorsCreate.base_price ? 'border-rose-400' : 'border-slate-200'
-                } focus:outline-none focus:ring-1 focus:ring-blue-500`}
+                }`}
               />
               {errorsCreate.base_price && (
                 <span className="text-[10px] text-rose-500 mt-1 block">{errorsCreate.base_price.message}</span>
@@ -572,14 +631,14 @@ export default function CatalogBrowsePage() {
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
               <label className="block text-xs font-semibold text-slate-700 mb-1">
-                Your Storefront Retail Price ($)
+                Your Storefront Retail Price (Rp)
               </label>
               <input
                 type="number"
-                step="0.01"
+                min="0"
                 {...registerCreate('custom_price')}
                 placeholder="Optional (defaults to base price)"
-                className="w-full px-3 py-2 text-xs bg-white rounded-xl border border-slate-200 focus:outline-none focus:ring-1 focus:ring-blue-500"
+                className="w-full px-3 py-2 text-xs bg-white rounded-xl border border-slate-200"
               />
             </div>
 
@@ -590,21 +649,56 @@ export default function CatalogBrowsePage() {
               <input
                 type="number"
                 {...registerCreate('stock')}
-                className="w-full px-3 py-2 text-xs bg-white rounded-xl border border-slate-200 focus:outline-none focus:ring-1 focus:ring-blue-500"
+                className="w-full px-3 py-2 text-xs bg-white rounded-xl border border-slate-200"
               />
             </div>
           </div>
 
+          {/* Multiple Product Images Upload with Laravel 13 optimization */}
           <div>
-            <label className="block text-xs font-semibold text-slate-700 mb-1">
-              Thumbnail Image URL
+            <div className="flex items-center justify-between mb-1">
+              <label className="block text-xs font-semibold text-slate-700">
+                Product Images (Multiple angles/shots - optimized to WebP)
+              </label>
+              <span className="text-[11px] text-slate-400">
+                {createImageFiles.length} image(s) selected
+              </span>
+            </div>
+
+            {createImagePreviews.length > 0 && (
+              <div className="flex flex-wrap gap-2.5 mb-2.5 p-2 bg-slate-50 rounded-xl border border-slate-200">
+                {createImagePreviews.map((src, idx) => (
+                  <div key={idx} className="relative w-16 h-16 rounded-lg overflow-hidden border border-slate-200 bg-white">
+                    <img src={src} alt="" className="w-full h-full object-cover" />
+                    {idx === 0 && (
+                      <span className="absolute bottom-0 left-0 right-0 bg-[#B88E2F] text-white text-[8px] text-center font-bold">
+                        MAIN
+                      </span>
+                    )}
+                    <button
+                      type="button"
+                      onClick={() => removeCreateFile(idx)}
+                      className="absolute top-0.5 right-0.5 bg-rose-600 text-white rounded-full p-0.5 opacity-90 hover:opacity-100"
+                    >
+                      <X className="w-3 h-3" />
+                    </button>
+                  </div>
+                ))}
+              </div>
+            )}
+
+            <label className="border-2 border-dashed border-slate-300 hover:border-blue-500 rounded-xl p-4 flex flex-col items-center justify-center cursor-pointer transition-colors bg-slate-50">
+              <Upload className="w-5 h-5 text-slate-400 mb-1" />
+              <span className="text-xs font-semibold text-slate-700">Click to select product images</span>
+              <span className="text-[10px] text-slate-400 mt-0.5">PNG, JPG, WebP. Laravel 13 automatically optimizes each photo.</span>
+              <input
+                type="file"
+                multiple
+                accept="image/*"
+                onChange={handleCreateFilesSelect}
+                className="hidden"
+              />
             </label>
-            <input
-              type="url"
-              {...registerCreate('thumbnail')}
-              placeholder="https://images.unsplash.com/photo-..."
-              className="w-full px-3 py-2 text-xs bg-white rounded-xl border border-slate-200 focus:outline-none focus:ring-1 focus:ring-blue-500"
-            />
           </div>
 
           <div>
@@ -615,7 +709,7 @@ export default function CatalogBrowsePage() {
               rows={3}
               {...registerCreate('description')}
               placeholder="Detailed description for the shared catalog..."
-              className="w-full px-3 py-2 text-xs bg-white rounded-xl border border-slate-200 focus:outline-none focus:ring-1 focus:ring-blue-500"
+              className="w-full px-3 py-2 text-xs bg-white rounded-xl border border-slate-200"
             />
           </div>
 

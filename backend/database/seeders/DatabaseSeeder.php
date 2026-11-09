@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\Category;
 use App\Models\Order;
 use App\Models\OrderItem;
 use App\Models\Product;
@@ -16,7 +17,7 @@ class DatabaseSeeder extends Seeder
 {
     /**
      * Seed the application's database.
-     * Clean, authentic Furniro products and merchants — zero dummy gadget data.
+     * Clean, authentic Furniro products and merchants with dynamic categories and multiple product images.
      */
     public function run(): void
     {
@@ -78,7 +79,38 @@ class DatabaseSeeder extends Seeder
             'status' => 'active',
         ]);
 
-        // 6. Create Real Furniro Signature Collection (from Figma UI Kit)
+        // 6. Create Dynamic Categories Table Records (Figma Browse The Range)
+        $categoriesData = [
+            [
+                'name' => 'Dining',
+                'slug' => 'dining',
+                'description' => 'Curated dining tables, artisanal chairs, and dining sets.',
+                'image' => '/images/furniro/imgImage106.png',
+                'is_active' => true,
+            ],
+            [
+                'name' => 'Living',
+                'slug' => 'living',
+                'description' => 'Handcrafted sofas, lounge chairs, and cozy living essentials.',
+                'image' => '/images/furniro/imgImage100.png',
+                'is_active' => true,
+            ],
+            [
+                'name' => 'Bedroom',
+                'slug' => 'bedroom',
+                'description' => 'Peaceful bed sets, ambient night lamps, and bedroom storage.',
+                'image' => '/images/furniro/imgImage101.png',
+                'is_active' => true,
+            ],
+        ];
+
+        $categoriesMap = [];
+        foreach ($categoriesData as $c) {
+            $cat = Category::create($c);
+            $categoriesMap[$c['name']] = $cat;
+        }
+
+        // 7. Create Real Furniro Signature Collection with Multiple Product Images
         $furniroCatalog = [
             [
                 'name' => 'Syltherine',
@@ -88,6 +120,12 @@ class DatabaseSeeder extends Seeder
                 'base_price' => 3500000,
                 'custom_price' => 2500000, // -30%
                 'thumbnail' => '/images/furniro/imgSyltherine.png',
+                'images' => [
+                    '/images/furniro/imgSyltherine.png',
+                    '/images/furniro/imgLeviosa.png',
+                    '/images/furniro/imgOutdoorSofa.png',
+                    '/images/furniro/imgAsgaardSofa.png',
+                ],
                 'stock' => 35,
             ],
             [
@@ -98,6 +136,12 @@ class DatabaseSeeder extends Seeder
                 'base_price' => 2500000,
                 'custom_price' => null,
                 'thumbnail' => '/images/furniro/imgLeviosa.png',
+                'images' => [
+                    '/images/furniro/imgLeviosa.png',
+                    '/images/furniro/imgSyltherine.png',
+                    '/images/furniro/imgLolito.png',
+                    '/images/furniro/imgOutdoorSofa.png',
+                ],
                 'stock' => 50,
             ],
             [
@@ -108,6 +152,11 @@ class DatabaseSeeder extends Seeder
                 'base_price' => 14000000,
                 'custom_price' => 7000000, // -50%
                 'thumbnail' => '/images/furniro/imgLolito.png',
+                'images' => [
+                    '/images/furniro/imgLolito.png',
+                    '/images/furniro/imgAsgaardSofa.png',
+                    '/images/furniro/imgOutdoorSofa.png',
+                ],
                 'stock' => 12,
             ],
             [
@@ -118,6 +167,11 @@ class DatabaseSeeder extends Seeder
                 'base_price' => 500000,
                 'custom_price' => null,
                 'thumbnail' => '/images/furniro/imgRespira.png',
+                'images' => [
+                    '/images/furniro/imgRespira.png',
+                    '/images/furniro/imgSyltherine.png',
+                    '/images/furniro/imgMuggo.png',
+                ],
                 'stock' => 45,
             ],
             [
@@ -128,6 +182,10 @@ class DatabaseSeeder extends Seeder
                 'base_price' => 1500000,
                 'custom_price' => null,
                 'thumbnail' => '/images/furniro/imgGrifo.png',
+                'images' => [
+                    '/images/furniro/imgGrifo.png',
+                    '/images/furniro/imgPotty.png',
+                ],
                 'stock' => 60,
             ],
             [
@@ -138,6 +196,10 @@ class DatabaseSeeder extends Seeder
                 'base_price' => 150000,
                 'custom_price' => null,
                 'thumbnail' => '/images/furniro/imgMuggo.png',
+                'images' => [
+                    '/images/furniro/imgMuggo.png',
+                    '/images/furniro/imgImage106.png',
+                ],
                 'stock' => 150,
             ],
             [
@@ -148,6 +210,11 @@ class DatabaseSeeder extends Seeder
                 'base_price' => 14000000,
                 'custom_price' => 7000000, // -50%
                 'thumbnail' => '/images/furniro/imgPingky.png',
+                'images' => [
+                    '/images/furniro/imgPingky.png',
+                    '/images/furniro/imgRectangle24.png',
+                    '/images/furniro/imgImage101.png',
+                ],
                 'stock' => 18,
             ],
             [
@@ -158,20 +225,28 @@ class DatabaseSeeder extends Seeder
                 'base_price' => 500000,
                 'custom_price' => null,
                 'thumbnail' => '/images/furniro/imgPotty.png',
+                'images' => [
+                    '/images/furniro/imgPotty.png',
+                    '/images/furniro/imgGrifo.png',
+                ],
                 'stock' => 80,
             ],
         ];
 
         foreach ($furniroCatalog as $item) {
+            $cat = $categoriesMap[$item['category']] ?? null;
+
             $product = Product::create([
                 'created_by' => $furniroOwner->id,
                 'name' => $item['name'],
                 'slug' => Str::slug($item['name']),
                 'sku' => $item['sku'],
+                'category_id' => $cat ? $cat->id : null,
                 'category' => $item['category'],
                 'description' => $item['description'],
                 'base_price' => $item['base_price'],
                 'thumbnail' => $item['thumbnail'],
+                'images' => $item['images'],
                 'is_active' => true,
             ]);
 
@@ -183,12 +258,13 @@ class DatabaseSeeder extends Seeder
                 'custom_title' => $item['name'],
                 'custom_description' => $item['description'],
                 'custom_thumbnail' => $item['thumbnail'],
+                'custom_images' => $item['images'],
                 'stock' => $item['stock'],
                 'is_active' => true,
             ]);
         }
 
-        // 7. Assign a shared catalog item to Partner Store to demonstrate multi-tenant listing customization
+        // 8. Assign a shared catalog item to Partner Store to demonstrate multi-tenant listing customization
         $sharedSyltherine = Product::where('sku', 'FUR-SYL-001')->first();
         ShopProduct::create([
             'shop_id' => $partnerShop->id,
@@ -197,21 +273,24 @@ class DatabaseSeeder extends Seeder
             'custom_title' => 'Artisan Living Syltherine Cafe Chair',
             'custom_description' => 'Specially selected natural oak edition curated for Artisan Living.',
             'custom_thumbnail' => $sharedSyltherine->thumbnail,
+            'custom_images' => $sharedSyltherine->images,
             'stock' => 20,
             'is_active' => true,
         ]);
 
-        // 8. Unassigned Catalog Product (Strictly unassigned to verify requirement:
+        // 9. Unassigned Catalog Product (Strictly unassigned to verify requirement:
         // "Products that are not assigned to any shop must not be visible to customers.")
         Product::create([
             'created_by' => $admin->id,
             'name' => 'Confidential Artisan Prototype Drafting Table',
             'slug' => 'confidential-artisan-prototype-drafting-table',
             'sku' => 'CAT-UNASSIGNED-999',
+            'category_id' => null,
             'category' => 'Prototypes',
             'description' => 'Internal studio prototype. Strictly unassigned to test that customers never see unassigned catalog products!',
             'base_price' => 9999999,
             'thumbnail' => '/images/furniro/imgSyltherine.png',
+            'images' => ['/images/furniro/imgSyltherine.png'],
             'is_active' => true,
         ]);
     }

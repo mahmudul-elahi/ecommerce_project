@@ -21,6 +21,7 @@ class ShopProduct extends Model
         'custom_title',
         'custom_description',
         'custom_thumbnail',
+        'custom_images',
         'stock',
         'is_active',
     ];
@@ -30,6 +31,7 @@ class ShopProduct extends Model
         'effective_title',
         'effective_description',
         'effective_thumbnail_url',
+        'effective_images_urls',
         'is_customized',
     ];
 
@@ -42,6 +44,7 @@ class ShopProduct extends Model
     {
         return [
             'custom_price' => 'decimal:2',
+            'custom_images' => 'array',
             'stock' => 'integer',
             'is_active' => 'boolean',
         ];
@@ -100,7 +103,14 @@ class ShopProduct extends Model
     {
         return Attribute::make(
             get: function (): ?string {
-                $raw = $this->custom_thumbnail ?: ($this->product ? $this->product->thumbnail : null);
+                $raw = $this->custom_thumbnail;
+                if (!$raw && !empty($this->custom_images) && is_array($this->custom_images)) {
+                    $raw = $this->custom_images[0] ?? null;
+                }
+                if (!$raw) {
+                    $raw = $this->product ? $this->product->thumbnail_url : null;
+                }
+
                 if (! $raw) {
                     return null;
                 }
@@ -116,6 +126,27 @@ class ShopProduct extends Model
         );
     }
 
+    protected function effectiveImagesUrls(): Attribute
+    {
+        return Attribute::make(
+            get: function (): array {
+                if (is_array($this->custom_images) && !empty($this->custom_images)) {
+                    return array_map(function ($img) {
+                        if (str_starts_with($img, '/') || str_starts_with($img, 'images/')) {
+                            return $img;
+                        }
+                        if (filter_var($img, FILTER_VALIDATE_URL)) {
+                            return $img;
+                        }
+                        return Storage::disk('public')->url($img);
+                    }, $this->custom_images);
+                }
+
+                return $this->product ? $this->product->images_urls : [];
+            }
+        );
+    }
+
     protected function isCustomized(): Attribute
     {
         return Attribute::make(
@@ -123,7 +154,8 @@ class ShopProduct extends Model
                 return $this->custom_price !== null
                     || ! empty($this->custom_title)
                     || ! empty($this->custom_description)
-                    || ! empty($this->custom_thumbnail);
+                    || ! empty($this->custom_thumbnail)
+                    || ! empty($this->custom_images);
             }
         );
     }

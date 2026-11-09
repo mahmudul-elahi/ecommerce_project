@@ -33,6 +33,7 @@ export const queryKeys = {
     shops: (search) => ['admin-shops', { search: search || '' }],
     owners: ['admin-owners'],
     products: (filters = {}) => ['admin-products', filters],
+    categories: ['admin-categories'],
     users: (search) => ['admin-users', { search: search || '' }],
   },
 };

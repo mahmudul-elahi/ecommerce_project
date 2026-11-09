@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
+import Link from 'next/link';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
@@ -17,11 +18,16 @@ import {
   Check,
   CheckCircle2,
   ShieldCheck,
+  FolderTree,
+  Upload,
+  X,
+  Image as ImageIcon,
 } from 'lucide-react';
 import Modal from '../../../components/common/Modal';
 import { useDebounce } from '../../../hooks/useDebounce';
 import {
   useAdminProductsQuery,
+  useAdminCategoriesQuery,
   useSaveAdminProductMutation,
   useDeleteAdminProductMutation,
 } from '../../../hooks/useAdmin';
@@ -29,27 +35,35 @@ import {
 const adminProductSchema = z.object({
   name: z.string().min(2, 'Product name is required'),
   sku: z.string().optional(),
+  category_id: z.string().optional(),
   category: z.string().optional(),
   description: z.string().optional(),
   base_price: z.string().min(1, 'Base price is required'),
-  thumbnail: z.string().optional(),
   is_active: z.boolean().default(true),
 });
 
 export default function ProductManagementPage() {
   const [search, setSearch] = useState('');
-  const [category, setCategory] = useState('');
+  const [selectedCategory, setSelectedCategory] = useState('');
   const debouncedSearch = useDebounce(search, 250);
 
   // Modal
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingProduct, setEditingProduct] = useState(null);
 
-  // TanStack React Query via custom hook
+  // Multiple Images State
+  const [existingImages, setExistingImages] = useState([]);
+  const [newImageFiles, setNewImageFiles] = useState([]);
+  const [newImagePreviews, setNewImagePreviews] = useState([]);
+
+  // Dynamic Categories from database
+  const { data: dbCategories = [] } = useAdminCategoriesQuery();
+
+  // Products Query
   const {
     data: products = [],
     isLoading,
-  } = useAdminProductsQuery({ search: debouncedSearch, category });
+  } = useAdminProductsQuery({ search: debouncedSearch, category: selectedCategory });
 
   // React Hook Form
   const {
@@ -62,21 +76,23 @@ export default function ProductManagementPage() {
     defaultValues: {
       name: '',
       sku: '',
+      category_id: '',
       category: '',
       description: '',
       base_price: '',
-      thumbnail: '',
       is_active: true,
     },
   });
 
-  // Save Mutation via custom hook
+  // Save Mutation
   const saveMutation = useSaveAdminProductMutation({
     onSuccess: (_, vars) => {
       toast.success(vars.id ? 'Product Updated' : 'Product Added to Shared Catalog', {
-        description: 'Changes are immediately synchronized across all store frontends.',
+        description: 'Changes with optimized images are immediately synchronized across all stores.',
       });
       setIsModalOpen(false);
+      setNewImageFiles([]);
+      setNewImagePreviews([]);
     },
     onError: (err) => {
       console.error(err);
@@ -86,7 +102,7 @@ export default function ProductManagementPage() {
     },
   });
 
-  // Delete Mutation via custom hook
+  // Delete Mutation
   const deleteMutation = useDeleteAdminProductMutation({
     onSuccess: () => {
       toast.success('Catalog Product Deleted', {
@@ -103,13 +119,16 @@ export default function ProductManagementPage() {
 
   const handleOpenCreateModal = () => {
     setEditingProduct(null);
+    setExistingImages([]);
+    setNewImageFiles([]);
+    setNewImagePreviews([]);
     reset({
       name: '',
       sku: '',
+      category_id: dbCategories[0]?.id ? String(dbCategories[0].id) : '',
       category: '',
       description: '',
       base_price: '',
-      thumbnail: '',
       is_active: true,
     });
     setIsModalOpen(true);
@@ -117,35 +136,105 @@ export default function ProductManagementPage() {
 
   const handleOpenEditModal = (prod) => {
     setEditingProduct(prod);
+    const prodImages = Array.isArray(prod.images) ? prod.images : (prod.images_urls || [prod.thumbnail_url].filter(Boolean));
+    setExistingImages(prodImages);
+    setNewImageFiles([]);
+    setNewImagePreviews([]);
     reset({
       name: prod.name || '',
       sku: prod.sku || '',
+      category_id: prod.category_id ? String(prod.category_id) : '',
       category: prod.category || '',
       description: prod.description || '',
       base_price: String(prod.base_price || ''),
-      thumbnail: prod.thumbnail_url || '',
       is_active: prod.is_active ?? true,
     });
     setIsModalOpen(true);
   };
 
-  const onFormSubmit = (data) => {
-    const payload = {
-      name: data.name,
-      sku: data.sku || null,
-      category: data.category || null,
-      description: data.description || null,
-      thumbnail: data.thumbnail || null,
-      base_price: parseFloat(data.base_price),
-      is_active: data.is_active,
-    };
-    saveMutation.mutate({ id: editingProduct?.id, payload });
+  const handleFilesSelect = (e) => {
+    const files = Array.from(e.target.files || []);
+    if (!files.length) return;
+
+    setNewImageFiles((prev) => [...prev, ...files]);
+
+    files.forEach((file) => {
+      const reader = new FileReader();
+      reader.onload = () => {
+        setNewImagePreviews((prev) => [...prev, reader.result]);
+      };
+      reader.readAsDataURL(file);
+    });
   };
 
-  const categories = Array.from(new Set(products.map((p) => p.category).filter(Boolean)));
+  const removeExistingImage = (index) => {
+    setExistingImages((prev) => prev.filter((_, i) => i !== index));
+  };
+
+  const removeNewFile = (index) => {
+    setNewImageFiles((prev) => prev.filter((_, i) => i !== index));
+    setNewImagePreviews((prev) => prev.filter((_, i) => i !== index));
+  };
+
+  const onFormSubmit = (data) => {
+    const formData = new FormData();
+    formData.append('name', data.name);
+    if (data.sku) formData.append('sku', data.sku);
+    if (data.category_id) formData.append('category_id', data.category_id);
+    if (data.category) formData.append('category', data.category);
+    if (data.description) formData.append('description', data.description);
+    formData.append('base_price', data.base_price);
+    formData.append('is_active', data.is_active ? '1' : '0');
+
+    // Existing images to keep
+    existingImages.forEach((img) => {
+      formData.append('images[]', img);
+    });
+
+    // New image files to optimize via Laravel 13 Image facade
+    newImageFiles.forEach((file) => {
+      formData.append('images[]', file);
+    });
+
+    saveMutation.mutate({ id: editingProduct?.id, payload: formData });
+  };
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 bg-slate-50">
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 bg-slate-50 min-h-screen">
+      {/* Admin Navigation Bar */}
+      <div className="flex flex-wrap items-center gap-3 mb-6 pb-4 border-b border-slate-200">
+        <Link
+          href="/admin/dashboard"
+          className="px-3 py-1.5 rounded-lg text-xs font-semibold text-slate-600 hover:text-slate-900 hover:bg-slate-100"
+        >
+          Dashboard
+        </Link>
+        <Link
+          href="/admin/products"
+          className="px-3 py-1.5 rounded-lg text-xs font-semibold bg-blue-50 text-blue-700 border border-blue-100"
+        >
+          Products
+        </Link>
+        <Link
+          href="/admin/categories"
+          className="px-3 py-1.5 rounded-lg text-xs font-semibold text-slate-600 hover:text-slate-900 hover:bg-slate-100"
+        >
+          Categories (Dynamic)
+        </Link>
+        <Link
+          href="/admin/shops"
+          className="px-3 py-1.5 rounded-lg text-xs font-semibold text-slate-600 hover:text-slate-900 hover:bg-slate-100"
+        >
+          Shops
+        </Link>
+        <Link
+          href="/admin/users"
+          className="px-3 py-1.5 rounded-lg text-xs font-semibold text-slate-600 hover:text-slate-900 hover:bg-slate-100"
+        >
+          Users
+        </Link>
+      </div>
+
       {/* Title & Actions */}
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 pb-6 border-b border-slate-200 mb-6">
         <div>
@@ -155,7 +244,7 @@ export default function ProductManagementPage() {
           </div>
           <h1 className="text-xl font-bold text-slate-900 tracking-tight">Global Catalog Registry</h1>
           <p className="text-xs text-slate-500 mt-0.5">
-            Centralized master product list available to all connected storefronts.
+            Centralized master product list with multiple images and dynamic category relationships.
           </p>
         </div>
 
@@ -178,24 +267,22 @@ export default function ProductManagementPage() {
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               placeholder="Search catalog by title, SKU, or category..."
-              className="w-full pl-9 pr-3 py-1.5 text-xs bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-blue-500 focus:bg-white text-slate-900"
+              className="w-full pl-9 pr-3 py-1.5 text-xs bg-slate-50 border border-slate-200 rounded-lg text-slate-900"
             />
           </div>
 
-          {categories.length > 0 && (
-            <select
-              value={category}
-              onChange={(e) => setCategory(e.target.value)}
-              className="px-2.5 py-1.5 text-xs bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-blue-500 text-slate-700"
-            >
-              <option value="">All Categories</option>
-              {categories.map((c) => (
-                <option key={c} value={c}>
-                  {c}
-                </option>
-              ))}
-            </select>
-          )}
+          <select
+            value={selectedCategory}
+            onChange={(e) => setSelectedCategory(e.target.value)}
+            className="px-2.5 py-1.5 text-xs bg-slate-50 border border-slate-200 rounded-lg text-slate-700"
+          >
+            <option value="">All Categories</option>
+            {dbCategories.map((c) => (
+              <option key={c.id} value={c.name}>
+                {c.name}
+              </option>
+            ))}
+          </select>
         </div>
 
         <div className="text-xs font-mono text-slate-500">
@@ -209,7 +296,8 @@ export default function ProductManagementPage() {
           <table className="w-full text-left text-xs">
             <thead className="bg-slate-50 border-b border-slate-200 text-slate-500 uppercase font-mono text-[10px] tracking-wider">
               <tr>
-                <th className="px-5 py-3">Product Details</th>
+                <th className="px-5 py-3">Product Details & Images</th>
+                <th className="px-5 py-3">Category</th>
                 <th className="px-5 py-3">Base Price</th>
                 <th className="px-5 py-3">Created By</th>
                 <th className="px-5 py-3">Listed in Shops</th>
@@ -220,113 +308,110 @@ export default function ProductManagementPage() {
             <tbody className="divide-y divide-stone-100">
               {isLoading ? (
                 <tr>
-                  <td colSpan="6" className="px-5 py-12 text-center text-slate-400">
-                    <div className="w-6 h-6 border-2 border-slate-800 border-t-transparent rounded-full animate-spin mx-auto mb-2" />
-                    <span>Loading catalog...</span>
+                  <td colSpan={7} className="px-5 py-8 text-center text-slate-400">
+                    Loading shared catalog products...
                   </td>
                 </tr>
               ) : products.length === 0 ? (
                 <tr>
-                  <td colSpan="6" className="px-5 py-12 text-center text-slate-500">
-                    <Layers className="w-10 h-10 text-slate-300 mx-auto mb-2" />
-                    <div className="font-semibold text-slate-800">No products found</div>
-                    <p className="text-xs text-slate-400 mt-1">Create master products to populate the shared catalog.</p>
+                  <td colSpan={7} className="px-5 py-8 text-center text-slate-400">
+                    No products found in master catalog.
                   </td>
                 </tr>
               ) : (
-                products.map((prod) => (
-                  <tr key={prod.id} className="hover:bg-slate-50/70 transition-colors">
-                    <td className="px-5 py-3.5">
-                      <div className="flex items-center space-x-3">
-                        <img
-                          src={
-                            prod.thumbnail_url ||
-                            'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=100'
-                          }
-                          alt={prod.name}
-                          className="w-11 h-11 rounded-lg object-cover bg-slate-100 border border-slate-200 flex-shrink-0"
-                          onError={(e) => {
-                            e.target.src =
-                              'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=100';
-                          }}
-                        />
-                        <div>
-                          <div className="font-bold text-slate-900 text-xs">{prod.name}</div>
-                          <div className="flex items-center space-x-2 text-[10px] font-mono text-slate-400 mt-0.5">
-                            {prod.category && <span className="uppercase">{prod.category}</span>}
-                            {prod.sku && <span>• SKU: {prod.sku}</span>}
+                products.map((prod) => {
+                  const images = Array.isArray(prod.images) ? prod.images : (prod.images_urls || [prod.thumbnail_url].filter(Boolean));
+                  return (
+                    <tr key={prod.id} className="hover:bg-slate-50/70 transition-colors">
+                      <td className="px-5 py-3.5">
+                        <div className="flex items-center space-x-3">
+                          <div className="w-12 h-12 rounded-xl bg-slate-100 border border-slate-200 flex-shrink-0 overflow-hidden flex items-center justify-center relative">
+                            {prod.thumbnail_url ? (
+                              <img
+                                src={prod.thumbnail_url}
+                                alt={prod.name}
+                                className="w-full h-full object-cover"
+                              />
+                            ) : (
+                              <ImageIcon className="w-5 h-5 text-slate-300" />
+                            )}
+                            {images.length > 1 && (
+                              <span className="absolute bottom-0.5 right-0.5 bg-black/75 text-white text-[9px] px-1 rounded font-mono">
+                                +{images.length}
+                              </span>
+                            )}
+                          </div>
+                          <div>
+                            <div className="font-semibold text-slate-900 leading-tight">
+                              {prod.name}
+                            </div>
+                            <div className="text-[11px] font-mono text-slate-400 mt-0.5">
+                              {prod.sku || 'No SKU'} · {images.length} image{images.length !== 1 ? 's' : ''}
+                            </div>
                           </div>
                         </div>
-                      </div>
-                    </td>
-
-                    <td className="px-5 py-3.5 font-mono text-xs font-bold text-slate-900">
-                      ${Number(prod.base_price).toFixed(2)}
-                    </td>
-
-                    <td className="px-5 py-3.5">
-                      <div className="text-slate-800 font-medium text-xs">
-                        {prod.creator ? prod.creator.name : 'System Admin'}
-                      </div>
-                      <div className="text-[10px] font-mono text-slate-400 uppercase">
-                        {prod.creator ? prod.creator.role.replace('_', ' ') : 'Platform Default'}
-                      </div>
-                    </td>
-
-                    <td className="px-5 py-3.5">
-                      <span className="font-mono text-xs font-bold text-slate-800">
-                        {prod.shop_products_count ?? 0}
-                      </span>{' '}
-                      <span className="text-[11px] text-slate-500">stores</span>
-                    </td>
-
-                    <td className="px-5 py-3.5">
-                      <span
-                        className={`px-2 py-0.5 rounded text-[10px] font-mono ${prod.is_active
-                          ? 'bg-blue-50 text-blue-700 border border-blue-100'
-                          : 'bg-slate-100 text-slate-500 border border-slate-200'
+                      </td>
+                      <td className="px-5 py-3.5">
+                        <span className="inline-flex items-center px-2 py-0.5 rounded-md bg-amber-50 text-amber-800 text-[10px] font-medium border border-amber-200">
+                          {prod.category_relation?.name || prod.category || 'Uncategorized'}
+                        </span>
+                      </td>
+                      <td className="px-5 py-3.5 font-mono text-slate-900 font-semibold">
+                        Rp {Number(prod.base_price).toLocaleString('id-ID')}
+                      </td>
+                      <td className="px-5 py-3.5 text-slate-500">
+                        {prod.creator?.name || 'Administrator'}
+                      </td>
+                      <td className="px-5 py-3.5">
+                        <span className="inline-flex items-center space-x-1 px-2 py-0.5 rounded-full bg-slate-100 text-slate-700 text-[11px] font-mono">
+                          <Store className="w-3 h-3 text-slate-500" />
+                          <span>{prod.shops_count || 0} shops</span>
+                        </span>
+                      </td>
+                      <td className="px-5 py-3.5">
+                        <span
+                          className={`inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-semibold ${
+                            prod.is_active
+                              ? 'bg-emerald-50 text-emerald-700'
+                              : 'bg-slate-100 text-slate-500'
                           }`}
-                      >
-                        {prod.is_active ? 'Active' : 'Archived'}
-                      </span>
-                    </td>
-
-                    <td className="px-5 py-3.5 text-right">
-                      <div className="flex items-center justify-end space-x-1.5">
-                        <button
-                          onClick={() => handleOpenEditModal(prod)}
-                          className="p-1.5 rounded-lg text-slate-600 hover:text-slate-900 hover:bg-slate-100 border border-slate-200 transition-colors"
-                          title="Edit Product"
                         >
-                          <Edit2 className="w-3.5 h-3.5" />
-                        </button>
-                        <button
-                          onClick={() => {
-                            if (window.confirm(`Delete "${prod.name}" from the global catalog?`)) {
-                              deleteMutation.mutate(prod.id);
-                            }
-                          }}
-                          className="p-1.5 rounded-lg text-slate-400 hover:text-rose-600 hover:bg-rose-50 transition-colors"
-                          title="Delete from Catalog"
-                        >
-                          <Trash2 className="w-3.5 h-3.5" />
-                        </button>
-                      </div>
-                    </td>
-                  </tr>
-                ))
+                          {prod.is_active ? 'Active' : 'Disabled'}
+                        </span>
+                      </td>
+                      <td className="px-5 py-3.5 text-right">
+                        <div className="inline-flex items-center space-x-1">
+                          <button
+                            onClick={() => handleOpenEditModal(prod)}
+                            className="p-1.5 text-slate-500 hover:text-blue-600 hover:bg-slate-100 rounded-lg transition-colors"
+                            title="Edit"
+                          >
+                            <Edit2 className="w-3.5 h-3.5" />
+                          </button>
+                          <button
+                            onClick={() => deleteMutation.mutate(prod.id)}
+                            className="p-1.5 text-slate-500 hover:text-rose-600 hover:bg-rose-50 rounded-lg transition-colors"
+                            title="Delete"
+                          >
+                            <Trash2 className="w-3.5 h-3.5" />
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+                  );
+                })
               )}
             </tbody>
           </table>
         </div>
       </div>
 
-      {/* Modal: Create or Edit */}
+      {/* Modal: Create or Edit Product with Multiple Images & Dynamic Category */}
       <Modal
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
         title={editingProduct ? `Edit Catalog Product: ${editingProduct.name}` : 'New Master Catalog Product'}
-        maxWidth="max-w-xl"
+        maxWidth="max-w-2xl"
       >
         <form onSubmit={handleSubmit(onFormSubmit)} className="space-y-4">
           <div>
@@ -336,9 +421,8 @@ export default function ProductManagementPage() {
             <input
               type="text"
               {...register('name')}
-              className={`w-full px-3 py-2 text-xs bg-slate-50 border ${errors.name ? 'border-rose-400' : 'border-slate-200'
-                } rounded-xl focus:outline-none focus:ring-1 focus:ring-blue-500 focus:bg-white text-slate-900`}
-              placeholder="e.g. Ergonomic Office Desk"
+              className="w-full px-3 py-2 text-xs bg-slate-50 border border-slate-200 rounded-xl text-slate-900"
+              placeholder="e.g. Syltherine Cafe Chair"
             />
             {errors.name && (
               <span className="text-[11px] text-rose-600 mt-1">{errors.name.message}</span>
@@ -348,16 +432,14 @@ export default function ProductManagementPage() {
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <div>
               <label className="block text-xs font-semibold text-slate-700 mb-1">
-                Base Wholesale Price ($) <span className="text-rose-500">*</span>
+                Base Price (Rp) <span className="text-rose-500">*</span>
               </label>
               <input
                 type="number"
-                step="0.01"
                 min="0"
                 {...register('base_price')}
-                className={`w-full px-3 py-2 text-xs bg-slate-50 border ${errors.base_price ? 'border-rose-400' : 'border-slate-200'
-                  } rounded-xl focus:outline-none focus:ring-1 focus:ring-blue-500 focus:bg-white text-slate-900 font-mono`}
-                placeholder="199.99"
+                className="w-full px-3 py-2 text-xs bg-slate-50 border border-slate-200 rounded-xl text-slate-900 font-mono"
+                placeholder="2500000"
               />
               {errors.base_price && (
                 <span className="text-[11px] text-rose-600 mt-1">{errors.base_price.message}</span>
@@ -369,41 +451,102 @@ export default function ProductManagementPage() {
               <input
                 type="text"
                 {...register('sku')}
-                className="w-full px-3 py-2 text-xs bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-1 focus:ring-blue-500 focus:bg-white text-slate-900 font-mono"
-                placeholder="FURN-102"
+                className="w-full px-3 py-2 text-xs bg-slate-50 border border-slate-200 rounded-xl text-slate-900 font-mono"
+                placeholder="FUR-001"
               />
             </div>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-            <div>
-              <label className="block text-xs font-semibold text-slate-700 mb-1">Category</label>
-              <input
-                type="text"
-                {...register('category')}
-                className="w-full px-3 py-2 text-xs bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-1 focus:ring-blue-500 focus:bg-white text-slate-900"
-                placeholder="Furniture, Gadgets, etc."
-              />
+          {/* Dynamic Category Dropdown from Database */}
+          <div>
+            <label className="block text-xs font-semibold text-slate-700 mb-1">
+              Category (from Dynamic Categories Table)
+            </label>
+            <select
+              {...register('category_id')}
+              className="w-full px-3 py-2 text-xs bg-slate-50 border border-slate-200 rounded-xl text-slate-900"
+            >
+              <option value="">-- Select Category --</option>
+              {dbCategories.map((c) => (
+                <option key={c.id} value={c.id}>
+                  {c.name}
+                </option>
+              ))}
+            </select>
+          </div>
+
+          {/* Multiple Images Upload & Gallery Management */}
+          <div>
+            <div className="flex items-center justify-between mb-1">
+              <label className="block text-xs font-semibold text-slate-700">
+                Product Images (Multiple angles/shots - optimized to WebP)
+              </label>
+              <span className="text-[11px] text-slate-400">
+                {existingImages.length + newImageFiles.length} image(s) selected
+              </span>
             </div>
 
-            <div>
-              <label className="block text-xs font-semibold text-slate-700 mb-1">Thumbnail URL</label>
+            {/* Existing Images preview */}
+            {(existingImages.length > 0 || newImagePreviews.length > 0) && (
+              <div className="flex flex-wrap gap-2.5 mb-2.5 p-2 bg-slate-50 rounded-xl border border-slate-200">
+                {existingImages.map((src, idx) => (
+                  <div key={`existing-${idx}`} className="relative w-16 h-16 rounded-lg overflow-hidden border border-slate-200 bg-white group">
+                    <img src={src} alt="" className="w-full h-full object-cover" />
+                    {idx === 0 && (
+                      <span className="absolute bottom-0 left-0 right-0 bg-[#B88E2F] text-white text-[8px] text-center font-bold">
+                        MAIN
+                      </span>
+                    )}
+                    <button
+                      type="button"
+                      onClick={() => removeExistingImage(idx)}
+                      className="absolute top-0.5 right-0.5 bg-rose-600 text-white rounded-full p-0.5 opacity-90 hover:opacity-100"
+                    >
+                      <X className="w-3 h-3" />
+                    </button>
+                  </div>
+                ))}
+
+                {newImagePreviews.map((src, idx) => (
+                  <div key={`new-${idx}`} className="relative w-16 h-16 rounded-lg overflow-hidden border border-blue-300 bg-white group">
+                    <img src={src} alt="" className="w-full h-full object-cover" />
+                    <span className="absolute bottom-0 left-0 right-0 bg-blue-600 text-white text-[8px] text-center font-bold">
+                      NEW
+                    </span>
+                    <button
+                      type="button"
+                      onClick={() => removeNewFile(idx)}
+                      className="absolute top-0.5 right-0.5 bg-rose-600 text-white rounded-full p-0.5 opacity-90 hover:opacity-100"
+                    >
+                      <X className="w-3 h-3" />
+                    </button>
+                  </div>
+                ))}
+              </div>
+            )}
+
+            {/* File Upload Trigger */}
+            <label className="border-2 border-dashed border-slate-300 hover:border-blue-500 rounded-xl p-4 flex flex-col items-center justify-center cursor-pointer transition-colors bg-white">
+              <Upload className="w-6 h-6 text-slate-400 mb-1" />
+              <span className="text-xs font-semibold text-slate-700">Click or drop multiple images here</span>
+              <span className="text-[10px] text-slate-400 mt-0.5">Supports PNG, JPG, WebP. Laravel 13 automatically optimizes each image.</span>
               <input
-                type="text"
-                {...register('thumbnail')}
-                className="w-full px-3 py-2 text-xs bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-1 focus:ring-blue-500 focus:bg-white text-slate-900"
-                placeholder="https://images.unsplash.com/..."
+                type="file"
+                multiple
+                accept="image/*"
+                onChange={handleFilesSelect}
+                className="hidden"
               />
-            </div>
+            </label>
           </div>
 
           <div>
-            <label className="block text-xs font-semibold text-slate-700 mb-1">Master Description</label>
+            <label className="block text-xs font-semibold text-slate-700 mb-1">Product Description</label>
             <textarea
               rows={3}
               {...register('description')}
-              className="w-full px-3 py-2 text-xs bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-1 focus:ring-blue-500 focus:bg-white text-slate-900"
-              placeholder="Standard specifications and description inherited by all shop owners by default..."
+              className="w-full px-3 py-2 text-xs bg-slate-50 border border-slate-200 rounded-xl text-slate-900"
+              placeholder="Specifications, materials, dimensions, and craft details..."
             />
           </div>
 
@@ -412,7 +555,7 @@ export default function ProductManagementPage() {
               type="checkbox"
               id="admin_prod_active"
               {...register('is_active')}
-              className="rounded text-slate-900 focus:ring-blue-500"
+              className="rounded text-slate-900"
             />
             <label htmlFor="admin_prod_active" className="text-xs font-semibold text-slate-800 cursor-pointer">
               Active in Shared Catalog
@@ -423,14 +566,14 @@ export default function ProductManagementPage() {
             <button
               type="button"
               onClick={() => setIsModalOpen(false)}
-              className="px-3.5 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-xs font-semibold text-slate-700 transition-colors"
+              className="px-3.5 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-xs font-semibold text-slate-700"
             >
               Cancel
             </button>
             <button
               type="submit"
               disabled={saveMutation.isPending}
-              className="px-4 py-2 rounded-xl bg-blue-600 hover:bg-blue-700 disabled:opacity-60 text-white text-xs font-semibold transition-all shadow-subtle active:scale-[0.99]"
+              className="px-4 py-2 rounded-xl bg-blue-600 hover:bg-blue-700 disabled:opacity-60 text-white text-xs font-semibold shadow-subtle"
             >
               {saveMutation.isPending ? 'Saving...' : editingProduct ? 'Save Changes' : 'Create Master Product'}
             </button>

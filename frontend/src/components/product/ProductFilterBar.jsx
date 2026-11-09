@@ -12,7 +12,7 @@ export default function ProductFilterBar({
   onViewModeChange,
   activeCategory = 'All',
   onCategoryChange,
-  categories = ['All', 'Dining', 'Living', 'Bedroom', 'Electronics', 'Apparel'],
+  categories = ['All', 'Dining', 'Living', 'Bedroom'],
   search = '',
   onSearchChange,
   shops = [],

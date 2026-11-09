@@ -19,6 +19,9 @@ import {
   Tag,
   CheckCircle2,
   XCircle,
+  Upload,
+  X,
+  Image as ImageIcon,
 } from 'lucide-react';
 import { useDebounce } from '../../../hooks/useDebounce';
 import {
@@ -75,8 +78,14 @@ export default function MyProductsPage() {
     },
   });
 
+  // Custom Images State
+  const [customFiles, setCustomFiles] = useState([]);
+  const [customPreviews, setCustomPreviews] = useState([]);
+
   const handleOpenEditModal = (listing) => {
     setSelectedListing(listing);
+    setCustomFiles([]);
+    setCustomPreviews([]);
     reset({
       custom_price: listing.custom_price !== null ? String(listing.custom_price) : '',
       custom_title: listing.custom_title || '',
@@ -89,13 +98,33 @@ export default function MyProductsPage() {
     setIsModalOpen(true);
   };
 
+  const handleCustomFilesSelect = (e) => {
+    const files = Array.from(e.target.files || []);
+    if (!files.length) return;
+    setCustomFiles((prev) => [...prev, ...files]);
+    files.forEach((file) => {
+      const reader = new FileReader();
+      reader.onload = () => {
+        setCustomPreviews((prev) => [...prev, reader.result]);
+      };
+      reader.readAsDataURL(file);
+    });
+  };
+
+  const removeCustomFile = (index) => {
+    setCustomFiles((prev) => prev.filter((_, i) => i !== index));
+    setCustomPreviews((prev) => prev.filter((_, i) => i !== index));
+  };
+
   // Custom Mutations
   const saveMutation = useUpdateShopProductMutation({
     onSuccess: () => {
       toast.success('Customizations Saved', {
-        description: 'Shop pricing and product details updated successfully.',
+        description: 'Shop pricing and product details updated successfully with optimized images.',
       });
       setIsModalOpen(false);
+      setCustomFiles([]);
+      setCustomPreviews([]);
     },
     onError: (err) => {
       console.error(err);
@@ -111,6 +140,8 @@ export default function MyProductsPage() {
         description: 'Listing reverted to shared catalog default title, price, and thumbnail.',
       });
       setIsModalOpen(false);
+      setCustomFiles([]);
+      setCustomPreviews([]);
     },
     onError: (err) => {
       console.error(err);
@@ -136,16 +167,27 @@ export default function MyProductsPage() {
 
   const onModalSubmit = (data) => {
     if (!selectedListing) return;
-    const payload = {
-      custom_price: data.custom_price !== '' ? parseFloat(data.custom_price) : null,
-      custom_title: data.custom_title || null,
-      custom_description: data.custom_description || null,
-      custom_thumbnail: data.custom_thumbnail || null,
-      clear_custom_thumbnail: data.clear_custom_thumbnail,
-      stock: parseInt(data.stock, 10),
-      is_active: data.is_active,
-    };
-    saveMutation.mutate({ id: selectedListing.id, payload });
+    const formData = new FormData();
+    if (data.custom_price !== '' && data.custom_price !== null) {
+      formData.append('custom_price', data.custom_price);
+    }
+    if (data.custom_title) {
+      formData.append('custom_title', data.custom_title);
+    }
+    if (data.custom_description) {
+      formData.append('custom_description', data.custom_description);
+    }
+    if (data.clear_custom_thumbnail) {
+      formData.append('clear_custom_thumbnail', '1');
+    }
+    formData.append('stock', data.stock);
+    formData.append('is_active', data.is_active ? '1' : '0');
+
+    customFiles.forEach((file) => {
+      formData.append('custom_images[]', file);
+    });
+
+    saveMutation.mutate({ id: selectedListing.id, payload: formData });
   };
 
   const currentPriceInput = watch('custom_price');
@@ -474,26 +516,51 @@ export default function MyProductsPage() {
             />
           </div>
 
+          {/* Custom Multiple Images Upload with Laravel 13 optimization */}
           <div>
-            <label className="block text-xs font-semibold text-slate-700 mb-1">
-              Custom Thumbnail Image URL
-            </label>
-            <input
-              type="text"
-              {...register('custom_thumbnail')}
-              className="w-full px-3 py-2 text-xs bg-slate-50 rounded-xl border border-slate-200 focus:outline-none focus:ring-1 focus:ring-blue-500 focus:bg-white text-slate-900"
-              placeholder="https://..."
-            />
-            {selectedListing?.custom_thumbnail && (
-              <label className="flex items-center space-x-2 mt-1.5 text-xs text-rose-600 cursor-pointer">
-                <input
-                  type="checkbox"
-                  {...register('clear_custom_thumbnail')}
-                  className="rounded text-rose-600 focus:ring-rose-500"
-                />
-                <span>Remove custom image and revert to catalog photo</span>
+            <div className="flex items-center justify-between mb-1">
+              <label className="block text-xs font-semibold text-slate-700">
+                Custom Storefront Images (Optional shop-specific photo angles)
               </label>
+              <span className="text-[11px] text-slate-400">
+                {customFiles.length} new image(s)
+              </span>
+            </div>
+
+            {customPreviews.length > 0 && (
+              <div className="flex flex-wrap gap-2.5 mb-2.5 p-2 bg-slate-50 rounded-xl border border-slate-200">
+                {customPreviews.map((src, idx) => (
+                  <div key={idx} className="relative w-16 h-16 rounded-lg overflow-hidden border border-slate-200 bg-white">
+                    <img src={src} alt="" className="w-full h-full object-cover" />
+                    {idx === 0 && (
+                      <span className="absolute bottom-0 left-0 right-0 bg-[#B88E2F] text-white text-[8px] text-center font-bold">
+                        MAIN
+                      </span>
+                    )}
+                    <button
+                      type="button"
+                      onClick={() => removeCustomFile(idx)}
+                      className="absolute top-0.5 right-0.5 bg-rose-600 text-white rounded-full p-0.5 opacity-90 hover:opacity-100"
+                    >
+                      <X className="w-3 h-3" />
+                    </button>
+                  </div>
+                ))}
+              </div>
             )}
+
+            <label className="border-2 border-dashed border-slate-300 hover:border-blue-500 rounded-xl p-3 flex flex-col items-center justify-center cursor-pointer transition-colors bg-white">
+              <Upload className="w-5 h-5 text-slate-400 mb-1" />
+              <span className="text-xs font-semibold text-slate-700">Upload shop-specific product images</span>
+              <span className="text-[10px] text-slate-400 mt-0.5">Optimized to WebP automatically with Laravel 13 Image facade.</span>
+              <input
+                type="file"
+                multiple
+                accept="image/*"
+                onChange={handleCustomFilesSelect}
+                className="hidden"
+              />
+            </label>
           </div>
 
           <div className="flex items-center space-x-2 pt-1">

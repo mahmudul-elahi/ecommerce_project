@@ -7,6 +7,7 @@ use App\Models\Shop;
 use App\Models\ShopProduct;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Laravel\Sanctum\Sanctum;
 use Tests\TestCase;
 
 class EcommerceApiTest extends TestCase
@@ -265,5 +266,46 @@ class EcommerceApiTest extends TestCase
         $this->assertContains('Dining', $categoryNames);
         $this->assertContains('Living', $categoryNames);
         $this->assertContains('Bedroom', $categoryNames);
+    }
+
+    public function test_admin_can_manage_categories(): void
+    {
+        $admin = User::where('role', 'admin')->first();
+        Sanctum::actingAs($admin);
+
+        // Create new category
+        $createRes = $this->postJson('/api/admin/categories', [
+            'name' => 'Outdoor & Patio',
+            'description' => 'Weatherproof furniture for patios and gardens',
+        ]);
+        $createRes->assertStatus(201)
+            ->assertJsonPath('category.name', 'Outdoor & Patio')
+            ->assertJsonPath('category.slug', 'outdoor-patio');
+
+        $catId = $createRes->json('category.id');
+
+        // Customer can now see it
+        $custRes = $this->getJson('/api/customer/categories');
+        $custRes->assertStatus(200);
+        $names = collect($custRes->json())->pluck('name')->toArray();
+        $this->assertContains('Outdoor & Patio', $names);
+
+        // Delete category
+        $deleteRes = $this->deleteJson("/api/admin/categories/{$catId}");
+        $deleteRes->assertStatus(200);
+    }
+
+    public function test_product_detail_returns_multiple_images(): void
+    {
+        $syltherine = Product::where('sku', 'FUR-SYL-001')->first();
+        $shopProduct = ShopProduct::where('product_id', $syltherine->id)->first();
+
+        $response = $this->getJson("/api/customer/products/{$shopProduct->id}");
+        $response->assertStatus(200)
+            ->assertJsonStructure(['id', 'images', 'thumbnail', 'category']);
+
+        $images = $response->json('images');
+        $this->assertIsArray($images);
+        $this->assertGreaterThanOrEqual(2, count($images));
     }
 }

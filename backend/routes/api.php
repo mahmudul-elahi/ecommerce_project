@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\Admin\CategoryController as AdminCategoryController;
 use App\Http\Controllers\Api\Admin\DashboardController as AdminDashboardController;
 use App\Http\Controllers\Api\Admin\ProductController as AdminProductController;
 use App\Http\Controllers\Api\Admin\ShopController as AdminShopController;
@@ -59,6 +60,9 @@ Route::middleware(['auth:sanctum', 'admin'])->prefix('admin')->group(function ()
     // Product Catalog Management (CRUD)
     Route::apiResource('products', AdminProductController::class);
 
+    // Dynamic Category Management (CRUD)
+    Route::apiResource('categories', AdminCategoryController::class);
+
     // Shop Owner Accounts Management (CRUD)
     Route::apiResource('users', AdminUserController::class);
 });
@@ -77,6 +81,7 @@ Route::middleware(['auth:sanctum', 'shop_owner'])->prefix('shop-owner')->group(f
     Route::put('/orders/{id}/status', [ShopOwnerShopController::class, 'updateOrderStatus']);
 
     // Shared Catalog Browsing & Adding
+    Route::get('/categories', [AdminCategoryController::class, 'index']);
     Route::get('/catalog', [ShopOwnerCatalogController::class, 'index']);
     Route::post('/catalog/create', [ShopOwnerCatalogController::class, 'store']);
     Route::post('/catalog/add-to-shop', [ShopOwnerCatalogController::class, 'addToShop']);

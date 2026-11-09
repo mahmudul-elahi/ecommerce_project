@@ -19,14 +19,16 @@ class Product extends Model
         'name',
         'slug',
         'sku',
+        'category_id',
         'category',
         'description',
         'base_price',
         'thumbnail',
+        'images',
         'is_active',
     ];
 
-    protected $appends = ['thumbnail_url'];
+    protected $appends = ['thumbnail_url', 'images_urls'];
 
     /**
      * Get the attributes that should be cast.
@@ -37,6 +39,7 @@ class Product extends Model
     {
         return [
             'base_price' => 'decimal:2',
+            'images' => 'array',
             'is_active' => 'boolean',
         ];
     }
@@ -44,6 +47,11 @@ class Product extends Model
     public function creator(): BelongsTo
     {
         return $this->belongsTo(User::class, 'created_by');
+    }
+
+    public function categoryRelation(): BelongsTo
+    {
+        return $this->belongsTo(Category::class, 'category_id');
     }
 
     public function shopProducts(): HasMany
@@ -60,6 +68,7 @@ class Product extends Model
                 'custom_title',
                 'custom_description',
                 'custom_thumbnail',
+                'custom_images',
                 'stock',
                 'is_active',
             ])
@@ -70,17 +79,45 @@ class Product extends Model
     {
         return Attribute::make(
             get: function () {
-                if (! $this->thumbnail) {
-                    return null;
-                }
-                if (str_starts_with($this->thumbnail, '/') || str_starts_with($this->thumbnail, 'images/')) {
-                    return $this->thumbnail;
-                }
-                if (filter_var($this->thumbnail, FILTER_VALIDATE_URL)) {
-                    return $this->thumbnail;
+                $raw = $this->thumbnail;
+                if (!$raw && !empty($this->images) && is_array($this->images)) {
+                    $raw = $this->images[0] ?? null;
                 }
 
-                return Storage::disk('public')->url($this->thumbnail);
+                if (! $raw) {
+                    return null;
+                }
+                if (str_starts_with($raw, '/') || str_starts_with($raw, 'images/')) {
+                    return $raw;
+                }
+                if (filter_var($raw, FILTER_VALIDATE_URL)) {
+                    return $raw;
+                }
+
+                return Storage::disk('public')->url($raw);
+            }
+        );
+    }
+
+    protected function imagesUrls(): Attribute
+    {
+        return Attribute::make(
+            get: function (): array {
+                $list = $this->images;
+                if (!is_array($list) || empty($list)) {
+                    $thumb = $this->thumbnail_url;
+                    return $thumb ? [$thumb] : [];
+                }
+
+                return array_map(function ($img) {
+                    if (str_starts_with($img, '/') || str_starts_with($img, 'images/')) {
+                        return $img;
+                    }
+                    if (filter_var($img, FILTER_VALIDATE_URL)) {
+                        return $img;
+                    }
+                    return Storage::disk('public')->url($img);
+                }, $list);
             }
         );
     }
