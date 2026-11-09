@@ -35,6 +35,7 @@ Route::prefix('auth')->group(function () {
 | Products not assigned to any shop are never visible.
 */
 Route::prefix('customer')->group(function () {
+    Route::get('/categories', [StorefrontController::class, 'categories']);
     Route::get('/shops', [StorefrontController::class, 'shops']);
     Route::get('/shops/{slugOrId}', [StorefrontController::class, 'shopDetail']);
     Route::get('/shops/{slugOrId}/products', [StorefrontController::class, 'shopProducts']);

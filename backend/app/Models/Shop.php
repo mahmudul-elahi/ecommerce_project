@@ -66,6 +66,9 @@ class Shop extends Model
                 if (! $this->logo) {
                     return null;
                 }
+                if (str_starts_with($this->logo, '/') || str_starts_with($this->logo, 'images/')) {
+                    return $this->logo;
+                }
                 if (filter_var($this->logo, FILTER_VALIDATE_URL)) {
                     return $this->logo;
                 }
@@ -81,6 +84,9 @@ class Shop extends Model
             get: function (): ?string {
                 if (! $this->banner) {
                     return null;
+                }
+                if (str_starts_with($this->banner, '/') || str_starts_with($this->banner, 'images/')) {
+                    return $this->banner;
                 }
                 if (filter_var($this->banner, FILTER_VALIDATE_URL)) {
                     return $this->banner;

@@ -15,6 +15,16 @@ export function useShopsQuery(search = '') {
 }
 
 /**
+ * Query hook to fetch distinct categories with active products
+ */
+export function useCategoriesQuery() {
+  return useQuery({
+    queryKey: queryKeys.categories.all,
+    queryFn: () => shopsService.getCategories(),
+  });
+}
+
+/**
  * Query hook to fetch a specific shop profile
  */
 export function useShopDetailQuery(slugOrId) {

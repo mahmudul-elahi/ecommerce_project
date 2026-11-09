@@ -73,6 +73,9 @@ class Product extends Model
                 if (! $this->thumbnail) {
                     return null;
                 }
+                if (str_starts_with($this->thumbnail, '/') || str_starts_with($this->thumbnail, 'images/')) {
+                    return $this->thumbnail;
+                }
                 if (filter_var($this->thumbnail, FILTER_VALIDATE_URL)) {
                     return $this->thumbnail;
                 }

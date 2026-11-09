@@ -104,6 +104,9 @@ class ShopProduct extends Model
                 if (! $raw) {
                     return null;
                 }
+                if (str_starts_with($raw, '/') || str_starts_with($raw, 'images/')) {
+                    return $raw;
+                }
                 if (filter_var($raw, FILTER_VALIDATE_URL)) {
                     return $raw;
                 }

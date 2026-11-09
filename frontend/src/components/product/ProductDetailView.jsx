@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { Star, Share2 } from 'lucide-react';
 import { useCart } from '../../context/CartContext';
 import ProductCard from './ProductCard';
@@ -9,10 +10,9 @@ import { toast } from 'sonner';
 
 export default function ProductDetailView({ product, relatedProducts = [] }) {
   const { addToCart } = useCart();
+  const router = useRouter();
 
-  const [selectedImg, setSelectedImg] = useState(
-    product.thumbnail || '/images/furniro/imgAsgaardSofa.png'
-  );
+  const [selectedImg, setSelectedImg] = useState(product.thumbnail || null);
   const [selectedSize, setSelectedSize] = useState('L');
   const [selectedColor, setSelectedColor] = useState('gold');
   const [quantity, setQuantity] = useState(1);
@@ -22,12 +22,7 @@ export default function ProductDetailView({ product, relatedProducts = [] }) {
     return `Rp ${Number(val).toLocaleString('id-ID')}`;
   };
 
-  const thumbnails = [
-    product.thumbnail || '/images/furniro/imgAsgaardSofa.png',
-    '/images/furniro/imgOutdoorSofa.png',
-    product.thumbnail || '/images/furniro/imgSyltherine.png',
-    '/images/furniro/imgScandinavianInteriorMockupWallDecalBackground2.png',
-  ];
+  const thumbnails = [product.thumbnail].filter(Boolean);
 
   const handleAddToCart = () => {
     const shop = {
@@ -53,8 +48,9 @@ export default function ProductDetailView({ product, relatedProducts = [] }) {
 
   const handleCompare = () => {
     toast.info('Comparison', {
-      description: `${product.name} added to comparison drawer.`,
+      description: `${product.name} opened in comparison.`,
     });
+    router.push('/comparison');
   };
 
   return (
@@ -76,21 +72,33 @@ export default function ProductDetailView({ product, relatedProducts = [] }) {
         <div className="product-hero-grid">
           {/* Gallery View */}
           <div className="product-gallery-layout">
-            <div className="thumb-column">
-              {thumbnails.map((src, i) => (
-                <button
-                  key={i}
-                  type="button"
-                  onClick={() => setSelectedImg(src)}
-                  className={`gallery-thumb-btn ${selectedImg === src ? 'active' : ''}`}
-                >
-                  <img src={src} alt="" className="thumb-img" />
-                </button>
-              ))}
-            </div>
+            {thumbnails.length > 1 && (
+              <div className="thumb-column">
+                {thumbnails.map((src, i) => (
+                  <button
+                    key={i}
+                    type="button"
+                    onClick={() => setSelectedImg(src)}
+                    className={`gallery-thumb-btn ${selectedImg === src ? 'active' : ''}`}
+                  >
+                    <img src={src} alt="" className="thumb-img" />
+                  </button>
+                ))}
+              </div>
+            )}
 
             <div className="main-photo-box">
-              <img src={selectedImg} alt={product.name} className="main-product-img" />
+              {(selectedImg || product.thumbnail) ? (
+                <img
+                  src={selectedImg || product.thumbnail}
+                  alt={product.name}
+                  className="main-product-img"
+                />
+              ) : (
+                <div className="w-full h-full bg-[#f4f5f7] flex items-center justify-center text-slate-400 font-medium">
+                  {product.name}
+                </div>
+              )}
             </div>
           </div>
 
@@ -109,10 +117,9 @@ export default function ProductDetailView({ product, relatedProducts = [] }) {
               <span className="reviews-count-text">5 Customer Review</span>
             </div>
 
-            <p className="product-short-desc">
-              {product.description ||
-                'Setting the bar as one of the loudest speakers in its class, the Kilburn is a compact, stout-hearted hero with a well-balanced audio which boasts a clear midrange and extended highs for a sound.'}
-            </p>
+            {product.description && (
+              <p className="product-short-desc">{product.description}</p>
+            )}
 
             {/* Size Selector */}
             <div className="option-group">

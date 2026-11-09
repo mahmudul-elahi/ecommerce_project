@@ -10,6 +10,14 @@ export const shopsService = {
   },
 
   /**
+   * Fetch all distinct categories with active products
+   */
+  async getCategories() {
+    const res = await api.get('/customer/categories');
+    return res.data;
+  },
+
+  /**
    * Fetch a specific shop profile by slug or id
    */
   async getShopDetail(slugOrId) {

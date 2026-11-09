@@ -62,15 +62,18 @@ export default function ProductCard({ product }) {
     >
       {/* Thumbnail & Badges */}
       <div className="product-card-media">
-        <img
-          src={product.thumbnail || '/images/furniro/imgSyltherine.png'}
-          alt={product.name}
-          className="product-card-img"
-          loading="lazy"
-          onError={(e) => {
-            e.currentTarget.src = '/images/furniro/imgSyltherine.png';
-          }}
-        />
+        {product.thumbnail ? (
+          <img
+            src={product.thumbnail}
+            alt={product.name}
+            className="product-card-img"
+            loading="lazy"
+          />
+        ) : (
+          <div className="w-full h-full bg-[#eaedf1] flex items-center justify-center text-slate-400 p-4">
+            <span className="text-xs font-medium text-center line-clamp-2">{product.name}</span>
+          </div>
+        )}
 
         {product.badge && (
           <div
@@ -139,13 +142,24 @@ export default function ProductCard({ product }) {
 
       {/* Details */}
       <div className="product-card-body">
-        <h3 className="product-card-title">{product.name}</h3>
-        <p className="product-card-subtitle">{product.subtitle || product.category || 'Interior Design'}</p>
-        {product.shop_name && (
-          <span className="text-xs text-[#B88E2F] font-medium mt-1 truncate">
-            {product.shop_name}
+        <div className="product-card-info-top">
+          <h3 className="product-card-title" title={product.name}>
+            {product.name}
+          </h3>
+          <p
+            className="product-card-subtitle"
+            title={product.subtitle || product.category || 'Interior Design'}
+          >
+            {product.subtitle || product.category || 'Interior Design'}
+          </p>
+          <span
+            className="product-card-shop"
+            title={product.shop_name || 'Furniro Flagship'}
+          >
+            {product.shop_name || 'Furniro Flagship'}
           </span>
-        )}
+        </div>
+
         <div className="product-card-price-row">
           <span className="product-card-price">{formatPrice(product.price)}</span>
           {product.original_base_price && product.original_base_price > product.price && (

@@ -77,23 +77,23 @@ export default function LoginPage() {
       <div className="max-w-md w-full space-y-7 bg-white p-8 sm:p-9 rounded-2xl border border-slate-200 shadow-craft">
         {/* Header */}
         <div className="text-center">
-          <div className="inline-flex items-center justify-center w-12 h-12 rounded-xl bg-blue-50 text-blue-700 border border-blue-100 mb-4 shadow-subtle">
-            <Store className="w-6 h-6 text-blue-700" />
+          <div className="inline-flex items-center justify-center w-12 h-12 rounded-xl bg-[#FAF3EA] text-[#B88E2F] border border-[#ebd9c5] mb-4 shadow-subtle">
+            <Store className="w-6 h-6 text-[#B88E2F]" />
           </div>
-          <h1 className="text-2xl font-bold tracking-tight text-slate-900">Sign in to OmniShop</h1>
+          <h1 className="text-2xl font-bold tracking-tight text-slate-900">Sign in to Furniro Hub</h1>
           <p className="text-xs text-slate-500 mt-1.5 font-normal">
-            Sign in to manage your shop or marketplace
+            Sign in to manage your storefront and shared catalog
           </p>
         </div>
 
         {/* Demo Accounts Quick-Select */}
-        <div className="bg-blue-50 border border-blue-200 rounded-xl p-3.5">
+        <div className="bg-[#FAF3EA]/60 border border-[#ebd9c5] rounded-xl p-3.5">
           <div className="flex items-center justify-between mb-2">
-            <div className="flex items-center space-x-1.5 text-xs font-semibold text-blue-900">
-              <UserCheck className="w-3.5 h-3.5 text-blue-700" />
-              <span>Instant Demo Accounts</span>
+            <div className="flex items-center space-x-1.5 text-xs font-semibold text-[#80601c]">
+              <UserCheck className="w-3.5 h-3.5 text-[#B88E2F]" />
+              <span>Instant Login Accounts</span>
             </div>
-            <span className="text-[10px] uppercase font-mono tracking-wider text-blue-700 bg-blue-100 px-1.5 py-0.5 rounded">
+            <span className="text-[10px] uppercase font-mono tracking-wider text-[#80601c] bg-[#FAF3EA] px-1.5 py-0.5 rounded border border-[#ebd9c5]">
               Click to autofill
             </span>
           </div>
@@ -102,48 +102,36 @@ export default function LoginPage() {
             <button
               type="button"
               onClick={() => handleQuickLogin('admin@ecommerce.com', 'password')}
-              className="p-2 rounded-lg bg-white border border-blue-200 text-slate-800 hover:border-blue-400 hover:bg-blue-50 transition-all text-left flex items-center space-x-2 shadow-subtle group"
+              className="p-2 rounded-lg bg-white border border-[#ebd9c5] text-slate-800 hover:border-[#B88E2F] hover:bg-[#FAF3EA]/40 transition-all text-left flex items-center space-x-2 shadow-subtle group"
             >
-              <ShieldCheck className="w-3.5 h-3.5 text-blue-700 flex-shrink-0" />
+              <ShieldCheck className="w-3.5 h-3.5 text-[#B88E2F] flex-shrink-0" />
               <div className="truncate">
-                <div className="font-semibold text-slate-900 text-[11px] group-hover:text-blue-900">System Admin</div>
+                <div className="font-semibold text-slate-900 text-[11px] group-hover:text-[#B88E2F]">System Admin</div>
                 <div className="text-[10px] text-slate-400 truncate">admin@ecommerce.com</div>
               </div>
             </button>
 
             <button
               type="button"
-              onClick={() => handleQuickLogin('owner1@ecommerce.com', 'password')}
-              className="p-2 rounded-lg bg-white border border-blue-200 text-slate-800 hover:border-blue-400 hover:bg-blue-50 transition-all text-left flex items-center space-x-2 shadow-subtle group"
+              onClick={() => handleQuickLogin('furniro@ecommerce.com', 'password')}
+              className="p-2 rounded-lg bg-white border border-[#ebd9c5] text-slate-800 hover:border-[#B88E2F] hover:bg-[#FAF3EA]/40 transition-all text-left flex items-center space-x-2 shadow-subtle group"
             >
-              <Building2 className="w-3.5 h-3.5 text-blue-700 flex-shrink-0" />
+              <Building2 className="w-3.5 h-3.5 text-[#B88E2F] flex-shrink-0" />
               <div className="truncate">
-                <div className="font-semibold text-slate-900 text-[11px] group-hover:text-blue-900">Tech Haven</div>
-                <div className="text-[10px] text-slate-400 truncate">owner1@ecommerce.com</div>
+                <div className="font-semibold text-slate-900 text-[11px] group-hover:text-[#B88E2F]">Furniro Flagship</div>
+                <div className="text-[10px] text-slate-400 truncate">furniro@ecommerce.com</div>
               </div>
             </button>
 
             <button
               type="button"
-              onClick={() => handleQuickLogin('owner2@ecommerce.com', 'password')}
-              className="p-2 rounded-lg bg-white border border-blue-200 text-slate-800 hover:border-blue-400 hover:bg-blue-50 transition-all text-left flex items-center space-x-2 shadow-subtle group"
+              onClick={() => handleQuickLogin('partner@ecommerce.com', 'password')}
+              className="p-2 rounded-lg bg-white border border-[#ebd9c5] text-slate-800 hover:border-[#B88E2F] hover:bg-[#FAF3EA]/40 transition-all text-left flex items-center space-x-2 shadow-subtle group col-span-2"
             >
-              <Store className="w-3.5 h-3.5 text-blue-700 flex-shrink-0" />
+              <Store className="w-3.5 h-3.5 text-[#B88E2F] flex-shrink-0" />
               <div className="truncate">
-                <div className="font-semibold text-slate-900 text-[11px] group-hover:text-blue-900">Urban Apparel</div>
-                <div className="text-[10px] text-slate-400 truncate">owner2@ecommerce.com</div>
-              </div>
-            </button>
-
-            <button
-              type="button"
-              onClick={() => handleQuickLogin('owner3@ecommerce.com', 'password')}
-              className="p-2 rounded-lg bg-white border border-blue-200 text-slate-800 hover:border-blue-400 hover:bg-blue-50 transition-all text-left flex items-center space-x-2 shadow-subtle group"
-            >
-              <Store className="w-3.5 h-3.5 text-blue-700 flex-shrink-0" />
-              <div className="truncate">
-                <div className="font-semibold text-slate-900 text-[11px] group-hover:text-blue-900">Nordic Living</div>
-                <div className="text-[10px] text-slate-400 truncate">owner3@ecommerce.com</div>
+                <div className="font-semibold text-slate-900 text-[11px] group-hover:text-[#B88E2F]">Partner Boutique Owner</div>
+                <div className="text-[10px] text-slate-400 truncate">partner@ecommerce.com</div>
               </div>
             </button>
           </div>

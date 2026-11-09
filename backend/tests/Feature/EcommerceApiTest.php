@@ -103,17 +103,17 @@ class EcommerceApiTest extends TestCase
 
     public function test_shop_owner_can_create_product_and_it_is_added_to_shared_catalog_and_shop(): void
     {
-        $owner = User::where('email', 'owner1@ecommerce.com')->first();
+        $owner = User::where('email', 'furniro@ecommerce.com')->first();
 
         $response = $this->actingAs($owner)
             ->postJson('/api/shop-owner/catalog/create', [
-                'name' => 'MagCharge Ultra Slim Powerbank',
-                'sku' => 'MAG-10K',
-                'category' => 'Electronics',
-                'description' => 'Magnetic wireless power bank 10,000mAh with stand',
-                'base_price' => 49.99,
-                'custom_price' => 44.99, // Special introductory price for their own shop
-                'stock' => 75,
+                'name' => 'Furniro Teak Accent Stool',
+                'sku' => 'FUR-STL-009',
+                'category' => 'Dining',
+                'description' => 'Solid handcrafted teak accent stool with organic curved silhouette.',
+                'base_price' => 850000,
+                'custom_price' => 750000,
+                'stock' => 40,
             ]);
 
         $response->assertStatus(201);
@@ -123,7 +123,7 @@ class EcommerceApiTest extends TestCase
         // Verify product exists in shared catalog
         $this->assertDatabaseHas('products', [
             'id' => $productId,
-            'name' => 'MagCharge Ultra Slim Powerbank',
+            'name' => 'Furniro Teak Accent Stool',
             'created_by' => $owner->id,
         ]);
 
@@ -131,13 +131,13 @@ class EcommerceApiTest extends TestCase
         $this->assertDatabaseHas('shop_products', [
             'shop_id' => $owner->shop->id,
             'product_id' => $productId,
-            'custom_price' => 44.99,
+            'custom_price' => 750000,
         ]);
 
-        // Verify ANOTHER shop owner (owner2) sees it in the shared catalog!
-        $owner2 = User::where('email', 'owner2@ecommerce.com')->first();
+        // Verify ANOTHER shop owner (partner) sees it in the shared catalog!
+        $owner2 = User::where('email', 'partner@ecommerce.com')->first();
         $catalogResponse = $this->actingAs($owner2)
-            ->getJson('/api/shop-owner/catalog?search=MagCharge');
+            ->getJson('/api/shop-owner/catalog?search=Teak');
 
         $catalogResponse->assertStatus(200);
         $this->assertTrue(collect($catalogResponse->json('data'))->contains('id', $productId));
@@ -145,11 +145,11 @@ class EcommerceApiTest extends TestCase
 
     public function test_shop_owner_can_add_shared_catalog_product_to_shop_and_customize_price_and_details(): void
     {
-        $owner2 = User::where('email', 'owner2@ecommerce.com')->first();
+        $owner2 = User::where('email', 'partner@ecommerce.com')->first();
         $shop = $owner2->shop;
 
-        // Find a product created by admin that is not yet in owner2's shop
-        $product = Product::where('sku', 'CAT-AP-001')->first();
+        // Find a product created in catalog not yet in partner's shop
+        $product = Product::where('sku', 'FUR-LEV-002')->first();
 
         // 1. Add to shop
         $addResponse = $this->actingAs($owner2)
@@ -163,14 +163,14 @@ class EcommerceApiTest extends TestCase
         // 2. Customize price and title
         $updateResponse = $this->actingAs($owner2)
             ->putJson("/api/shop-owner/products/{$shopProductId}", [
-                'custom_price' => 269.00,
-                'custom_title' => 'Urban Sound AcousticPro Noise-Cancelling Headphones',
-                'custom_description' => 'Specially selected for Urban Apparel audio lovers.',
+                'custom_price' => 2400000,
+                'custom_title' => 'Artisan Living Leviosa Special Edition',
+                'custom_description' => 'Specially selected contemporary finish for Artisan Living.',
             ]);
 
         $updateResponse->assertStatus(200)
-            ->assertJsonPath('listing.custom_price', '269.00')
-            ->assertJsonPath('listing.custom_title', 'Urban Sound AcousticPro Noise-Cancelling Headphones');
+            ->assertJsonPath('listing.custom_price', '2400000.00')
+            ->assertJsonPath('listing.custom_title', 'Artisan Living Leviosa Special Edition');
 
         // 3. Customer sees the customized price and title in this shop!
         $customerResponse = $this->getJson("/api/customer/shops/{$shop->slug}/products");
@@ -178,8 +178,8 @@ class EcommerceApiTest extends TestCase
 
         $customerProduct = collect($customerResponse->json('data'))->firstWhere('shop_product_id', $shopProductId);
         $this->assertNotNull($customerProduct);
-        $this->assertEquals('Urban Sound AcousticPro Noise-Cancelling Headphones', $customerProduct['name']);
-        $this->assertEquals(269.00, $customerProduct['price']);
+        $this->assertEquals('Artisan Living Leviosa Special Edition', $customerProduct['name']);
+        $this->assertEquals(2400000.00, $customerProduct['price']);
     }
 
     public function test_customer_view_never_shows_unassigned_catalog_products(): void
@@ -202,7 +202,7 @@ class EcommerceApiTest extends TestCase
 
     public function test_customer_can_checkout_and_place_order(): void
     {
-        $shop = Shop::where('slug', 'tech-haven')->first();
+        $shop = Shop::where('slug', 'furniro')->first();
         $shopProduct = ShopProduct::where('shop_id', $shop->id)->where('is_active', true)->first();
 
         $response = $this->postJson('/api/customer/checkout', [
@@ -250,5 +250,20 @@ class EcommerceApiTest extends TestCase
         $this->assertNotNull($unassigned);
         $allCustomerProductIds = collect($response->json('data'))->pluck('product_id')->toArray();
         $this->assertNotContains($unassigned->id, $allCustomerProductIds);
+    }
+
+    public function test_customer_can_retrieve_dynamic_categories(): void
+    {
+        $response = $this->getJson('/api/customer/categories');
+
+        $response->assertStatus(200)
+            ->assertJsonStructure([
+                '*' => ['name', 'slug', 'products_count', 'image']
+            ]);
+
+        $categoryNames = collect($response->json())->pluck('name')->toArray();
+        $this->assertContains('Dining', $categoryNames);
+        $this->assertContains('Living', $categoryNames);
+        $this->assertContains('Bedroom', $categoryNames);
     }
 }

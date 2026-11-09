@@ -4,18 +4,16 @@ import { useMemo, useState } from 'react';
 import Link from 'next/link';
 import { ChevronRight } from 'lucide-react';
 import { useDebounce } from '../hooks/useDebounce';
-import { useShopsQuery, useAllProductsQuery } from '../hooks/useShops';
+import { useShopsQuery, useAllProductsQuery, useCategoriesQuery } from '../hooks/useShops';
 import ProductGrid from '../components/product/ProductGrid';
 import MerchantGrid from '../components/merchant/MerchantGrid';
-import { furniroProducts } from '../data/furniroProducts';
 
 const image = (name) => `/images/furniro/${name}.png`;
 
 const merchantCategories = [
   { id: 'all', label: 'All stores' },
-  { id: 'furniture', label: 'Furniture & Living' },
-  { id: 'tech', label: 'Audio & Tech' },
-  { id: 'apparel', label: 'Apparel & Style' },
+  { id: 'flagship', label: 'Flagship Studios' },
+  { id: 'artisan', label: 'Artisan & Boutiques' },
 ];
 
 const rooms = [
@@ -29,11 +27,12 @@ const gallery = ['36', '38', '40', '39', '41', '44', '43', '45', '37'];
 export default function HomePage() {
   const [storeSearch, setStoreSearch] = useState('');
   const [storeCategory, setStoreCategory] = useState('all');
+  const [showAllCategories, setShowAllCategories] = useState(false);
   const [room, setRoom] = useState(0);
 
   const debouncedSearch = useDebounce(storeSearch, 250);
 
-  // 1. Fetch live assigned products across active stores
+  // 1. Fetch live assigned products across active stores from Laravel backend
   const {
     data: productsData,
     isLoading: loadingProducts,
@@ -41,12 +40,9 @@ export default function HomePage() {
     refetch: refetchProducts,
   } = useAllProductsQuery({ per_page: 8 });
 
-  // Use database products or graceful fallback to seeded items
-  const featuredProducts = productsData?.data?.length
-    ? productsData.data.slice(0, 8)
-    : furniroProducts;
+  const featuredProducts = productsData?.data || [];
 
-  // 2. Fetch live merchant stores
+  // 2. Fetch live merchant stores from Laravel backend
   const {
     data: rawShops = [],
     isLoading: loadingShops,
@@ -54,17 +50,19 @@ export default function HomePage() {
     refetch: refetchShops,
   } = useShopsQuery(debouncedSearch);
 
+  // 3. Fetch dynamic customer categories from Laravel backend
+  const {
+    data: categories = [],
+    isLoading: loadingCategories,
+  } = useCategoriesQuery();
+
   const filteredShops = useMemo(() => {
     return rawShops.filter((shop) => {
       const text = `${shop.name} ${shop.description || ''}`.toLowerCase();
-      return (
-        storeCategory === 'all' ||
-        (storeCategory === 'furniture'
-          ? /furniro|home|studio|living|decor|nordic|artisan/.test(text)
-          : storeCategory === 'tech'
-          ? /tech|audio|electronics|gadget/.test(text)
-          : /apparel|cloth|fashion|style|urban/.test(text))
-      );
+      if (storeCategory === 'all') return true;
+      if (storeCategory === 'flagship') return /flagship|furniro/.test(text);
+      if (storeCategory === 'artisan') return /artisan|boutique|studio/.test(text);
+      return true;
     });
   }, [rawShops, storeCategory]);
 
@@ -86,7 +84,7 @@ export default function HomePage() {
             New Collection
           </h1>
           <p>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut elit tellus, luctus nec ullamcorper mattis.
+            Thoughtful collections crafted with natural materials and timeless aesthetics. Explore unique pieces from verified independent shops.
           </p>
           <Link className="gold-button hero-button" href="/shop">
             BUY NOW
@@ -94,27 +92,65 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* 2. Browse The Range (Figma) */}
+      {/* 2. Browse The Range (Dynamic backend categories from active shops) */}
       <section className="range-section section-container" aria-labelledby="range-title">
         <h2 id="range-title">Browse The Range</h2>
-        <p className="section-subtitle">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
-        <div className="range-grid">
-          {[
-            ['Dining', 'imgImage106', 'dining'],
-            ['Living', 'imgImage100', 'living'],
-            ['Bedroom', 'imgImage101', 'bedroom'],
-          ].map(([name, src, crop]) => (
-            <Link href={`/shop?category=${name}`} className="range-card" key={name}>
-              <div className={`range-photo ${crop}`}>
-                <img src={image(src)} alt={`${name} interior`} loading="lazy" />
+        <p className="section-subtitle">Curated collections for every corner of your home.</p>
+
+        {loadingCategories ? (
+          <div className="range-grid">
+            {[1, 2, 3].map((n) => (
+              <div key={n} className="range-card animate-pulse">
+                <div className="range-photo bg-slate-200" />
+                <div className="h-6 bg-slate-200 rounded w-1/2 mx-auto mt-6" />
               </div>
-              <h3>{name}</h3>
-            </Link>
-          ))}
-        </div>
+            ))}
+          </div>
+        ) : (
+          <>
+            <div className="range-grid">
+              {(showAllCategories ? categories : categories.slice(0, 3)).map((cat) => (
+                <Link
+                  href={`/shop?category=${encodeURIComponent(cat.name)}`}
+                  className="range-card group"
+                  key={cat.slug || cat.name}
+                >
+                  <div className="range-photo">
+                    {cat.image ? (
+                      <img
+                        src={cat.image}
+                        alt={cat.name}
+                        loading="lazy"
+                      />
+                    ) : (
+                      <div className="w-full h-full bg-[#f4f5f7] flex items-center justify-center text-slate-400 font-medium p-4">
+                        <span>{cat.name}</span>
+                      </div>
+                    )}
+                  </div>
+                  <h3>{cat.name}</h3>
+                </Link>
+              ))}
+            </div>
+
+            {categories.length > 3 && (
+              <div className="mt-8 text-center">
+                <button
+                  type="button"
+                  onClick={() => setShowAllCategories((prev) => !prev)}
+                  className="furniro-outline-btn text-sm py-2 px-6"
+                >
+                  {showAllCategories
+                    ? 'Show Less'
+                    : `View All Categories (${categories.length})`}
+                </button>
+              </div>
+            )}
+          </>
+        )}
       </section>
 
-      {/* 3. Our Products (Figma Core Section - Modular Product Component) */}
+      {/* 3. Our Products (Dynamic backend products from active shops) */}
       <section className="section-container products-section" aria-labelledby="products-title">
         <h2 id="products-title" className="section-main-heading">
           Our Products
@@ -122,8 +158,8 @@ export default function HomePage() {
 
         <ProductGrid
           products={featuredProducts}
-          isLoading={loadingProducts && !featuredProducts.length}
-          isError={errorProducts && !featuredProducts.length}
+          isLoading={loadingProducts}
+          isError={errorProducts}
           onRetry={refetchProducts}
         />
 
@@ -134,7 +170,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* 4. Modular Merchant Store Component */}
+      {/* 4. Modular Merchant Store Component (Dynamic from Laravel backend) */}
       <MerchantGrid
         shops={filteredShops}
         isLoading={loadingShops}

@@ -1,14 +1,13 @@
 'use client';
 
-import { useState, useMemo, Suspense } from 'react';
+import { useState, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import PageBanner from '../../components/common/PageBanner';
 import FeaturesBar from '../../components/common/FeaturesBar';
 import ProductFilterBar from '../../components/product/ProductFilterBar';
 import ProductGrid from '../../components/product/ProductGrid';
-import { useAllProductsQuery, useShopsQuery } from '../../hooks/useShops';
+import { useAllProductsQuery, useShopsQuery, useCategoriesQuery } from '../../hooks/useShops';
 import { useDebounce } from '../../hooks/useDebounce';
-import { furniroProducts } from '../../data/furniroProducts';
 
 function ShopContent() {
   const searchParams = useSearchParams();
@@ -25,10 +24,12 @@ function ShopContent() {
 
   const debouncedSearch = useDebounce(search, 300);
 
-  // Fetch shops for store filter
+  // Fetch shops for store filter from backend
   const { data: shops = [] } = useShopsQuery();
 
-  // Fetch products assigned to shops from backend
+  // Fetch dynamic categories from Laravel backend
+  const { data: rawCategories = [] } = useCategoriesQuery();
+  const categoriesList = ['All', ...rawCategories.map((c) => c.name)];
   const {
     data: apiResponse,
     isLoading,
@@ -43,28 +44,8 @@ function ShopContent() {
     per_page: showCount,
   });
 
-  // Database products with seamless fallback to seeded Furniro items
-  const backendProducts = apiResponse?.data;
-  const totalResults = apiResponse?.total ?? (backendProducts ? backendProducts.length : furniroProducts.length);
-
-  const displayedProducts = useMemo(() => {
-    if (backendProducts && backendProducts.length > 0) {
-      return backendProducts;
-    }
-    // Client-side fallback if backend API is not yet reachable
-    return furniroProducts.filter((p) => {
-      const matchCat =
-        activeCategory === 'All' ||
-        p.category.toLowerCase() === activeCategory.toLowerCase();
-      const matchSearch =
-        !search ||
-        p.name.toLowerCase().includes(search.toLowerCase()) ||
-        p.subtitle.toLowerCase().includes(search.toLowerCase());
-      return matchCat && matchSearch;
-    });
-  }, [backendProducts, activeCategory, search]);
-
-  const categoriesList = ['All', 'Dining', 'Living', 'Bedroom', 'Electronics', 'Apparel'];
+  const displayedProducts = apiResponse?.data || [];
+  const totalResults = apiResponse?.total ?? 0;
 
   return (
     <div className="furniro-shop-page">
@@ -100,8 +81,8 @@ function ShopContent() {
       <main className="section-container shop-grid-section">
         <ProductGrid
           products={displayedProducts}
-          isLoading={isLoading && !displayedProducts.length}
-          isError={isError && !displayedProducts.length}
+          isLoading={isLoading}
+          isError={isError}
           viewMode={viewMode}
           onRetry={refetch}
         />

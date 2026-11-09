@@ -145,7 +145,7 @@ export default function CartDrawer() {
                   Checkout
                 </Link>
                 <Link
-                  href="/shop"
+                  href="/comparison"
                   onClick={() => setIsCartOpen(false)}
                   className="flex-1 text-center py-2 px-3 rounded-[50px] border border-black text-xs font-normal text-black hover:bg-black hover:text-white transition-colors"
                 >

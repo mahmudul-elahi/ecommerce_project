@@ -39,6 +39,46 @@ class StorefrontController extends Controller
     }
 
     /**
+     * List distinct categories that have active customer-visible products.
+     * Derived purely dynamically from products in the database.
+     */
+    public function categories()
+    {
+        $categoryProducts = ShopProduct::where('is_active', true)
+            ->whereHas('shop', function ($sq) {
+                $sq->where('status', 'active');
+            })
+            ->whereHas('product', function ($pq) {
+                $pq->where('is_active', true)->whereNotNull('category');
+            })
+            ->with('product')
+            ->get();
+
+        $categories = $categoryProducts
+            ->groupBy(function ($item) {
+                return trim($item->product->category);
+            })
+            ->filter(function ($items, $categoryName) {
+                return !empty($categoryName);
+            })
+            ->map(function ($items, $categoryName) {
+                $first = $items->first();
+                // Image derived dynamically from the product's thumbnail in database
+                $image = $first ? $first->effective_thumbnail_url : null;
+
+                return [
+                    'name' => $categoryName,
+                    'slug' => Str::slug($categoryName),
+                    'products_count' => $items->count(),
+                    'image' => $image,
+                ];
+            })
+            ->values();
+
+        return response()->json($categories);
+    }
+
+    /**
      * List all customer-visible products across all active shops.
      * Only products assigned to active shops are returned.
      * Products not assigned to any shop are NEVER returned.
